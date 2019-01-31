@@ -1,0 +1,278 @@
+[30-Nov-2017 13:05:28 America/Chicago] PHP Parse error:  syntax error, unexpected 'syed' (T_STRING), expecting ',' or ')' in /home/masterk/public_html/rayice/administrator/login.php on line 60
+[30-Nov-2017 13:05:42 America/Chicago] PHP Parse error:  syntax error, unexpected 'syed' (T_STRING), expecting ',' or ')' in /home/masterk/public_html/rayice/administrator/login.php on line 60
+[30-Nov-2017 13:06:31 America/Chicago] PHP Parse error:  syntax error, unexpected 'syed' (T_STRING), expecting ',' or ')' in /home/masterk/public_html/rayice/administrator/login.php on line 60
+[30-Nov-2017 13:07:18 America/Chicago] PHP Parse error:  syntax error, unexpected '' (T_ENCAPSED_AND_WHITESPACE), expecting '-' or identifier (T_STRING) or variable (T_VARIABLE) or number (T_NUM_STRING) in /home/masterk/public_html/rayice/administrator/login.php on line 70
+[30-Nov-2017 13:07:50 America/Chicago] PHP Parse error:  syntax error, unexpected '' (T_ENCAPSED_AND_WHITESPACE), expecting '-' or identifier (T_STRING) or variable (T_VARIABLE) or number (T_NUM_STRING) in /home/masterk/public_html/rayice/administrator/login.php on line 70
+[30-Nov-2017 13:27:33 America/Chicago] PHP Warning:  mysqli_real_escape_string() expects parameter 1 to be mysqli, null given in /home/masterk/public_html/rayice/administrator/login.php on line 26
+[30-Nov-2017 13:27:33 America/Chicago] PHP Warning:  mysqli_real_escape_string() expects parameter 1 to be mysqli, null given in /home/masterk/public_html/rayice/administrator/login.php on line 26
+[30-Nov-2017 13:27:33 America/Chicago] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home/masterk/public_html/rayice/administrator/login.php:26) in /home/masterk/public_html/rayice/administrator/login.php on line 79
+[30-Nov-2017 13:28:42 America/Chicago] PHP Warning:  mysqli_real_escape_string() expects parameter 1 to be mysqli, null given in /home/masterk/public_html/rayice/administrator/login.php on line 33
+[30-Nov-2017 13:28:42 America/Chicago] PHP Warning:  mysqli_real_escape_string() expects parameter 1 to be mysqli, null given in /home/masterk/public_html/rayice/administrator/login.php on line 33
+[30-Nov-2017 13:28:42 America/Chicago] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home/masterk/public_html/rayice/administrator/login.php:33) in /home/masterk/public_html/rayice/administrator/login.php on line 86
+[30-Nov-2017 13:34:32 America/Chicago] PHP Fatal error:  Uncaught Error: Call to undefined function mysqli_result() in /home/masterk/public_html/rayice/administrator/login.php:41
+Stack trace:
+#0 {main}
+  thrown in /home/masterk/public_html/rayice/administrator/login.php on line 41
+[30-Nov-2017 14:37:55 America/Chicago] PHP Fatal error:  Uncaught Error: Call to undefined function mysqli_result() in /home/masterk/public_html/rayice/administrator/login.php:41
+Stack trace:
+#0 {main}
+  thrown in /home/masterk/public_html/rayice/administrator/login.php on line 41
+[30-Nov-2017 14:38:32 America/Chicago] PHP Fatal error:  Uncaught Error: Call to undefined function mysqli_result() in /home/masterk/public_html/rayice/administrator/login.php:41
+Stack trace:
+#0 {main}
+  thrown in /home/masterk/public_html/rayice/administrator/login.php on line 41
+[30-Nov-2017 15:01:30 America/Chicago] PHP Parse error:  syntax error, unexpected '' (T_ENCAPSED_AND_WHITESPACE), expecting '-' or identifier (T_STRING) or variable (T_VARIABLE) or number (T_NUM_STRING) in /home/masterk/public_html/rayice/administrator/login.php on line 35
+[30-Nov-2017 15:08:55 America/Chicago] PHP Parse error:  syntax error, unexpected '$row_LoginRS' (T_VARIABLE), expecting ')' in /home/masterk/public_html/rayice/administrator/login.php on line 31
+[30-Nov-2017 15:10:33 America/Chicago] PHP Parse error:  syntax error, unexpected '$row_LoginRS' (T_VARIABLE), expecting ')' in /home/masterk/public_html/rayice/administrator/login.php on line 31
+[30-Nov-2017 15:13:05 America/Chicago] PHP Warning:  mysqli_real_escape_string() expects parameter 1 to be mysqli, null given in /home/masterk/public_html/rayice/administrator/login.php on line 26
+[30-Nov-2017 15:13:05 America/Chicago] PHP Warning:  mysqli_real_escape_string() expects parameter 1 to be mysqli, null given in /home/masterk/public_html/rayice/administrator/login.php on line 26
+[30-Nov-2017 15:13:05 America/Chicago] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home/masterk/public_html/rayice/administrator/login.php:26) in /home/masterk/public_html/rayice/administrator/login.php on line 80
+[30-Nov-2017 15:14:33 America/Chicago] PHP Warning:  mysqli_real_escape_string() expects parameter 1 to be mysqli, null given in /home/masterk/public_html/rayice/administrator/login.php on line 26
+[30-Nov-2017 15:14:33 America/Chicago] PHP Warning:  mysqli_real_escape_string() expects parameter 1 to be mysqli, null given in /home/masterk/public_html/rayice/administrator/login.php on line 26
+[30-Nov-2017 15:14:33 America/Chicago] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home/masterk/public_html/rayice/administrator/login.php:26) in /home/masterk/public_html/rayice/administrator/login.php on line 80
+[30-Nov-2017 15:15:30 America/Chicago] PHP Warning:  mysqli_real_escape_string() expects parameter 1 to be mysqli, null given in /home/masterk/public_html/rayice/administrator/login.php on line 26
+[30-Nov-2017 15:15:30 America/Chicago] PHP Warning:  mysqli_real_escape_string() expects parameter 1 to be mysqli, null given in /home/masterk/public_html/rayice/administrator/login.php on line 26
+[30-Nov-2017 15:15:30 America/Chicago] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home/masterk/public_html/rayice/administrator/login.php:26) in /home/masterk/public_html/rayice/administrator/login.php on line 80
+[30-Nov-2017 15:15:34 America/Chicago] PHP Warning:  mysqli_real_escape_string() expects parameter 1 to be mysqli, null given in /home/masterk/public_html/rayice/administrator/login.php on line 26
+[30-Nov-2017 15:15:34 America/Chicago] PHP Warning:  mysqli_real_escape_string() expects parameter 1 to be mysqli, null given in /home/masterk/public_html/rayice/administrator/login.php on line 26
+[30-Nov-2017 15:15:34 America/Chicago] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home/masterk/public_html/rayice/administrator/login.php:26) in /home/masterk/public_html/rayice/administrator/login.php on line 80
+[30-Nov-2017 15:16:22 America/Chicago] PHP Warning:  mysqli_real_escape_string() expects parameter 1 to be mysqli, null given in /home/masterk/public_html/rayice/administrator/login.php on line 26
+[30-Nov-2017 15:16:22 America/Chicago] PHP Warning:  mysqli_real_escape_string() expects parameter 1 to be mysqli, null given in /home/masterk/public_html/rayice/administrator/login.php on line 26
+[30-Nov-2017 15:16:22 America/Chicago] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home/masterk/public_html/rayice/administrator/login.php:26) in /home/masterk/public_html/rayice/administrator/login.php on line 80
+[30-Nov-2017 15:16:28 America/Chicago] PHP Warning:  mysqli_real_escape_string() expects parameter 1 to be mysqli, null given in /home/masterk/public_html/rayice/administrator/login.php on line 26
+[30-Nov-2017 15:16:28 America/Chicago] PHP Warning:  mysqli_real_escape_string() expects parameter 1 to be mysqli, null given in /home/masterk/public_html/rayice/administrator/login.php on line 26
+[30-Nov-2017 15:16:28 America/Chicago] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home/masterk/public_html/rayice/administrator/login.php:26) in /home/masterk/public_html/rayice/administrator/login.php on line 80
+[30-Nov-2017 15:16:32 America/Chicago] PHP Warning:  mysqli_real_escape_string() expects parameter 1 to be mysqli, null given in /home/masterk/public_html/rayice/administrator/login.php on line 26
+[30-Nov-2017 15:16:32 America/Chicago] PHP Warning:  mysqli_real_escape_string() expects parameter 1 to be mysqli, null given in /home/masterk/public_html/rayice/administrator/login.php on line 26
+[30-Nov-2017 15:16:32 America/Chicago] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home/masterk/public_html/rayice/administrator/login.php:26) in /home/masterk/public_html/rayice/administrator/login.php on line 80
+[01-Dec-2017 06:53:30 America/Chicago] PHP Warning:  mysqli_real_escape_string() expects parameter 1 to be mysqli, null given in /home/masterk/public_html/rayice/administrator/login.php on line 26
+[01-Dec-2017 06:53:30 America/Chicago] PHP Warning:  mysqli_real_escape_string() expects parameter 1 to be mysqli, null given in /home/masterk/public_html/rayice/administrator/login.php on line 26
+[01-Dec-2017 06:53:30 America/Chicago] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home/masterk/public_html/rayice/administrator/login.php:26) in /home/masterk/public_html/rayice/administrator/login.php on line 80
+[01-Dec-2017 07:03:05 America/Chicago] PHP Fatal error:  Uncaught Error: Call to undefined function mysql_query() in /home/masterk/public_html/rayice/administrator/login.php:28
+Stack trace:
+#0 {main}
+  thrown in /home/masterk/public_html/rayice/administrator/login.php on line 28
+[01-Dec-2017 07:04:57 America/Chicago] PHP Fatal error:  Uncaught Error: Call to undefined function mysql_query() in /home/masterk/public_html/rayice/administrator/login.php:28
+Stack trace:
+#0 {main}
+  thrown in /home/masterk/public_html/rayice/administrator/login.php on line 28
+[01-Dec-2017 07:05:17 America/Chicago] PHP Fatal error:  Uncaught Error: Call to undefined function mysql_query() in /home/masterk/public_html/rayice/administrator/login.php:28
+Stack trace:
+#0 {main}
+  thrown in /home/masterk/public_html/rayice/administrator/login.php on line 28
+[01-Dec-2017 07:08:25 America/Chicago] PHP Fatal error:  Uncaught Error: Call to undefined function mysql_query() in /home/masterk/public_html/rayice/administrator/login.php:28
+Stack trace:
+#0 {main}
+  thrown in /home/masterk/public_html/rayice/administrator/login.php on line 28
+[01-Dec-2017 07:08:37 America/Chicago] PHP Fatal error:  Uncaught Error: Call to undefined function mysql_escape_string() in /home/masterk/public_html/rayice/administrator/login.php:28
+Stack trace:
+#0 {main}
+  thrown in /home/masterk/public_html/rayice/administrator/login.php on line 28
+[01-Dec-2017 07:09:11 America/Chicago] PHP Fatal error:  Uncaught Error: Call to undefined function mysql_real_escape_string() in /home/masterk/public_html/rayice/administrator/login.php:28
+Stack trace:
+#0 {main}
+  thrown in /home/masterk/public_html/rayice/administrator/login.php on line 28
+[01-Dec-2017 07:09:34 America/Chicago] PHP Warning:  mysqli_real_escape_string() expects exactly 2 parameters, 1 given in /home/masterk/public_html/rayice/administrator/login.php on line 28
+[01-Dec-2017 07:09:34 America/Chicago] PHP Warning:  mysqli_real_escape_string() expects exactly 2 parameters, 1 given in /home/masterk/public_html/rayice/administrator/login.php on line 28
+[01-Dec-2017 07:09:34 America/Chicago] PHP Warning:  mysqli_query() expects at least 2 parameters, 1 given in /home/masterk/public_html/rayice/administrator/login.php on line 28
+[01-Dec-2017 07:09:34 America/Chicago] PHP Warning:  mysqli_query(): Empty query in /home/masterk/public_html/rayice/administrator/login.php on line 30
+[01-Dec-2017 07:09:45 America/Chicago] PHP Warning:  mysqli_real_escape_string() expects exactly 2 parameters, 1 given in /home/masterk/public_html/rayice/administrator/login.php on line 28
+[01-Dec-2017 07:09:45 America/Chicago] PHP Warning:  mysqli_real_escape_string() expects exactly 2 parameters, 1 given in /home/masterk/public_html/rayice/administrator/login.php on line 28
+[01-Dec-2017 07:09:45 America/Chicago] PHP Warning:  mysqli_query() expects at least 2 parameters, 1 given in /home/masterk/public_html/rayice/administrator/login.php on line 28
+[01-Dec-2017 07:09:45 America/Chicago] PHP Warning:  mysqli_query(): Empty query in /home/masterk/public_html/rayice/administrator/login.php on line 30
+[01-Dec-2017 07:11:16 America/Chicago] PHP Fatal error:  Uncaught Error: Call to undefined function mysql_escape_string() in /home/masterk/public_html/rayice/administrator/login.php:20
+Stack trace:
+#0 {main}
+  thrown in /home/masterk/public_html/rayice/administrator/login.php on line 20
+[01-Dec-2017 07:11:45 America/Chicago] PHP Warning:  mysqli_real_escape_string() expects exactly 2 parameters, 1 given in /home/masterk/public_html/rayice/administrator/login.php on line 20
+[01-Dec-2017 07:11:45 America/Chicago] PHP Warning:  mysqli_real_escape_string() expects exactly 2 parameters, 1 given in /home/masterk/public_html/rayice/administrator/login.php on line 21
+[01-Dec-2017 07:11:45 America/Chicago] PHP Fatal error:  Uncaught Error: Call to undefined function GetSQLValueString() in /home/masterk/public_html/rayice/administrator/login.php:28
+Stack trace:
+#0 {main}
+  thrown in /home/masterk/public_html/rayice/administrator/login.php on line 28
+[01-Dec-2017 07:12:32 America/Chicago] PHP Warning:  mysqli_real_escape_string() expects exactly 2 parameters, 1 given in /home/masterk/public_html/rayice/administrator/login.php on line 20
+[01-Dec-2017 07:12:32 America/Chicago] PHP Warning:  mysqli_real_escape_string() expects exactly 2 parameters, 1 given in /home/masterk/public_html/rayice/administrator/login.php on line 21
+[01-Dec-2017 07:12:46 America/Chicago] PHP Warning:  mysqli_real_escape_string() expects exactly 2 parameters, 1 given in /home/masterk/public_html/rayice/administrator/login.php on line 20
+[01-Dec-2017 07:12:46 America/Chicago] PHP Warning:  mysqli_real_escape_string() expects exactly 2 parameters, 1 given in /home/masterk/public_html/rayice/administrator/login.php on line 21
+[01-Dec-2017 07:13:59 America/Chicago] PHP Parse error:  syntax error, unexpected ',' in /home/masterk/public_html/rayice/administrator/login.php on line 28
+[01-Dec-2017 07:14:16 America/Chicago] PHP Parse error:  syntax error, unexpected ',' in /home/masterk/public_html/rayice/administrator/login.php on line 28
+[01-Dec-2017 07:14:28 America/Chicago] PHP Parse error:  syntax error, unexpected ',' in /home/masterk/public_html/rayice/administrator/login.php on line 28
+[01-Dec-2017 07:15:38 America/Chicago] PHP Parse error:  syntax error, unexpected '"' in /home/masterk/public_html/rayice/administrator/login.php on line 28
+[01-Dec-2017 07:15:57 America/Chicago] PHP Warning:  mysqli_real_escape_string() expects exactly 2 parameters, 1 given in /home/masterk/public_html/rayice/administrator/login.php on line 20
+[01-Dec-2017 07:15:57 America/Chicago] PHP Warning:  mysqli_real_escape_string() expects exactly 2 parameters, 1 given in /home/masterk/public_html/rayice/administrator/login.php on line 21
+[01-Dec-2017 07:15:57 America/Chicago] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home/masterk/public_html/rayice/administrator/login.php:20) in /home/masterk/public_html/rayice/administrator/login.php on line 48
+[01-Dec-2017 07:16:00 America/Chicago] PHP Warning:  mysqli_real_escape_string() expects exactly 2 parameters, 1 given in /home/masterk/public_html/rayice/administrator/login.php on line 20
+[01-Dec-2017 07:16:00 America/Chicago] PHP Warning:  mysqli_real_escape_string() expects exactly 2 parameters, 1 given in /home/masterk/public_html/rayice/administrator/login.php on line 21
+[01-Dec-2017 07:16:00 America/Chicago] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home/masterk/public_html/rayice/administrator/login.php:20) in /home/masterk/public_html/rayice/administrator/login.php on line 48
+[01-Dec-2017 07:16:05 America/Chicago] PHP Warning:  mysqli_real_escape_string() expects exactly 2 parameters, 1 given in /home/masterk/public_html/rayice/administrator/login.php on line 20
+[01-Dec-2017 07:16:05 America/Chicago] PHP Warning:  mysqli_real_escape_string() expects exactly 2 parameters, 1 given in /home/masterk/public_html/rayice/administrator/login.php on line 21
+[01-Dec-2017 07:16:05 America/Chicago] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home/masterk/public_html/rayice/administrator/login.php:20) in /home/masterk/public_html/rayice/administrator/login.php on line 48
+[01-Dec-2017 07:16:12 America/Chicago] PHP Warning:  mysqli_real_escape_string() expects exactly 2 parameters, 1 given in /home/masterk/public_html/rayice/administrator/login.php on line 20
+[01-Dec-2017 07:16:12 America/Chicago] PHP Warning:  mysqli_real_escape_string() expects exactly 2 parameters, 1 given in /home/masterk/public_html/rayice/administrator/login.php on line 21
+[01-Dec-2017 07:16:12 America/Chicago] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home/masterk/public_html/rayice/administrator/login.php:20) in /home/masterk/public_html/rayice/administrator/login.php on line 48
+[01-Dec-2017 07:16:15 America/Chicago] PHP Warning:  mysqli_real_escape_string() expects exactly 2 parameters, 1 given in /home/masterk/public_html/rayice/administrator/login.php on line 20
+[01-Dec-2017 07:16:15 America/Chicago] PHP Warning:  mysqli_real_escape_string() expects exactly 2 parameters, 1 given in /home/masterk/public_html/rayice/administrator/login.php on line 21
+[01-Dec-2017 07:16:15 America/Chicago] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home/masterk/public_html/rayice/administrator/login.php:20) in /home/masterk/public_html/rayice/administrator/login.php on line 48
+[01-Dec-2017 07:17:14 America/Chicago] PHP Warning:  mysqli_real_escape_string() expects exactly 2 parameters, 1 given in /home/masterk/public_html/rayice/administrator/login.php on line 20
+[01-Dec-2017 07:17:14 America/Chicago] PHP Warning:  mysqli_real_escape_string() expects exactly 2 parameters, 1 given in /home/masterk/public_html/rayice/administrator/login.php on line 21
+[01-Dec-2017 07:21:35 America/Chicago] PHP Fatal error:  Uncaught Error: Call to undefined function GetSQLValueString() in /home/masterk/public_html/rayice/administrator/index.php:52
+Stack trace:
+#0 {main}
+  thrown in /home/masterk/public_html/rayice/administrator/index.php on line 52
+[01-Dec-2017 07:21:50 America/Chicago] PHP Warning:  mysqli_real_escape_string() expects parameter 1 to be mysqli, null given in /home/masterk/public_html/rayice/administrator/index.php on line 45
+[01-Dec-2017 07:21:50 America/Chicago] PHP Warning:  mysqli_real_escape_string() expects parameter 1 to be mysqli, null given in /home/masterk/public_html/rayice/administrator/index.php on line 45
+[01-Dec-2017 07:21:50 America/Chicago] PHP Warning:  mysqli_real_escape_string() expects parameter 1 to be mysqli, null given in /home/masterk/public_html/rayice/administrator/index.php on line 45
+[01-Dec-2017 07:23:00 America/Chicago] PHP Parse error:  syntax error, unexpected ',' in /home/masterk/public_html/rayice/administrator/index.php on line 47
+[01-Dec-2017 07:25:37 America/Chicago] PHP Parse error:  syntax error, unexpected ',' in /home/masterk/public_html/rayice/administrator/index.php on line 47
+[01-Dec-2017 07:26:15 America/Chicago] PHP Fatal error:  Uncaught ArgumentCountError: Too few arguments to function GetSQLValueString(), 2 passed in /home/masterk/public_html/rayice/administrator/index.php on line 87 and at least 3 expected in /home/masterk/public_html/rayice/administrator/index.php:42
+Stack trace:
+#0 /home/masterk/public_html/rayice/administrator/index.php(87): GetSQLValueString('custom', 'text')
+#1 {main}
+  thrown in /home/masterk/public_html/rayice/administrator/index.php on line 42
+[01-Dec-2017 07:26:59 America/Chicago] PHP Warning:  function_exists() expects exactly 1 parameter, 2 given in /home/masterk/public_html/rayice/administrator/index.php on line 41
+[01-Dec-2017 07:26:59 America/Chicago] PHP Warning:  mysqli_real_escape_string() expects parameter 1 to be mysqli, null given in /home/masterk/public_html/rayice/administrator/index.php on line 48
+[01-Dec-2017 07:26:59 America/Chicago] PHP Warning:  mysqli_real_escape_string() expects parameter 1 to be mysqli, null given in /home/masterk/public_html/rayice/administrator/index.php on line 48
+[01-Dec-2017 07:26:59 America/Chicago] PHP Warning:  mysqli_real_escape_string() expects parameter 1 to be mysqli, null given in /home/masterk/public_html/rayice/administrator/index.php on line 48
+[01-Dec-2017 07:27:19 America/Chicago] PHP Warning:  function_exists() expects exactly 1 parameter, 2 given in /home/masterk/public_html/rayice/administrator/index.php on line 48
+[01-Dec-2017 07:27:19 America/Chicago] PHP Warning:  mysqli_escape_string() expects exactly 2 parameters, 1 given in /home/masterk/public_html/rayice/administrator/index.php on line 48
+[01-Dec-2017 07:27:19 America/Chicago] PHP Warning:  function_exists() expects exactly 1 parameter, 2 given in /home/masterk/public_html/rayice/administrator/index.php on line 48
+[01-Dec-2017 07:27:19 America/Chicago] PHP Warning:  mysqli_escape_string() expects exactly 2 parameters, 1 given in /home/masterk/public_html/rayice/administrator/index.php on line 48
+[01-Dec-2017 07:27:19 America/Chicago] PHP Warning:  function_exists() expects exactly 1 parameter, 2 given in /home/masterk/public_html/rayice/administrator/index.php on line 48
+[01-Dec-2017 07:27:19 America/Chicago] PHP Warning:  mysqli_escape_string() expects exactly 2 parameters, 1 given in /home/masterk/public_html/rayice/administrator/index.php on line 48
+[01-Dec-2017 07:28:24 America/Chicago] PHP Warning:  function_exists() expects exactly 1 parameter, 2 given in /home/masterk/public_html/rayice/administrator/index.php on line 48
+[01-Dec-2017 07:28:24 America/Chicago] PHP Warning:  mysqli_escape_string() expects exactly 2 parameters, 1 given in /home/masterk/public_html/rayice/administrator/index.php on line 48
+[01-Dec-2017 07:28:24 America/Chicago] PHP Warning:  function_exists() expects exactly 1 parameter, 2 given in /home/masterk/public_html/rayice/administrator/index.php on line 48
+[01-Dec-2017 07:28:24 America/Chicago] PHP Warning:  mysqli_escape_string() expects exactly 2 parameters, 1 given in /home/masterk/public_html/rayice/administrator/index.php on line 48
+[01-Dec-2017 07:28:24 America/Chicago] PHP Warning:  function_exists() expects exactly 1 parameter, 2 given in /home/masterk/public_html/rayice/administrator/index.php on line 48
+[01-Dec-2017 07:28:24 America/Chicago] PHP Warning:  mysqli_escape_string() expects exactly 2 parameters, 1 given in /home/masterk/public_html/rayice/administrator/index.php on line 48
+[01-Dec-2017 07:29:16 America/Chicago] PHP Fatal error:  Uncaught ArgumentCountError: Too few arguments to function GetSQLValueString(), 2 passed in /home/masterk/public_html/rayice/administrator/index.php on line 87 and at least 3 expected in /home/masterk/public_html/rayice/administrator/index.php:42
+Stack trace:
+#0 /home/masterk/public_html/rayice/administrator/index.php(87): GetSQLValueString('custom', 'text')
+#1 {main}
+  thrown in /home/masterk/public_html/rayice/administrator/index.php on line 42
+[01-Dec-2017 08:00:57 America/Chicago] PHP Fatal error:  Uncaught Error: Call to undefined function mysql_escape_string() in /home/masterk/public_html/rayice/administrator/login.php:26
+Stack trace:
+#0 /home/masterk/public_html/rayice/administrator/login.php(60): GetSQLValueString('admin', 'text')
+#1 {main}
+  thrown in /home/masterk/public_html/rayice/administrator/login.php on line 26
+[01-Dec-2017 08:02:13 America/Chicago] PHP Warning:  mysqli_escape_string() expects exactly 2 parameters, 1 given in /home/masterk/public_html/rayice/administrator/login.php on line 26
+[01-Dec-2017 08:02:13 America/Chicago] PHP Warning:  mysqli_escape_string() expects exactly 2 parameters, 1 given in /home/masterk/public_html/rayice/administrator/login.php on line 26
+[01-Dec-2017 08:02:13 America/Chicago] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home/masterk/public_html/rayice/administrator/login.php:26) in /home/masterk/public_html/rayice/administrator/login.php on line 80
+[01-Dec-2017 08:02:38 America/Chicago] PHP Fatal error:  Uncaught Error: Call to undefined function mysql_escape_string() in /home/masterk/public_html/rayice/administrator/login.php:26
+Stack trace:
+#0 /home/masterk/public_html/rayice/administrator/login.php(60): GetSQLValueString('admin', 'text')
+#1 {main}
+  thrown in /home/masterk/public_html/rayice/administrator/login.php on line 26
+[01-Dec-2017 08:05:06 America/Chicago] PHP Warning:  mysqli_real_escape_string() expects parameter 1 to be mysqli, null given in /home/masterk/public_html/rayice/administrator/login.php on line 26
+[01-Dec-2017 08:05:06 America/Chicago] PHP Warning:  mysqli_real_escape_string() expects parameter 1 to be mysqli, null given in /home/masterk/public_html/rayice/administrator/login.php on line 26
+[01-Dec-2017 08:05:06 America/Chicago] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home/masterk/public_html/rayice/administrator/login.php:26) in /home/masterk/public_html/rayice/administrator/login.php on line 80
+[01-Dec-2017 08:05:09 America/Chicago] PHP Warning:  mysqli_real_escape_string() expects parameter 1 to be mysqli, null given in /home/masterk/public_html/rayice/administrator/login.php on line 26
+[01-Dec-2017 08:05:09 America/Chicago] PHP Warning:  mysqli_real_escape_string() expects parameter 1 to be mysqli, null given in /home/masterk/public_html/rayice/administrator/login.php on line 26
+[01-Dec-2017 08:05:09 America/Chicago] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home/masterk/public_html/rayice/administrator/login.php:26) in /home/masterk/public_html/rayice/administrator/login.php on line 80
+[01-Dec-2017 08:07:36 America/Chicago] PHP Warning:  mysqli_select_db() expects parameter 1 to be mysqli, null given in /home/masterk/public_html/rayice/administrator/login.php on line 13
+[01-Dec-2017 08:07:36 America/Chicago] PHP Warning:  mysqli_query() expects parameter 1 to be mysqli, null given in /home/masterk/public_html/rayice/administrator/login.php on line 15
+[01-Dec-2017 08:07:52 America/Chicago] PHP Warning:  mysqli_select_db() expects parameter 1 to be mysqli, null given in /home/masterk/public_html/rayice/administrator/login.php on line 13
+[01-Dec-2017 08:07:52 America/Chicago] PHP Warning:  mysqli_query() expects parameter 1 to be mysqli, null given in /home/masterk/public_html/rayice/administrator/login.php on line 15
+[01-Dec-2017 08:07:57 America/Chicago] PHP Warning:  mysqli_select_db() expects parameter 1 to be mysqli, null given in /home/masterk/public_html/rayice/administrator/login.php on line 13
+[01-Dec-2017 08:07:57 America/Chicago] PHP Warning:  mysqli_query() expects parameter 1 to be mysqli, null given in /home/masterk/public_html/rayice/administrator/login.php on line 15
+[01-Dec-2017 08:08:40 America/Chicago] PHP Fatal error:  Uncaught Error: Call to undefined function mysqli_result() in /home/masterk/public_html/rayice/administrator/login.php:67
+Stack trace:
+#0 {main}
+  thrown in /home/masterk/public_html/rayice/administrator/login.php on line 67
+[01-Dec-2017 08:09:13 America/Chicago] PHP Fatal error:  Uncaught Error: Call to undefined function mysqli_result() in /home/masterk/public_html/rayice/administrator/login.php:66
+Stack trace:
+#0 {main}
+  thrown in /home/masterk/public_html/rayice/administrator/login.php on line 66
+[01-Dec-2017 08:10:05 America/Chicago] PHP Fatal error:  Uncaught Error: Call to undefined function mysqli_result() in /home/masterk/public_html/rayice/administrator/login.php:67
+Stack trace:
+#0 {main}
+  thrown in /home/masterk/public_html/rayice/administrator/login.php on line 67
+[01-Dec-2017 08:48:15 America/Chicago] PHP Fatal error:  Uncaught Error: Call to undefined function mysqli_result() in /home/masterk/public_html/rayice/administrator/login.php:67
+Stack trace:
+#0 {main}
+  thrown in /home/masterk/public_html/rayice/administrator/login.php on line 67
+[01-Dec-2017 08:52:11 America/Chicago] PHP Warning:  mysqli_fetch_array() expects at most 2 parameters, 3 given in /home/masterk/public_html/rayice/administrator/login.php on line 67
+[01-Dec-2017 08:52:11 America/Chicago] PHP Warning:  session_regenerate_id(): Cannot regenerate session id - headers already sent in /home/masterk/public_html/rayice/administrator/login.php on line 69
+[01-Dec-2017 08:52:11 America/Chicago] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home/masterk/public_html/rayice/administrator/login.php:67) in /home/masterk/public_html/rayice/administrator/login.php on line 77
+[01-Dec-2017 08:52:19 America/Chicago] PHP Warning:  mysqli_fetch_array() expects at most 2 parameters, 3 given in /home/masterk/public_html/rayice/administrator/login.php on line 67
+[01-Dec-2017 08:52:19 America/Chicago] PHP Warning:  session_regenerate_id(): Cannot regenerate session id - headers already sent in /home/masterk/public_html/rayice/administrator/login.php on line 69
+[01-Dec-2017 08:52:19 America/Chicago] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home/masterk/public_html/rayice/administrator/login.php:67) in /home/masterk/public_html/rayice/administrator/login.php on line 77
+[01-Dec-2017 08:52:45 America/Chicago] PHP Warning:  mysqli_fetch_array() expects at most 2 parameters, 3 given in /home/masterk/public_html/rayice/administrator/login.php on line 67
+[01-Dec-2017 08:52:45 America/Chicago] PHP Warning:  session_regenerate_id(): Cannot regenerate session id - headers already sent in /home/masterk/public_html/rayice/administrator/login.php on line 69
+[01-Dec-2017 08:52:45 America/Chicago] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home/masterk/public_html/rayice/administrator/login.php:67) in /home/masterk/public_html/rayice/administrator/login.php on line 77
+[01-Dec-2017 08:53:27 America/Chicago] PHP Warning:  mysqli_num_rows() expects exactly 1 parameter, 3 given in /home/masterk/public_html/rayice/administrator/login.php on line 67
+[01-Dec-2017 08:53:27 America/Chicago] PHP Warning:  session_regenerate_id(): Cannot regenerate session id - headers already sent in /home/masterk/public_html/rayice/administrator/login.php on line 69
+[01-Dec-2017 08:53:27 America/Chicago] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home/masterk/public_html/rayice/administrator/login.php:67) in /home/masterk/public_html/rayice/administrator/login.php on line 77
+[01-Dec-2017 09:00:50 America/Chicago] PHP Fatal error:  Uncaught Error: Call to undefined function mysql_result() in /home/masterk/public_html/rayice/administrator/login.php:67
+Stack trace:
+#0 {main}
+  thrown in /home/masterk/public_html/rayice/administrator/login.php on line 67
+[01-Dec-2017 09:17:23 America/Chicago] PHP Fatal error:  Uncaught Error: Call to undefined function mysqli_result() in /home/masterk/public_html/rayice/administrator/login.php:67
+Stack trace:
+#0 {main}
+  thrown in /home/masterk/public_html/rayice/administrator/login.php on line 67
+[01-Dec-2017 09:22:35 America/Chicago] PHP Fatal error:  Uncaught Error: Call to undefined function mysqli_fetch_all() in /home/masterk/public_html/rayice/administrator/login.php:67
+Stack trace:
+#0 {main}
+  thrown in /home/masterk/public_html/rayice/administrator/login.php on line 67
+[01-Dec-2017 09:27:08 America/Chicago] PHP Warning:  mysqli_num_rows() expects exactly 1 parameter, 3 given in /home/masterk/public_html/rayice/administrator/login.php on line 67
+[01-Dec-2017 09:27:08 America/Chicago] PHP Warning:  session_regenerate_id(): Cannot regenerate session id - headers already sent in /home/masterk/public_html/rayice/administrator/login.php on line 70
+[01-Dec-2017 09:27:08 America/Chicago] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home/masterk/public_html/rayice/administrator/login.php:67) in /home/masterk/public_html/rayice/administrator/login.php on line 78
+[01-Dec-2017 09:32:45 America/Chicago] PHP Warning:  mysqli_num_rows() expects exactly 1 parameter, 3 given in /home/masterk/public_html/rayice/administrator/login.php on line 67
+[01-Dec-2017 09:32:45 America/Chicago] PHP Warning:  session_regenerate_id(): Cannot regenerate session id - headers already sent in /home/masterk/public_html/rayice/administrator/login.php on line 70
+[01-Dec-2017 09:32:45 America/Chicago] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home/masterk/public_html/rayice/administrator/login.php:67) in /home/masterk/public_html/rayice/administrator/login.php on line 78
+[01-Dec-2017 09:33:11 America/Chicago] PHP Fatal error:  Uncaught Error: Call to undefined function mysqli_result() in /home/masterk/public_html/rayice/administrator/login.php:67
+Stack trace:
+#0 {main}
+  thrown in /home/masterk/public_html/rayice/administrator/login.php on line 67
+[02-Dec-2017 09:43:52 America/Chicago] PHP Fatal error:  Call to undefined function mysqli_result() in /home/masterk/public_html/rayice/administrator/login.php on line 67
+[02-Dec-2017 09:46:24 America/Chicago] PHP Warning:  mysql_result() expects parameter 1 to be resource, object given in /home/masterk/public_html/rayice/administrator/login.php on line 67
+[02-Dec-2017 09:46:24 America/Chicago] PHP Warning:  session_regenerate_id(): Cannot regenerate session id - headers already sent in /home/masterk/public_html/rayice/administrator/login.php on line 69
+[02-Dec-2017 09:46:24 America/Chicago] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home/masterk/public_html/rayice/administrator/login.php:67) in /home/masterk/public_html/rayice/administrator/login.php on line 77
+[02-Dec-2017 09:46:53 America/Chicago] PHP Warning:  mysql_result() expects parameter 1 to be resource, object given in /home/masterk/public_html/rayice/administrator/login.php on line 67
+[02-Dec-2017 09:46:53 America/Chicago] PHP Warning:  session_regenerate_id(): Cannot regenerate session id - headers already sent in /home/masterk/public_html/rayice/administrator/login.php on line 69
+[02-Dec-2017 09:46:53 America/Chicago] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home/masterk/public_html/rayice/administrator/login.php:67) in /home/masterk/public_html/rayice/administrator/login.php on line 77
+[02-Dec-2017 09:47:09 America/Chicago] PHP Warning:  mysql_result() expects parameter 1 to be resource, object given in /home/masterk/public_html/rayice/administrator/login.php on line 67
+[02-Dec-2017 09:47:09 America/Chicago] PHP Warning:  session_regenerate_id(): Cannot regenerate session id - headers already sent in /home/masterk/public_html/rayice/administrator/login.php on line 69
+[02-Dec-2017 09:47:09 America/Chicago] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home/masterk/public_html/rayice/administrator/login.php:67) in /home/masterk/public_html/rayice/administrator/login.php on line 77
+[02-Dec-2017 09:51:57 America/Chicago] PHP Warning:  mysql_result() expects parameter 1 to be resource, object given in /home/masterk/public_html/rayice/administrator/login.php on line 67
+[02-Dec-2017 09:51:57 America/Chicago] PHP Warning:  session_regenerate_id(): Cannot regenerate session id - headers already sent in /home/masterk/public_html/rayice/administrator/login.php on line 69
+[02-Dec-2017 09:51:57 America/Chicago] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home/masterk/public_html/rayice/administrator/login.php:67) in /home/masterk/public_html/rayice/administrator/login.php on line 77
+[02-Dec-2017 09:51:59 America/Chicago] PHP Warning:  mysql_result() expects parameter 1 to be resource, object given in /home/masterk/public_html/rayice/administrator/login.php on line 67
+[02-Dec-2017 09:51:59 America/Chicago] PHP Warning:  session_regenerate_id(): Cannot regenerate session id - headers already sent in /home/masterk/public_html/rayice/administrator/login.php on line 69
+[02-Dec-2017 09:51:59 America/Chicago] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home/masterk/public_html/rayice/administrator/login.php:67) in /home/masterk/public_html/rayice/administrator/login.php on line 77
+[02-Dec-2017 09:52:17 America/Chicago] PHP Fatal error:  Call to undefined function mysqli_result() in /home/masterk/public_html/rayice/administrator/login.php on line 67
+[02-Dec-2017 09:54:22 America/Chicago] PHP Fatal error:  Call to undefined function mysqli_result() in /home/masterk/public_html/rayice/administrator/login.php on line 69
+[02-Dec-2017 10:32:34 America/Chicago] PHP Fatal error:  Call to undefined function mysqli_result() in /home/masterk/public_html/rayice/administrator/login.php on line 69
+[02-Dec-2017 10:48:22 America/Chicago] PHP Parse error:  syntax error, unexpected '=' in /home/masterk/public_html/rayice/includes/rayicecms.php on line 18
+[02-Dec-2017 10:50:09 America/Chicago] PHP Parse error:  syntax error, unexpected '=' in /home/masterk/public_html/rayice/includes/rayicecms.php on line 18
+[02-Dec-2017 10:50:41 America/Chicago] PHP Parse error:  syntax error, unexpected '=' in /home/masterk/public_html/rayice/includes/rayicecms.php on line 18
+[02-Dec-2017 10:51:25 America/Chicago] PHP Parse error:  syntax error, unexpected '=' in /home/masterk/public_html/rayice/includes/rayicecms.php on line 18
+[02-Dec-2017 10:52:29 America/Chicago] PHP Parse error:  syntax error, unexpected '=' in /home/masterk/public_html/rayice/includes/rayicecms.php on line 18
+[02-Dec-2017 14:59:52 America/Chicago] PHP Parse error:  syntax error, unexpected '=' in /home/masterk/public_html/rayice/includes/rayicecms.php on line 18
+[02-Dec-2017 15:00:06 America/Chicago] PHP Parse error:  syntax error, unexpected '=' in /home/masterk/public_html/rayice/includes/rayicecms.php on line 18
+[02-Dec-2017 15:02:26 America/Chicago] PHP Parse error:  syntax error, unexpected '=' in /home/masterk/public_html/rayice/includes/rayicecms.php on line 18
+[03-Dec-2017 05:41:22 America/Chicago] PHP Warning:  session_start(): Cannot send session cache limiter - headers already sent (output started at /home/masterk/public_html/rayice/includes/rayicecms.php:19) in /home/masterk/public_html/rayice/administrator/index.php on line 5
+[03-Dec-2017 05:41:27 America/Chicago] PHP Warning:  session_start(): Cannot send session cache limiter - headers already sent (output started at /home/masterk/public_html/rayice/includes/rayicecms.php:19) in /home/masterk/public_html/rayice/administrator/topic.php on line 5
+[03-Dec-2017 05:41:31 America/Chicago] PHP Warning:  session_start(): Cannot send session cache limiter - headers already sent (output started at /home/masterk/public_html/rayice/includes/rayicecms.php:19) in /home/masterk/public_html/rayice/administrator/topic.php on line 5
+[03-Dec-2017 05:41:31 America/Chicago] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home/masterk/public_html/rayice/includes/rayicecms.php:19) in /home/masterk/public_html/rayice/administrator/topic.php on line 125
+[03-Dec-2017 05:42:40 America/Chicago] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home/masterk/public_html/rayice/includes/rayicecms.php:18) in /home/masterk/public_html/rayice/administrator/topic.php on line 71
+[03-Dec-2017 05:42:50 America/Chicago] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home/masterk/public_html/rayice/includes/rayicecms.php:18) in /home/masterk/public_html/rayice/administrator/index.php on line 67
+[03-Dec-2017 05:42:53 America/Chicago] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home/masterk/public_html/rayice/includes/rayicecms.php:18) in /home/masterk/public_html/rayice/administrator/index.php on line 67
+[03-Dec-2017 05:43:22 America/Chicago] PHP Warning:  session_start(): Cannot send session cache limiter - headers already sent (output started at /home/masterk/public_html/rayice/includes/rayicecms.php:19) in /home/masterk/public_html/rayice/administrator/index.php on line 5
+[03-Dec-2017 05:43:22 America/Chicago] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home/masterk/public_html/rayice/includes/rayicecms.php:19) in /home/masterk/public_html/rayice/administrator/index.php on line 67
+[03-Dec-2017 05:43:26 America/Chicago] PHP Warning:  session_start(): Cannot send session cache limiter - headers already sent (output started at /home/masterk/public_html/rayice/includes/rayicecms.php:19) in /home/masterk/public_html/rayice/administrator/index.php on line 5
+[03-Dec-2017 05:43:26 America/Chicago] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home/masterk/public_html/rayice/includes/rayicecms.php:19) in /home/masterk/public_html/rayice/administrator/index.php on line 67
+[03-Dec-2017 05:44:40 America/Chicago] PHP Warning:  session_start(): Cannot send session cache limiter - headers already sent (output started at /home/masterk/public_html/rayice/includes/rayicecms.php:19) in /home/masterk/public_html/rayice/administrator/index.php on line 5
+[03-Dec-2017 05:44:40 America/Chicago] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home/masterk/public_html/rayice/includes/rayicecms.php:19) in /home/masterk/public_html/rayice/administrator/index.php on line 67
+[03-Dec-2017 05:46:10 America/Chicago] PHP Warning:  session_start(): Cannot send session cache limiter - headers already sent (output started at /home/masterk/public_html/rayice/includes/rayicecms.php:24) in /home/masterk/public_html/rayice/administrator/index.php on line 5
+[03-Dec-2017 05:46:10 America/Chicago] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home/masterk/public_html/rayice/includes/rayicecms.php:24) in /home/masterk/public_html/rayice/administrator/index.php on line 67
+[03-Dec-2017 05:46:25 America/Chicago] PHP Warning:  session_start(): Cannot send session cache limiter - headers already sent (output started at /home/masterk/public_html/rayice/includes/rayicecms.php:24) in /home/masterk/public_html/rayice/administrator/index.php on line 5
+[03-Dec-2017 05:46:25 America/Chicago] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home/masterk/public_html/rayice/includes/rayicecms.php:24) in /home/masterk/public_html/rayice/administrator/index.php on line 67
+[03-Dec-2017 05:46:34 America/Chicago] PHP Warning:  session_start(): Cannot send session cache limiter - headers already sent (output started at /home/masterk/public_html/rayice/includes/rayicecms.php:24) in /home/masterk/public_html/rayice/administrator/index.php on line 5
+[03-Dec-2017 05:46:34 America/Chicago] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home/masterk/public_html/rayice/includes/rayicecms.php:24) in /home/masterk/public_html/rayice/administrator/index.php on line 67
+[03-Dec-2017 05:47:07 America/Chicago] PHP Warning:  session_start(): Cannot send session cache limiter - headers already sent (output started at /home/masterk/public_html/rayice/includes/rayicecms.php:24) in /home/masterk/public_html/rayice/administrator/index.php on line 5
+[03-Dec-2017 05:47:07 America/Chicago] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home/masterk/public_html/rayice/includes/rayicecms.php:24) in /home/masterk/public_html/rayice/administrator/index.php on line 67
+[03-Dec-2017 05:47:40 America/Chicago] PHP Warning:  session_start(): Cannot send session cache limiter - headers already sent (output started at /home/masterk/public_html/rayice/includes/rayicecms.php:24) in /home/masterk/public_html/rayice/administrator/index.php on line 5
+[03-Dec-2017 05:47:40 America/Chicago] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home/masterk/public_html/rayice/includes/rayicecms.php:24) in /home/masterk/public_html/rayice/administrator/index.php on line 67
+[03-Dec-2017 05:50:00 America/Chicago] PHP Warning:  session_start(): Cannot send session cache limiter - headers already sent (output started at /home/masterk/public_html/rayice/includes/rayicecms.php:24) in /home/masterk/public_html/rayice/administrator/topic.php on line 5
