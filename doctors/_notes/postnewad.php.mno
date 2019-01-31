@@ -1,0 +1,4 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<info>
+	<infoitem key="UD_cates" value="name:adpostingcategoryid;datatype:int,name:adpostingcategory;datatype:string" />
+</info>
