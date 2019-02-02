@@ -18,6 +18,10 @@ It is used as backend solution for many clients to provide them ease of content 
 
 Anyone can use this project and customize as per their needs and can develop the themes to use for frontend either by using Pure html, based on ReactJS or Angular.
 
+# Demo
+
+you can visit http://rayice.com to see the demo. To Access the admin panel http://rayice.com/administrator/ please email at ask@rayice.com
+
 # License
 
 You are open to edit, share or use it in any of your project. For any support you can contact at ask@rayice.com
