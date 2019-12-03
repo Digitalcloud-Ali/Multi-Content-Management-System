@@ -5,9 +5,9 @@ if (!isset($_SESSION)) {
 function dbconnect()
 {
   $hostname_rayicecms = 'localhost';
-  $database_rayicecms = 'masterk_cms';
-  $username_rayicecms = 'masterk_cms';
-  $password_rayicecms = 'raza1234';
+  $database_rayicecms = 'db_password';
+  $username_rayicecms = 'db_username';
+  $password_rayicecms = 'password';
   $rayicecms = mysqli_connect($hostname_rayicecms, $username_rayicecms, $password_rayicecms, $database_rayicecms) or trigger_error(mysqli_error(),E_USER_ERROR);
   return $rayicecms;
 }
