@@ -435,10 +435,10 @@ CREATE TABLE IF NOT EXISTS `members` (
 --
 
 INSERT INTO `members` (`memberid`, `users`, `passs`, `level`, `fullname`, `address`, `email`, `photo`, `zip`, `city`, `state`, `country`, `phone`, `yahooid`, `twitter`, `facebook`, `status`, `position`, `selecttopic`) VALUES
-(1, 'syed', 'raza', 'member', 'Syed', 'mian mohamad town', 'falconali2004@hotmail.com', '1000b053xmD7.jpg', '10250', 'mirpur', 'azad kashmir', 'pakistan', '923214708525', '', '', '', 'active', 'gold', NULL),
-(5, 'syedraza', 'raza12', 'editor', 'Syed Raza', 'mian mohamad town', 'falconali2004@hotmail.com', '5favicon.png', '10250', 'mirpur', 'azad kashmir', 'pakistan', '923214708525', NULL, NULL, NULL, 'active', 'gold', NULL),
-(8, 'admin', '123456', 'administrator', 'Syed Raza Ali', 'Mian Mohammad Town', 'trusthide@hotmail.com', 'missing.png', '10250', 'Karbala', 'Select a region', 'Pakistan', '923214708525', NULL, NULL, NULL, 'active', 'bronze', NULL),
-(9, 'razashah', 'raza12', 'member', 'syed raza ali', 'mian own', 'falconali2004@hotmail.com', NULL, '10250', 'mirpur', 'blue', 'Pakistan', '923214708525', NULL, NULL, NULL, 'pending', 'basic', NULL);
+(1, 'syed', 'raza', 'member', 'Syed Member', 'Oslo City', 'ask@rayice.com', '1000b053xmD7.jpg', '00000', 'Oslo', 'Oslo', 'Norway', '004744444444', '', '', '', 'active', 'gold', NULL),
+(5, 'syedraza', 'raza12', 'editor', 'Syed Editor', 'Oslo City', 'ask@rayice.com', '5favicon.png', '10250', 'Oslo', 'Oslo', 'Norway', '004744444444', NULL, NULL, NULL, 'active', 'gold', NULL),
+(8, 'admin', '123456', 'administrator', 'Syed Admin', 'Oslo City', 'ask@rayice.com', 'missing.png', '10250', 'Oslo', 'Select a region', 'Norway', '004744444444', NULL, NULL, NULL, 'active', 'bronze', NULL),
+(9, 'razashah', 'raza12', 'member', 'Syed Member', 'Oslo City', 'ask@rayice.com', NULL, '10250', 'Oslo', 'blue', 'Pakistan', '004744444444', NULL, NULL, NULL, 'pending', 'basic', NULL);
 
 -- --------------------------------------------------------
 
@@ -685,7 +685,7 @@ CREATE TABLE IF NOT EXISTS `settings` (
 --
 
 INSERT INTO `settings` (`settingid`, `title`, `siteurl`, `logo`, `favicon`, `selecttopic`, `installed`, `currency`, `theme`, `owner`, `missingimage`, `email`, `phone`, `metadesc`, `metakey`, `onlinestatus`, `footer`, `host`, `username`, `password`, `database`, `ad1`, `ad2`, `ad3`, `ad4`, `ad5`, `ad6`) VALUES
-(1, 'MULTI CMS', 'http://localhost/', '11logo.png', 'favicon.png', 'custom', 'no', 'PKR', 'default', 'Syed', 'missing.png', 'ask@rayice.com', '00923214708525', 'RAYICE CMS - New Style Creativity / New Style CMS - Downlod Now and make Your Website without any Coding Knowledge.', 'rayice cms, ray cms, new style cms, creativity cms, new features cms, content management system', 'yes', '<div class="oneone"><div class="oneone"><div class="oneone"><div class="oneone"><div class="oneone"><p>(c) copyright 2012 RAYICE Multi Content Management System. All Rights Reserved.</p></div></div></div></div></div>', 'localhost', 'root', NULL, 'rayicecms', '<script type="text/javascript"><!--\r\ngoogle_ad_client = "ca-pub-3153542456893297";\r\n/* 300x250, created 2/17/10 */\r\ngoogle_ad_slot = "4924434531";\r\ngoogle_ad_width = 300;\r\ngoogle_ad_height = 250;\r\n//-->\r\n</script>\r\n<script type="text/javascript"\r\nsrc="http://pagead2.googlesyndication.com/pagead/show_ads.js">\r\n</script>', NULL, NULL, NULL, NULL, NULL);
+(1, 'MULTI CMS', 'http://demo.rayice.com/', '11logo.png', 'favicon.png', 'custom', 'no', 'USD', 'default', 'Developer', 'missing.png', 'ask@rayice.com', '0047444444444', 'RAYICE CMS - New Style Creativity / New Style CMS - Downlod Now and make Your Website without any Coding Knowledge.', 'rayice cms, ray cms, new style cms, creativity cms, new features cms, content management system', 'yes', '<div class="oneone"><div class="oneone"><div class="oneone"><div class="oneone"><div class="oneone"><p>(c) copyright 2012 RAYICE Multi Content Management System. All Rights Reserved.</p></div></div></div></div></div>', 'localhost', 'root', NULL, 'rayicecms', '<script type="text/javascript"><!--\r\ngoogle_ad_client = "ca-pub-xxxxxxxxxxxxxxxxxxx";\r\n/* 300x250, created 2/17/10 */\r\ngoogle_ad_slot = "4924434531";\r\ngoogle_ad_width = 300;\r\ngoogle_ad_height = 250;\r\n//-->\r\n</script>\r\n<script type="text/javascript"\r\nsrc="http://pagead2.googlesyndication.com/pagead/show_ads.js">\r\n</script>', NULL, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
