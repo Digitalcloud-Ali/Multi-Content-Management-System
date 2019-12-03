@@ -1,6 +1,6 @@
 <?php require_once('../includes/rayicecms.php'); ?>
 <?php
-$filename = 'rayicecms.js';
+$filename = 'raycms.sql';
 // Connect to MySQL server
 mysqli_connect($hostname_rayicecms, $username_rayicecms, $password_rayicecms) or die('Error connecting to MySQL server: ' . mysqli_connect_error());
 // Select database
