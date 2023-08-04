@@ -28,7 +28,7 @@ A demo of the system can be accessed at [multicms.digitalcloud.no](http://multic
 
 ## License
 
-Users are free to edit, share, or use this project in any of their projects. For any support or inquiries, please contact us at ask@digitalcloud.no
+Users are free to edit, share, or use this project in any of their projects. For any support or inquiries, please contact us at hei@digitalcloud.no
 
 ## Future Plans
 
