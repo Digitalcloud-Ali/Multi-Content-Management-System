@@ -24,7 +24,7 @@ The system is designed with customization in mind. Users can easily tailor the p
 
 ## Demo
 
-A demo of the system can be accessed at [multicms.digitalcloud.no](http://multicms.digitalcloud.no). To access the admin panel, visit [multicms.digitalcloud.no/administrator/](http://multicms.digitalcloud.no/administrator/). For access, please email at ask@digitalcloud.no
+A demo of the system can be accessed at [multicms.digitalcloud.no](http://multicms.digitalcloud.no). To access the admin panel, visit [multicms.digitalcloud.no/administrator/](http://multicms.digitalcloud.no/administrator/). For access, please email at hei@digitalcloud.no
 
 ## License
 
