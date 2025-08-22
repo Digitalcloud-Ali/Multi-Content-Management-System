@@ -1,28 +1,44 @@
 <?php
-if (!isset($_SESSION)) {
-  session_start();
-}
-function dbconnect()
-{
-  $hostname_rayicecms = 'localhost';
-  $database_rayicecms = 'db_password';
-  $username_rayicecms = 'db_username';
-  $password_rayicecms = 'password';
-  $rayicecms = mysqli_connect($hostname_rayicecms, $username_rayicecms, $password_rayicecms, $database_rayicecms) or trigger_error(mysqli_error(),E_USER_ERROR);
-  return $rayicecms;
+// Include modern classes for PHP 7.0+ compatibility
+require_once(__DIR__ . '/modern_functions.php');
+require_once(__DIR__ . '/Database.php');
+require_once(__DIR__ . '/Session.php');
+require_once(__DIR__ . '/Validator.php');
+
+// Initialize modern session management
+Session::start();
+
+// Legacy compatibility function (now uses modern Database class)
+function dbconnect() {
+    return Database::getInstance()->getConnection();
 }
 
-$query = "SELECT * FROM settings WHERE settingid = 1";
-$result = mysqli_query(dbconnect(), $query);
-$row = mysqli_fetch_array($result);
+// Set modern error reporting
+set_modern_error_reporting();
 
-if ($row['selecttopic'] != $_SESSION['sitetopic']) {
-?>
-<script type="text/javascript"> location.replace("Location: /"); </script>
-<?php
-}
-else
-{
-unset($_SESSION['sitetopic']); 
+// Get database instance
+$db = Database::getInstance();
+
+// Query settings with modern database class
+try {
+    $query = "SELECT * FROM settings WHERE settingid = 1";
+    $row = $db->queryOne($query);
+    
+    if ($row && isset($row['selecttopic']) && isset($_SESSION['sitetopic']) && $row['selecttopic'] != $_SESSION['sitetopic']) {
+        // Redirect if site topic doesn't match
+        echo '<script type="text/javascript">location.replace("Location: /");</script>';
+    } else {
+        unset($_SESSION['sitetopic']); 
+    }
+    
+} catch (Exception $e) {
+    // Log error but don't expose it to users
+    error_log("Settings query error: " . $e->getMessage());
+    
+    // Set default values if database is not available
+    $row = [
+        'selecttopic' => 'default',
+        'installed' => 'yes'
+    ];
 }
 ?>

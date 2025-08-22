@@ -22,12 +22,13 @@ if (isset($_GET['accesscheck'])) {
 if (!function_exists("GetSQLValueString")) {
 function GetSQLValueString($theValue, $theType, $theDefinedValue = "", $theNotDefinedValue = "") 
 {
-  if (PHP_VERSION < 6) {
-    $theValue = get_magic_quotes_gpc() ? stripslashes($theValue) : $theValue;
+  // Modern PHP handles input automatically - no need for magic quotes handling
+  
+  // Use mysqli_real_escape_string for proper SQL escaping
+  if (function_exists('dbconnect') && function_exists('mysqli_real_escape_string')) {
+    $theValue = mysqli_real_escape_string(dbconnect(), $theValue);
   }
-
-  $theValue = function_exists("mysqli_real_escape_string") ? mysqli_real_escape_string(dbconnect(), $theValue) : mysqli_escape_string(dbconnect(), $theValue);
-
+  
   switch ($theType) {
     case "text":
       $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
@@ -46,6 +47,8 @@ function GetSQLValueString($theValue, $theType, $theDefinedValue = "", $theNotDe
       $theValue = ($theValue != "") ? $theDefinedValue : $theNotDefinedValue;
       break;
   }
+  return $theValue;
+}
   return $theValue;
 }
 }

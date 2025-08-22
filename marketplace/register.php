@@ -34,37 +34,6 @@ if (!isset($_SESSION)) {
   session_start();
 }
 
-if (!function_exists("GetSQLValueString")) {
-function GetSQLValueString($theValue, $theType, $theDefinedValue = "", $theNotDefinedValue = "") 
-{
-  if (PHP_VERSION < 6) {
-    $theValue = get_magic_quotes_gpc() ? stripslashes($theValue) : $theValue;
-  }
-
-  $theValue = function_exists("mysqli_real_escape_string") ? mysqli_real_escape_string(dbconnect(), $theValue) : mysqli_escape_string(dbconnect(), $theValue);
-
-  switch ($theType) {
-    case "text":
-      $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
-      break;    
-    case "long":
-    case "int":
-      $theValue = ($theValue != "") ? intval($theValue) : "NULL";
-      break;
-    case "double":
-      $theValue = ($theValue != "") ? doubleval($theValue) : "NULL";
-      break;
-    case "date":
-      $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
-      break;
-    case "defined":
-      $theValue = ($theValue != "") ? $theDefinedValue : $theNotDefinedValue;
-      break;
-  }
-  return $theValue;
-}
-}
-
 // *** Redirect if username exists
 $MM_flag="MM_insert";
 if (isset($_POST[$MM_flag])) {
@@ -141,7 +110,6 @@ $pages = mysqli_query(dbconnect(),$query_pages) or die(mysqli_connect_error());
 $row_pages = mysqli_fetch_assoc($pages);
 $totalRows_pages = mysqli_num_rows($pages);
 
-
 mysqli_select_db(dbconnect(),$database_rayicecms);
 $query_parts = "SELECT * FROM parts";
 $parts = mysqli_query(dbconnect(),$query_parts) or die(mysqli_connect_error());
@@ -153,7 +121,6 @@ $query_theme = "SELECT * FROM themes";
 $theme = mysqli_query(dbconnect(),$query_theme) or die(mysqli_connect_error());
 $row_theme = mysqli_fetch_assoc($theme);
 $totalRows_theme = mysqli_num_rows($theme);
-
 
 $maxRows_market = 10;
 $pageNum_market = 0;

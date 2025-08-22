@@ -33,37 +33,6 @@ if (!isset($_SESSION)) {
   session_start();
 }
 
-if (!function_exists("GetSQLValueString")) {
-function GetSQLValueString($theValue, $theType, $theDefinedValue = "", $theNotDefinedValue = "") 
-{
-  if (PHP_VERSION < 6) {
-    $theValue = get_magic_quotes_gpc() ? stripslashes($theValue) : $theValue;
-  }
-
-  $theValue = function_exists("mysqli_real_escape_string") ? mysqli_real_escape_string(dbconnect(), $theValue) : mysqli_escape_string(dbconnect(), $theValue);
-
-  switch ($theType) {
-    case "text":
-      $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
-      break;    
-    case "long":
-    case "int":
-      $theValue = ($theValue != "") ? intval($theValue) : "NULL";
-      break;
-    case "double":
-      $theValue = ($theValue != "") ? doubleval($theValue) : "NULL";
-      break;
-    case "date":
-      $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
-      break;
-    case "defined":
-      $theValue = ($theValue != "") ? $theDefinedValue : $theNotDefinedValue;
-      break;
-  }
-  return $theValue;
-}
-}
-
 $currentPage = $_SERVER["PHP_SELF"];
 
 mysqli_select_db(dbconnect(),$database_rayicecms);
@@ -78,7 +47,6 @@ $pages = mysqli_query(dbconnect(),$query_pages) or die(mysqli_connect_error());
 $row_pages = mysqli_fetch_assoc($pages);
 $totalRows_pages = mysqli_num_rows($pages);
 
-
 mysqli_select_db(dbconnect(),$database_rayicecms);
 $query_parts = "SELECT * FROM parts";
 $parts = mysqli_query(dbconnect(),$query_parts) or die(mysqli_connect_error());
@@ -90,7 +58,6 @@ $query_theme = "SELECT * FROM themes";
 $theme = mysqli_query(dbconnect(),$query_theme) or die(mysqli_connect_error());
 $row_theme = mysqli_fetch_assoc($theme);
 $totalRows_theme = mysqli_num_rows($theme);
-
 
 mysqli_select_db(dbconnect(),$database_rayicecms);
 $query_links = "SELECT * FROM friendlinks";
@@ -196,8 +163,7 @@ if($row_setting['onlinestatus'] == "yes")
               <?php } while ($row_image = mysqli_fetch_assoc($image)); ?>
             <?php } // Show if recordset not empty ?>
 <div align="center"><a href="<?php printf("%s?pageNum_image=%d%s", $currentPage, 0, $queryString_image); ?>" class="navigationbuttons">FIRST</a> <a href="<?php printf("%s?pageNum_image=%d%s", $currentPage, max(0, $pageNum_image - 1), $queryString_image); ?>" class="navigationbuttons">PREVIOUS</a> <a href="<?php printf("%s?pageNum_image=%d%s", $currentPage, min($totalPages_image, $pageNum_image + 1), $queryString_image); ?>" class="navigationbuttons">NEXT</a> <a href="<?php printf("%s?pageNum_image=%d%s", $currentPage, $totalPages_image, $queryString_image); ?>" class="navigationbuttons">LAST</a></div>
-          
-          
+
 <?php if ($totalRows_image == 0) { // Show if recordset empty ?>
 <div align="center">Sorry! No Post Found Here</div>
   <?php } // Show if recordset empty ?></td>

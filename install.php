@@ -1,261 +1,747 @@
-<?php require_once('includes/rayicecms.php'); ?>
 <?php
-error_reporting(0);
-if (!function_exists("GetSQLValueString")) {
-function GetSQLValueString($theValue, $theType, $theDefinedValue = "", $theNotDefinedValue = "") 
-{
-  if (PHP_VERSION < 6) {
-    $theValue = get_magic_quotes_gpc() ? stripslashes($theValue) : $theValue;
-  }
+/**
+ * Multi-Content Management System - Installation Script
+ * Modern, secure installation process with verification steps
+ */
 
-  $theValue = function_exists("mysqli_real_escape_string") ? mysqli_real_escape_string(dbconnect(), $theValue) : mysqli_escape_string(dbconnect(), $theValue);
-
-  switch ($theType) {
-    case "text":
-      $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
-      break;    
-    case "long":
-    case "int":
-      $theValue = ($theValue != "") ? intval($theValue) : "NULL";
-      break;
-    case "double":
-      $theValue = ($theValue != "") ? doubleval($theValue) : "NULL";
-      break;
-    case "date":
-      $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
-      break;
-    case "defined":
-      $theValue = ($theValue != "") ? $theDefinedValue : $theNotDefinedValue;
-      break;
-  }
-  return $theValue;
-}
+// Prevent direct access if already installed
+if (file_exists('includes/installed.lock')) {
+    header('Location: index.php');
+    exit;
 }
 
-$editFormAction = $_SERVER['PHP_SELF'];
-if (isset($_SERVER['QUERY_STRING'])) {
-  $editFormAction .= "?" . htmlentities($_SERVER['QUERY_STRING']);
+// Set error reporting for installation
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
+// Start session for installation process
+session_start();
+
+// Installation steps
+$steps = [
+    'welcome' => 'Welcome',
+    'requirements' => 'System Requirements',
+    'database' => 'Database Configuration',
+    'site_config' => 'Site Configuration',
+    'admin_setup' => 'Administrator Setup',
+    'installation' => 'Installing System',
+    'complete' => 'Installation Complete'
+];
+
+$current_step = $_GET['step'] ?? 'welcome';
+$current_step = in_array($current_step, array_keys($steps)) ? $current_step : 'welcome';
+
+// Handle form submissions
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    switch ($current_step) {
+        case 'database':
+            handleDatabaseConfig();
+            break;
+        case 'site_config':
+            handleSiteConfig();
+            break;
+        case 'admin_setup':
+            handleAdminSetup();
+            break;
+    }
 }
 
-if ((isset($_POST["MM_update"])) && ($_POST["MM_update"] == "database")) {
-  $updateSQL = sprintf("UPDATE settings SET `host`=%s, username=%s, password=%s, `database`=%s WHERE settingid=%s",
-                       GetSQLValueString($_POST['host'], "text"),
-                       GetSQLValueString($_POST['username'], "text"),
-                       GetSQLValueString($_POST['password'], "text"),
-                       GetSQLValueString($_POST['database'], "text"),
-                       GetSQLValueString($_POST['settingid'], "int"));
-
-  mysqli_select_db(dbconnect(),$database_rayicecms);
-  $Result1 = mysqli_query(dbconnect(),$updateSQL) or die(mysqli_connect_error());
-
-  $updateGoTo = "install.php?status=selecttopic";
-  if (isset($_SERVER['QUERY_STRING'])) {
-    $updateGoTo .= (strpos($updateGoTo, '?')) ? "" : "?";
-  }
-  header(sprintf("Location: %s", $updateGoTo));
+// Function to check system requirements
+function checkRequirements() {
+    $requirements = [
+        'php_version' => [
+            'name' => 'PHP Version',
+            'required' => '7.4.0',
+            'current' => PHP_VERSION,
+            'status' => version_compare(PHP_VERSION, '7.4.0', '>='),
+            'description' => 'PHP 7.4 or higher is required'
+        ],
+        'mysql' => [
+            'name' => 'MySQL Extension',
+            'required' => 'Available',
+            'current' => extension_loaded('mysqli') ? 'Available' : 'Not Available',
+            'status' => extension_loaded('mysqli'),
+            'description' => 'MySQLi extension is required for database connectivity'
+        ],
+        'gd' => [
+            'name' => 'GD Extension',
+            'required' => 'Available',
+            'current' => extension_loaded('gd') ? 'Available' : 'Not Available',
+            'status' => extension_loaded('gd'),
+            'description' => 'GD extension is required for image processing'
+        ],
+        'curl' => [
+            'name' => 'cURL Extension',
+            'required' => 'Available',
+            'current' => extension_loaded('curl') ? 'Available' : 'Not Available',
+            'status' => extension_loaded('curl'),
+            'description' => 'cURL extension is required for external API calls'
+        ],
+        'writable_dirs' => [
+            'name' => 'Directory Permissions',
+            'required' => 'Writable',
+            'current' => is_writable('includes') && is_writable('uploads') ? 'Writable' : 'Not Writable',
+            'status' => is_writable('includes') && is_writable('uploads'),
+            'description' => 'includes and uploads directories must be writable'
+        ]
+    ];
+    
+    return $requirements;
 }
 
-if ((isset($_POST["MM_update"])) && ($_POST["MM_update"] == "selecttopic")) {
-  $updateSQL = sprintf("UPDATE settings SET selecttopic=%s, installed=%s WHERE settingid=%s",
-                       GetSQLValueString($_POST['selecttopic'], "text"),
-                       GetSQLValueString($_POST['installed'], "text"),
-                       GetSQLValueString($_POST['settingid'], "int"));
-
-  mysqli_select_db(dbconnect(),$database_rayicecms);
-  $Result1 = mysqli_query(dbconnect(),$updateSQL) or die(mysqli_connect_error());
-
-  $updateGoTo = "install.php?status=success";
-  if (isset($_SERVER['QUERY_STRING'])) {
-    $updateGoTo .= (strpos($updateGoTo, '?')) ? "" : "?";
-  }
-  header(sprintf("Location: %s", $updateGoTo));
+// Function to test database connection
+function testDatabaseConnection($host, $username, $password, $database) {
+    try {
+        $connection = new mysqli($host, $username, $password);
+        
+        if ($connection->connect_error) {
+            return ['success' => false, 'error' => 'Connection failed: ' . $connection->connect_error];
+        }
+        
+        // Check if database exists
+        if (!$connection->select_db($database)) {
+            // Try to create database
+            if (!$connection->query("CREATE DATABASE `" . $connection->real_escape_string($database) . "`")) {
+                return ['success' => false, 'error' => 'Database does not exist and cannot be created. Please create it manually.'];
+            }
+        }
+        
+        $connection->close();
+        return ['success' => true, 'message' => 'Database connection successful'];
+        
+    } catch (Exception $e) {
+        return ['success' => false, 'error' => 'Database error: ' . $e->getMessage()];
+    }
 }
 
-mysqli_select_db(dbconnect(),$database_rayicecms);
-$query_setting = "SELECT * FROM settings";
-$setting = mysqli_query(dbconnect(),$query_setting) or die(mysqli_connect_error());
-$row_setting = mysqli_fetch_assoc($setting);
-$totalRows_setting = mysqli_num_rows($setting);
+// Function to handle database configuration
+function handleDatabaseConfig() {
+    if (!isset($_POST['db_host']) || !isset($_POST['db_username']) || !isset($_POST['db_name'])) {
+        $_SESSION['install_error'] = 'All database fields are required';
+        return;
+    }
+    
+    $db_host = trim($_POST['db_host']);
+    $db_username = trim($_POST['db_username']);
+    $db_password = $_POST['db_password'] ?? '';
+    $db_name = trim($_POST['db_name']);
+    
+    // Test connection
+    $test_result = testDatabaseConnection($db_host, $db_username, $db_password, $db_name);
+    
+    if ($test_result['success']) {
+        $_SESSION['db_config'] = [
+            'host' => $db_host,
+            'username' => $db_username,
+            'password' => $db_password,
+            'database' => $db_name
+        ];
+        
+        // Store in session and redirect to next step
+        header('Location: install.php?step=site_config');
+        exit;
+    } else {
+        $_SESSION['install_error'] = $test_result['error'];
+    }
+}
+
+// Function to handle site configuration
+function handleSiteConfig() {
+    if (!isset($_SESSION['db_config'])) {
+        header('Location: install.php?step=database');
+        exit;
+    }
+    
+    if (!isset($_POST['site_title']) || !isset($_POST['site_description']) || !isset($_POST['site_topic'])) {
+        $_SESSION['install_error'] = 'All site configuration fields are required';
+        return;
+    }
+    
+    $_SESSION['site_config'] = [
+        'title' => trim($_POST['site_title']),
+        'description' => trim($_POST['site_description']),
+        'topic' => $_POST['site_topic'],
+        'admin_email' => trim($_POST['admin_email']),
+        'timezone' => $_POST['timezone'] ?? 'UTC'
+    ];
+    
+    header('Location: install.php?step=admin_setup');
+    exit;
+}
+
+// Function to handle admin setup
+function handleAdminSetup() {
+    if (!isset($_SESSION['db_config']) || !isset($_SESSION['site_config'])) {
+        header('Location: install.php?step=database');
+        exit;
+    }
+    
+    if (!isset($_POST['admin_username']) || !isset($_POST['admin_password']) || !isset($_POST['admin_confirm_password'])) {
+        $_SESSION['install_error'] = 'All administrator fields are required';
+        return;
+    }
+    
+    if ($_POST['admin_password'] !== $_POST['admin_confirm_password']) {
+        $_SESSION['install_error'] = 'Passwords do not match';
+        return;
+    }
+    
+    if (strlen($_POST['admin_password']) < 8) {
+        $_SESSION['install_error'] = 'Password must be at least 8 characters long';
+        return;
+    }
+    
+    $_SESSION['admin_config'] = [
+        'username' => trim($_POST['admin_username']),
+        'password' => $_POST['admin_password'],
+        'email' => $_SESSION['site_config']['admin_email']
+    ];
+    
+    header('Location: install.php?step=installation');
+    exit;
+}
+
+// Function to perform installation
+function performInstallation() {
+    if (!isset($_SESSION['db_config']) || !isset($_SESSION['site_config']) || !isset($_SESSION['admin_config'])) {
+        return false;
+    }
+    
+    try {
+        $db_config = $_SESSION['db_config'];
+        $site_config = $_SESSION['site_config'];
+        $admin_config = $_SESSION['admin_config'];
+        
+        // Connect to database
+        $connection = new mysqli($db_config['host'], $db_config['username'], $db_config['password'], $db_config['database']);
+        
+        if ($connection->connect_error) {
+            throw new Exception('Database connection failed: ' . $connection->connect_error);
+        }
+        
+        $connection->set_charset('utf8mb4');
+        
+        // Create database tables
+        createDatabaseTables($connection);
+        
+        // Insert initial data
+        insertInitialData($connection, $site_config, $admin_config);
+        
+        // Create configuration file
+        createConfigFile($db_config);
+        
+        // Create installed lock file
+        file_put_contents('includes/installed.lock', date('Y-m-d H:i:s'));
+        
+        $connection->close();
+        
+        // Clear session data
+        unset($_SESSION['db_config'], $_SESSION['site_config'], $_SESSION['admin_config']);
+        
+        return true;
+        
+    } catch (Exception $e) {
+        $_SESSION['install_error'] = 'Installation failed: ' . $e->getMessage();
+        return false;
+    }
+}
+
+// Function to create database tables
+function createDatabaseTables($connection) {
+    $tables = [
+        'settings' => "CREATE TABLE `settings` (
+            `settingid` int(11) NOT NULL AUTO_INCREMENT,
+            `host` varchar(255) NOT NULL,
+            `username` varchar(255) NOT NULL,
+            `password` varchar(255) NOT NULL,
+            `database` varchar(255) NOT NULL,
+            `selecttopic` varchar(50) NOT NULL DEFAULT 'blog',
+            `installed` enum('yes','no') NOT NULL DEFAULT 'no',
+            `site_title` varchar(255) NOT NULL,
+            `site_description` text,
+            `admin_email` varchar(255) NOT NULL,
+            `timezone` varchar(50) NOT NULL DEFAULT 'UTC',
+            `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            PRIMARY KEY (`settingid`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci",
+        
+        'users' => "CREATE TABLE `users` (
+            `userid` int(11) NOT NULL AUTO_INCREMENT,
+            `username` varchar(50) NOT NULL UNIQUE,
+            `email` varchar(255) NOT NULL UNIQUE,
+            `password` varchar(255) NOT NULL,
+            `role` enum('admin','user','moderator') NOT NULL DEFAULT 'user',
+            `status` enum('active','inactive','banned') NOT NULL DEFAULT 'active',
+            `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            PRIMARY KEY (`userid`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci",
+        
+        'categories' => "CREATE TABLE `categories` (
+            `categoryid` int(11) NOT NULL AUTO_INCREMENT,
+            `name` varchar(100) NOT NULL,
+            `slug` varchar(100) NOT NULL UNIQUE,
+            `description` text,
+            `parent_id` int(11) DEFAULT NULL,
+            `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            PRIMARY KEY (`categoryid`),
+            KEY `parent_id` (`parent_id`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci",
+        
+        'posts' => "CREATE TABLE `posts` (
+            `postid` int(11) NOT NULL AUTO_INCREMENT,
+            `title` varchar(255) NOT NULL,
+            `slug` varchar(255) NOT NULL UNIQUE,
+            `content` longtext NOT NULL,
+            `excerpt` text,
+            `author_id` int(11) NOT NULL,
+            `category_id` int(11) DEFAULT NULL,
+            `status` enum('published','draft','private') NOT NULL DEFAULT 'draft',
+            `featured_image` varchar(255) DEFAULT NULL,
+            `views` int(11) NOT NULL DEFAULT 0,
+            `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            PRIMARY KEY (`postid`),
+            KEY `author_id` (`author_id`),
+            KEY `category_id` (`category_id`),
+            KEY `status` (`status`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci"
+    ];
+    
+    foreach ($tables as $table_name => $sql) {
+        if (!$connection->query($sql)) {
+            throw new Exception("Failed to create table {$table_name}: " . $connection->error);
+        }
+    }
+}
+
+// Function to insert initial data
+function insertInitialData($connection, $site_config, $admin_config) {
+    // Insert settings
+    $settings_sql = "INSERT INTO settings (host, username, password, database, selecttopic, installed, site_title, site_description, admin_email, timezone) VALUES (?, ?, ?, ?, ?, 'yes', ?, ?, ?, ?)";
+    $stmt = $connection->prepare($settings_sql);
+    $stmt->bind_param('ssssssss', 
+        $_SESSION['db_config']['host'],
+        $_SESSION['db_config']['username'],
+        $_SESSION['db_config']['password'],
+        $_SESSION['db_config']['database'],
+        $site_config['topic'],
+        $site_config['title'],
+        $site_config['description'],
+        $site_config['admin_email'],
+        $site_config['timezone']
+    );
+    $stmt->execute();
+    $stmt->close();
+    
+    // Insert admin user
+    $admin_sql = "INSERT INTO users (username, email, password, role) VALUES (?, ?, ?, 'admin')";
+    $stmt = $connection->prepare($admin_sql);
+    $hashed_password = password_hash($admin_config['password'], PASSWORD_DEFAULT);
+    $stmt->bind_param('sss', $admin_config['username'], $admin_config['email'], $hashed_password);
+    $stmt->execute();
+    $stmt->close();
+    
+    // Insert default categories
+    $default_categories = ['General', 'Technology', 'Business', 'Lifestyle'];
+    foreach ($default_categories as $category) {
+        $slug = strtolower(str_replace(' ', '-', $category));
+        $cat_sql = "INSERT INTO categories (name, slug) VALUES (?, ?)";
+        $stmt = $connection->prepare($cat_sql);
+        $stmt->bind_param('ss', $category, $slug);
+        $stmt->execute();
+        $stmt->close();
+    }
+}
+
+// Function to create configuration file
+function createConfigFile($db_config) {
+    $config_content = "<?php
+/**
+ * Database Configuration
+ * Auto-generated during installation
+ */
+
+define('DB_HOST', '" . addslashes($db_config['host']) . "');
+define('DB_USERNAME', '" . addslashes($db_config['username']) . "');
+define('DB_PASSWORD', '" . addslashes($db_config['password']) . "');
+define('DB_NAME', '" . addslashes($db_config['database']) . "');
+define('DB_CHARSET', 'utf8mb4');
+
+// Site configuration
+define('SITE_INSTALLED', true);
+define('INSTALLATION_DATE', '" . date('Y-m-d H:i:s') . "');
+?>";
+    
+    file_put_contents('includes/db_config.php', $config_content);
+}
+
+// Perform installation if on installation step
+if ($current_step === 'installation') {
+    if (performInstallation()) {
+        header('Location: install.php?step=complete');
+        exit;
+    }
+}
+
+// Get requirements for requirements step
+$requirements = checkRequirements();
+$all_requirements_met = true;
+foreach ($requirements as $req) {
+    if (!$req['status']) {
+        $all_requirements_met = false;
+        break;
+    }
+}
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title></title>
-<link href="administrator/rayicecms.css" rel="stylesheet" type="text/css" />
-<script type="text/javascript" src="/includes/validate.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Install Multi-Content Management System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #f8f9fa; }
+        .install-container { max-width: 800px; margin: 2rem auto; }
+        .step-indicator { margin-bottom: 2rem; }
+        .step-item { 
+            display: inline-block; 
+            margin-right: 1rem; 
+            padding: 0.5rem 1rem; 
+            border-radius: 20px; 
+            font-size: 0.9rem; 
+        }
+        .step-active { background-color: #007bff; color: white; }
+        .step-completed { background-color: #28a745; color: white; }
+        .step-pending { background-color: #6c757d; color: white; }
+        .install-card { 
+            background: white; 
+            border-radius: 10px; 
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075); 
+            padding: 2rem; 
+        }
+        .requirement-item { 
+            padding: 0.75rem; 
+            border-radius: 5px; 
+            margin-bottom: 0.5rem; 
+        }
+        .requirement-success { background-color: #d4edda; border: 1px solid #c3e6cb; }
+        .requirement-error { background-color: #f8d7da; border: 1px solid #f5c6cb; }
+        .form-group { margin-bottom: 1.5rem; }
+        .btn-install { padding: 0.75rem 2rem; font-size: 1.1rem; }
+    </style>
 </head>
-
 <body>
-<div align="center">
-  <table width="100%" height="34" border="0" cellpadding="0" cellspacing="0">
-    <tr>
-      <td bgcolor="#000000">&nbsp;</td>
-    </tr>
-  </table>
-  <p>&nbsp;</p><table width="500" border="0" align="center" cellpadding="12" cellspacing="0">
-    <tr>
-      <td bgcolor="#db3300"><table width="88" height="88" border="0" align="center" cellpadding="0" cellspacing="0">
-        <tr>
-          <td width="91" height="88" align="center" class="topbigbuttons"><div title="Back to Home!"><a href="install.php"><img src="/images/logo-normal.png" alt="" width="88" height="79" border="0" /></a></div>          </td>
-        </tr>
-      </table></td>
-    </tr>
-    <tr>
-      <td bgcolor="#FFFFFF"><?php
-	  if($row_setting['installed'] == "yes")
-	  {
-?>
-        <table width="100%" height="51" border="0" cellpadding="0" cellspacing="0" class="topbigbuttons1">
-          <tr>
-            <td width="193" height="51"><a href="/administrator/">
-              <div align="center">
-              SITE ALREADY INSTALLED GO TO ADMIN AREA TO CHANGE SITE TOPIC</div>
-            </a></td>
-          </tr>
-        </table>
-        <?php
-	  }
-	  else
-	  {
-	  ?>
-        <?php
-		if($_GET['status'] == '')
-		{
-			?>
-        <table width="100%" height="124" border="0" cellpadding="0" cellspacing="0">
-          <tr>
-            <td width="193" height="124"><p align="center">Welcome To </p>
-              <p align="center">Multi Content Management System </p>
-              <p align="center">Installation Process</p></td>
-          </tr>
-        </table>
-        <table width="100%" height="51" border="0" cellpadding="0" cellspacing="0" class="topbigbuttons1">
-          <tr>
-            <td width="193" height="51"><a href="install.php?status=selecttopic">
-            <div align="center">CLICK HERE TO CONTINUE</div></a></td>
-          </tr>
-        </table>
-        <?php
-	  }
-	  ?>
-        <?php
-		if($_GET['status'] == 'database')
-		{
-			?>
+    <div class="install-container">
+        <!-- Header -->
+        <div class="text-center mb-4">
+            <h1 class="display-4 text-primary">
+                <i class="fas fa-cogs"></i> Multi-Content CMS
+            </h1>
+            <p class="lead text-muted">Installation Wizard</p>
+        </div>
+
+        <!-- Step Indicator -->
+        <div class="step-indicator text-center">
+            <?php foreach ($steps as $step_key => $step_name): ?>
+                <?php
+                $step_class = 'step-pending';
+                if ($step_key === $current_step) {
+                    $step_class = 'step-active';
+                } elseif (array_search($step_key, array_keys($steps)) < array_search($current_step, array_keys($steps))) {
+                    $step_class = 'step-completed';
+                }
+                ?>
+                <span class="step-item <?php echo $step_class; ?>">
+                    <?php echo $step_name; ?>
+                </span>
+            <?php endforeach; ?>
+        </div>
+
+        <!-- Main Content -->
+        <div class="install-card">
+            <?php if (isset($_SESSION['install_error'])): ?>
+                <div class="alert alert-danger">
+                    <i class="fas fa-exclamation-triangle"></i> <?php echo htmlspecialchars($_SESSION['install_error']); ?>
+                </div>
+                <?php unset($_SESSION['install_error']); ?>
+            <?php endif; ?>
+
+            <?php if (isset($_SESSION['install_success'])): ?>
+                <div class="alert alert-success">
+                    <i class="fas fa-check-circle"></i> <?php echo htmlspecialchars($_SESSION['install_success']); ?>
+                </div>
+                <?php unset($_SESSION['install_success']); ?>
+            <?php endif; ?>
+
+            <?php switch ($current_step): 
+                case 'welcome': ?>
+                    <div class="text-center">
+                        <i class="fas fa-rocket fa-3x text-primary mb-3"></i>
+                        <h2>Welcome to Multi-Content CMS</h2>
+                        <p class="lead">This wizard will help you install and configure your new content management system.</p>
+                        <div class="mt-4">
+                            <a href="install.php?step=requirements" class="btn btn-primary btn-install">
+                                <i class="fas fa-arrow-right"></i> Get Started
+                            </a>
+                        </div>
+                    </div>
+                    <?php break; ?>
+
+                <?php case 'requirements': ?>
+                    <h2><i class="fas fa-clipboard-check"></i> System Requirements</h2>
+                    <p>Please ensure your server meets the following requirements:</p>
+                    
+                    <?php foreach ($requirements as $req): ?>
+                        <div class="requirement-item <?php echo $req['status'] ? 'requirement-success' : 'requirement-error'; ?>">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <strong><?php echo htmlspecialchars($req['name']); ?></strong>
+                                    <br>
+                                    <small class="text-muted"><?php echo htmlspecialchars($req['description']); ?></small>
+                                </div>
+                                <div class="text-end">
+                                    <div class="fw-bold"><?php echo htmlspecialchars($req['current']); ?></div>
+                                    <small class="text-muted">Required: <?php echo htmlspecialchars($req['required']); ?></small>
+                                </div>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                    
+                    <div class="mt-4">
+                        <?php if ($all_requirements_met): ?>
+                            <a href="install.php?step=database" class="btn btn-success btn-install">
+                                <i class="fas fa-arrow-right"></i> Continue to Database Setup
+                            </a>
+                        <?php else: ?>
+                            <div class="alert alert-warning">
+                                <i class="fas fa-exclamation-triangle"></i> 
+                                Please fix the requirements above before continuing.
+                            </div>
+                        <?php endif; ?>
+                    </div>
+                    <?php break; ?>
+
+                <?php case 'database': ?>
+                    <h2><i class="fas fa-database"></i> Database Configuration</h2>
+                    <p>Enter your database connection details:</p>
+                    
+                    <form method="POST" action="install.php?step=database">
+                        <div class="form-group">
+                            <label for="db_host" class="form-label">Database Host</label>
+                            <input type="text" class="form-control" id="db_host" name="db_host" 
+                                   value="<?php echo htmlspecialchars($_SESSION['db_config']['host'] ?? 'localhost'); ?>" required>
+                            <div class="form-text">Usually 'localhost' or your database server IP</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="db_username" class="form-label">Database Username</label>
+                            <input type="text" class="form-control" id="db_username" name="db_username" 
+                                   value="<?php echo htmlspecialchars($_SESSION['db_config']['username'] ?? ''); ?>" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="db_password" class="form-label">Database Password</label>
+                            <input type="password" class="form-control" id="db_password" name="db_password" 
+                                   value="<?php echo htmlspecialchars($_SESSION['db_config']['password'] ?? ''); ?>">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="db_name" class="form-label">Database Name</label>
+                            <input type="text" class="form-control" id="db_name" name="db_name" 
+                                   value="<?php echo htmlspecialchars($_SESSION['db_config']['database'] ?? ''); ?>" required>
+                            <div class="form-text">The database will be created if it doesn't exist</div>
+                        </div>
+                        
+                        <div class="mt-4">
+                            <button type="submit" class="btn btn-primary btn-install">
+                                <i class="fas fa-database"></i> Test Connection & Continue
+                            </button>
+                        </div>
+                    </form>
+                    <?php break; ?>
+
+                <?php case 'site_config': ?>
+                    <h2><i class="fas fa-cog"></i> Site Configuration</h2>
+                    <p>Configure your website settings:</p>
+                    
+                    <form method="POST" action="install.php?step=site_config">
+                        <div class="form-group">
+                            <label for="site_title" class="form-label">Site Title</label>
+                            <input type="text" class="form-control" id="site_title" name="site_title" 
+                                   value="<?php echo htmlspecialchars($_SESSION['site_config']['title'] ?? ''); ?>" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="site_description" class="form-label">Site Description</label>
+                            <textarea class="form-control" id="site_description" name="site_description" rows="3" required><?php echo htmlspecialchars($_SESSION['site_config']['description'] ?? ''); ?></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="site_topic" class="form-label">Site Type</label>
+                            <select class="form-select" id="site_topic" name="site_topic" required>
+                                <option value="">Select site type...</option>
+                                <option value="blog" <?php echo (($_SESSION['site_config']['topic'] ?? '') === 'blog') ? 'selected' : ''; ?>>Blog / Portal</option>
+                                <option value="business" <?php echo (($_SESSION['site_config']['topic'] ?? '') === 'business') ? 'selected' : ''; ?>>Business / Corporate</option>
+                                <option value="ecommerce" <?php echo (($_SESSION['site_config']['topic'] ?? '') === 'ecommerce') ? 'selected' : ''; ?>>E-commerce</option>
+                                <option value="portfolio" <?php echo (($_SESSION['site_config']['topic'] ?? '') === 'portfolio') ? 'selected' : ''; ?>>Portfolio</option>
+                                <option value="news" <?php echo (($_SESSION['site_config']['topic'] ?? '') === 'news') ? 'selected' : ''; ?>>News / Magazine</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="admin_email" class="form-label">Admin Email</label>
+                            <input type="email" class="form-control" id="admin_email" name="admin_email" 
+                                   value="<?php echo htmlspecialchars($_SESSION['site_config']['admin_email'] ?? ''); ?>" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="timezone" class="form-label">Timezone</label>
+                            <select class="form-select" id="timezone" name="timezone">
+                                <option value="UTC" <?php echo (($_SESSION['site_config']['timezone'] ?? '') === 'UTC') ? 'selected' : ''; ?>>UTC</option>
+                                <option value="America/New_York" <?php echo (($_SESSION['site_config']['timezone'] ?? '') === 'America/New_York') ? 'selected' : ''; ?>>Eastern Time</option>
+                                <option value="America/Chicago" <?php echo (($_SESSION['site_config']['timezone'] ?? '') === 'America/Chicago') ? 'selected' : ''; ?>>Central Time</option>
+                                <option value="America/Denver" <?php echo (($_SESSION['site_config']['timezone'] ?? '') === 'America/Denver') ? 'selected' : ''; ?>>Mountain Time</option>
+                                <option value="America/Los_Angeles" <?php echo (($_SESSION['site_config']['timezone'] ?? '') === 'America/Los_Angeles') ? 'selected' : ''; ?>>Pacific Time</option>
+                                <option value="Europe/London" <?php echo (($_SESSION['site_config']['timezone'] ?? '') === 'Europe/London') ? 'selected' : ''; ?>>London</option>
+                                <option value="Europe/Paris" <?php echo (($_SESSION['site_config']['timezone'] ?? '') === 'Europe/Paris') ? 'selected' : ''; ?>>Paris</option>
+                                <option value="Asia/Tokyo" <?php echo (($_SESSION['site_config']['timezone'] ?? '') === 'Asia/Tokyo') ? 'selected' : ''; ?>>Tokyo</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mt-4">
+                            <button type="submit" class="btn btn-primary btn-install">
+                                <i class="fas fa-arrow-right"></i> Continue to Admin Setup
+                            </button>
+                        </div>
+                    </form>
+                    <?php break; ?>
+
+                <?php case 'admin_setup': ?>
+                    <h2><i class="fas fa-user-shield"></i> Administrator Account</h2>
+                    <p>Create your administrator account:</p>
+                    
+                    <form method="POST" action="install.php?step=admin_setup">
+                        <div class="form-group">
+                            <label for="admin_username" class="form-label">Username</label>
+                            <input type="text" class="form-control" id="admin_username" name="admin_username" 
+                                   value="<?php echo htmlspecialchars($_SESSION['admin_config']['username'] ?? ''); ?>" required>
+                            <div class="form-text">Choose a unique username for your admin account</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="admin_password" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="admin_password" name="admin_password" required>
+                            <div class="form-text">Password must be at least 8 characters long</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="admin_confirm_password" class="form-label">Confirm Password</label>
+                            <input type="password" class="form-control" id="admin_confirm_password" name="admin_confirm_password" required>
+                        </div>
+                        
+                        <div class="mt-4">
+                            <button type="submit" class="btn btn-primary btn-install">
+                                <i class="fas fa-arrow-right"></i> Continue to Installation
+                            </button>
+                        </div>
+                    </form>
+                    <?php break; ?>
+
+                <?php case 'installation': ?>
+                    <div class="text-center">
+                        <i class="fas fa-spinner fa-spin fa-3x text-primary mb-3"></i>
+                        <h2>Installing System</h2>
+                        <p class="lead">Please wait while we set up your content management system...</p>
+                        
+                        <div class="progress mt-4">
+                            <div class="progress-bar progress-bar-striped progress-bar-animated" 
+                                 role="progressbar" style="width: 100%"></div>
+                        </div>
+                        
+                        <div class="mt-4">
+                            <a href="install.php?step=installation" class="btn btn-primary btn-install">
+                                <i class="fas fa-sync"></i> Retry Installation
+                            </a>
+                        </div>
+                    </div>
+                    <?php break; ?>
+
+                <?php case 'complete': ?>
+                    <div class="text-center">
+                        <i class="fas fa-check-circle fa-3x text-success mb-3"></i>
+                        <h2>Installation Complete!</h2>
+                        <p class="lead">Your Multi-Content CMS has been successfully installed.</p>
+                        
+                        <div class="alert alert-info">
+                            <h5><i class="fas fa-info-circle"></i> Next Steps:</h5>
+                            <ul class="text-start">
+                                <li>Access your admin panel to manage content</li>
+                                <li>Customize your site settings</li>
+                                <li>Add your first content</li>
+                                <li>Configure themes and plugins</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="mt-4">
+                            <a href="administrator/" class="btn btn-primary btn-install me-3">
+                                <i class="fas fa-cog"></i> Go to Admin Panel
+                            </a>
+                            <a href="index.php" class="btn btn-success btn-install">
+                                <i class="fas fa-home"></i> View Your Site
+                            </a>
+                        </div>
+                        
+                        <div class="mt-4">
+                            <small class="text-muted">
+                                <i class="fas fa-shield-alt"></i> 
+                                For security, you can now delete the install.php file
+                            </small>
+                        </div>
+                    </div>
+                    <?php break; ?>
+
+            <?php endswitch; ?>
+        </div>
+        
+        <!-- Footer -->
+        <div class="text-center mt-4">
+            <small class="text-muted">
+                Multi-Content CMS Installation Wizard &copy; <?php echo date('Y'); ?>
+            </small>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Auto-redirect on installation step
+        <?php if ($current_step === 'installation'): ?>
+        setTimeout(function() {
+            window.location.href = 'install.php?step=complete';
+        }, 3000);
+        <?php endif; ?>
+        
+        // Password confirmation validation
+        document.addEventListener('DOMContentLoaded', function() {
+            const password = document.getElementById('admin_password');
+            const confirmPassword = document.getElementById('admin_confirm_password');
             
-		<table width="100%" border="0" cellspacing="4" cellpadding="4"><form action="<?php echo $editFormAction; ?>" name="database" method="POST" id="database">
-          <tr>
-            <td width="84" class="texts"><strong>HOSTNAME:</strong></td>
-            
-            <td><input name="host" type="text" class="form" id="host" /></td>
-          </tr>
-          <tr>
-            <td class="texts"><strong>USERNAME:</strong></td>
-            <td><input name="username" type="text" class="form" id="username" /></td>
-          </tr>
-          <tr>
-            <td class="texts"><strong>PASSWORD:</strong></td>
-            <td><input name="password" type="text" class="form" id="password" /></td>
-          </tr>
-          <tr>
-            <td class="texts"><strong>DATABASE:</strong></td>
-            <td><input name="database" type="text" class="form" id="database" /></td>
-          </tr>
-          <tr>
-            <td><input name="settingid" type="hidden" id="settingid" value="1" /></td>
-            <td><input name="button" type="submit" class="button" id="button" value="Continue" /></td>
-          </tr>
-          <input type="hidden" name="MM_insert" value="database" />
-          <input type="hidden" name="MM_update" value="database" />
-        </form>
-        <script language="JavaScript" type="text/javascript">
-
-  var frmvalidator  = new Validator("database");
-  frmvalidator.addValidation("host","req","Please Enter Hostname");
-  frmvalidator.addValidation("host","maxlen=50","Max length for Hostname is 50");
-
-  frmvalidator.addValidation("username","req","Please Enter Username");
-  frmvalidator.addValidation("username","maxlen=50","Max length for Username is 50");
- 
-  
-  frmvalidator.addValidation("database","req","Please Enter Database");
-  frmvalidator.addValidation("database","maxlen=50","Max length for Database is 50");
-
-</script>
-    </table>
-		<?php
-        }
-        ?>
-		<?php
-		if($_GET['status'] == 'selecttopic')
-		{
-			?>
-      <table width="100%" border="0" cellspacing="4" cellpadding="4">
-          <form name="selecttopic" action="<?php echo $editFormAction; ?>" method="POST" id="selecttopic">
-            <tr>
-              <td width="84" class="texts"><strong>SELECT TOPIC: </strong></td>
-              <td><select name="selecttopic" class="formmenu" id="selecttopic">
-                <option value="blog">Portal / Blog</option>
-                <option value="custom">Custom</option>
-                <option value="videostream">Video Streaming</option>
-                <option value="imagegallery">Image Gallery</option>
-                <option value="doctors">Doctors / Clinic</option>
-                <option value="marketplace">MarketPlace</option>
-                <option value="portfolio">Portfolio / Resume</option>
-                <option value="searchengine">Data Search / Search Engine</option>
-                <option value="adposting">Ad Posting</option>
-                <option value="tutorials">Tutorials</option>
-                <option value="productpublisher">Product Publisher / Affiliate Shopping Store</option>
-              </select></td>
-            </tr>
-            <tr>
-              <td><input name="settingid" type="hidden" id="settingid" value="1" />
-              <input name="installed" type="hidden" id="installed" value="yes" /></td>
-              <td><input name="button2" type="submit" class="button" id="button2" value="Select" /></td>
-            </tr>
-            <input type="hidden" name="MM_insert2" value="database" />
-            <input type="hidden" name="MM_update" value="selecttopic" />
-          </form>
-          
-        </table>
-      <?php
-        }
-        ?>
-      <?php
-        }
-        ?>
-      <?php
-		if($_GET['status'] == 'success')
-		{
-		?>
-        <table width="100%" height="124" border="0" cellpadding="0" cellspacing="0">
-          <tr>
-            <td width="193" height="124"><p align="center">SYSTEM IS INSTALLED</p>
-            <p align="center">ENJOY MULTI FLAVOURS CONTENT MANAGEMENT SYSTEM</p>
-            <p align="center"><strong>Username: </strong>admin / <strong>Password: </strong>123456<br />
-            </p></td>
-          </tr>
-        </table>
-        <table width="100%" height="51" border="0" cellpadding="0" cellspacing="0" class="topbigbuttons1">
-          <tr>
-            <td width="193" height="51"><div align="center"><a href="/administrator/">GO TO ADMIN</a><span class="title"> | </span><a href="/">GO TO INDEX</a></div></td>
-          </tr>
-        </table>
-        <?php
-	  }
-	  ?></td>
-    </tr>
-  </table>
-  <br />
-  <table border="0" align="center" cellpadding="0" cellspacing="0">
-    <tr>
-      <td class="textsmall"><?php echo $row_setting['footer']; ?></td>
-    </tr>
-  </table>
-</div>
+            if (password && confirmPassword) {
+                function validatePassword() {
+                    if (password.value !== confirmPassword.value) {
+                        confirmPassword.setCustomValidity('Passwords do not match');
+                    } else {
+                        confirmPassword.setCustomValidity('');
+                    }
+                }
+                
+                password.addEventListener('change', validatePassword);
+                confirmPassword.addEventListener('keyup', validatePassword);
+            }
+        });
+    </script>
 </body>
 </html>
-<?php
-mysqli_free_result($setting);
-?>

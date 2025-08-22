@@ -1,0 +1,36 @@
+# Security Headers
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options nosniff
+    Header always set X-Frame-Options DENY
+    Header always set X-XSS-Protection "1; mode=block"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    Header always set Permissions-Policy "geolocation=(), microphone=(), camera=()"
+</IfModule>
+
+# Protect sensitive files
+<Files "*.log">
+    Order allow,deny
+    Deny from all
+</Files>
+
+<Files "*.lock">
+    Order allow,deny
+    Deny from all
+</Files>
+
+# Block access to configuration files
+<Files "db_config.php">
+    Order allow,deny
+    Deny from all
+</Files>
+
+# Prevent access to includes directory
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteRule ^includes/.*\.php$ - [F,L]
+</IfModule>
+
+# Custom error pages
+ErrorDocument 403 /themes/default/403.php
+ErrorDocument 404 /themes/default/404.php
+ErrorDocument 500 /themes/default/500.php

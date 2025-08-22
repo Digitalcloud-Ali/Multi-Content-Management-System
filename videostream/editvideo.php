@@ -73,36 +73,6 @@ if (!((isset($_SESSION['MM_Username'])) && (isAuthorized("",$MM_authorizedUsers,
 }
 ?>
 <?php
-if (!function_exists("GetSQLValueString")) {
-function GetSQLValueString($theValue, $theType, $theDefinedValue = "", $theNotDefinedValue = "") 
-{
-  if (PHP_VERSION < 6) {
-    $theValue = get_magic_quotes_gpc() ? stripslashes($theValue) : $theValue;
-  }
-
-  $theValue = function_exists("mysqli_real_escape_string") ? mysqli_real_escape_string(dbconnect(), $theValue) : mysqli_escape_string(dbconnect(), $theValue);
-
-  switch ($theType) {
-    case "text":
-      $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
-      break;    
-    case "long":
-    case "int":
-      $theValue = ($theValue != "") ? intval($theValue) : "NULL";
-      break;
-    case "double":
-      $theValue = ($theValue != "") ? doubleval($theValue) : "NULL";
-      break;
-    case "date":
-      $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
-      break;
-    case "defined":
-      $theValue = ($theValue != "") ? $theDefinedValue : $theNotDefinedValue;
-      break;
-  }
-  return $theValue;
-}
-}
 
 $editFormAction = $_SERVER['PHP_SELF'];
 if (isset($_SERVER['QUERY_STRING'])) {
@@ -126,7 +96,6 @@ $row_rsT = mysqli_fetch_assoc($rsT);
 $totalRows_rsT = mysqli_num_rows($rsT);
 
 if ((isset($_POST["MM_update"])) && ($_POST["MM_update"] == "adpost")) {
-	
 
    // UPLOAD CODE BY SYED RAZA ALI START //
    	$allowed_filetypes = array('.jpg','.gif','.bmp','.png');
@@ -152,7 +121,6 @@ if ((isset($_POST["MM_update"])) && ($_POST["MM_update"] == "adpost")) {
            else{echo'There was an error during the file upload.  Please try again.';} 
 		}
    // UPLOAD CODE BY SYED RAZA ALI END //
-
 
    // UPLOAD CODE BY SYED RAZA ALI START //
    	$allowed_filetypes1 = array('.FLV','.mp3','.mp4','.3gp','.avi');
@@ -226,7 +194,6 @@ $pages = mysqli_query(dbconnect(),$query_pages) or die(mysqli_connect_error());
 $row_pages = mysqli_fetch_assoc($pages);
 $totalRows_pages = mysqli_num_rows($pages);
 
-
 mysqli_select_db(dbconnect(),$database_rayicecms);
 $query_parts = "SELECT * FROM parts";
 $parts = mysqli_query(dbconnect(),$query_parts) or die(mysqli_connect_error());
@@ -238,7 +205,6 @@ $query_theme = "SELECT * FROM themes";
 $theme = mysqli_query(dbconnect(),$query_theme) or die(mysqli_connect_error());
 $row_theme = mysqli_fetch_assoc($theme);
 $totalRows_theme = mysqli_num_rows($theme);
-
 
 $maxRows_video = 10;
 $pageNum_video = 0;
