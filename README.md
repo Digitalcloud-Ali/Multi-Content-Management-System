@@ -87,10 +87,12 @@ cd Multi-Content-Management-System
 
 ## 📚 **Documentation**
 
-- **Installation Guide**: Complete setup instructions
-- **User Manual**: Comprehensive system documentation
-- **Developer Guide**: Customization and extension guide
-- **API Reference**: Integration and development documentation
+Comprehensive documentation is available in the [`/docs`](docs/) folder:
+
+- **📖 [Documentation Index](docs/README.md)** - Overview and navigation
+- **🚀 [Installation Guide](docs/INSTALLATION_GUIDE.md)** - Complete setup instructions
+- **🔧 [Update Guide](docs/UPDATE_README.md)** - Modernization details and changes
+- **🔮 [Advanced Improvements](docs/ADVANCED_IMPROVEMENTS.md)** - Future roadmap and development
 
 ## 🔧 **Customization**
 
