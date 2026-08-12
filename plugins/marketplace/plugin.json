@@ -1,0 +1,7 @@
+{
+  "name": "Marketplace",
+  "slug": "marketplace",
+  "version": "1.0.0",
+  "description": "Marketplace module migrated into plugin. onActivate will copy legacy marketplace/ into plugins/marketplace/www.",
+  "entry": "src/MarketplacePlugin.php"
+}

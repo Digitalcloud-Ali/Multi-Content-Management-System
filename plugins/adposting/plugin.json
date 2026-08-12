@@ -1,0 +1,7 @@
+{
+  "name": "AdPosting",
+  "slug": "adposting",
+  "version": "1.0.0",
+  "description": "AdPosting module migrated into plugin. onActivate will copy legacy adposting/ into plugins/adposting/www.",
+  "entry": "src/AdpostingPlugin.php"
+}

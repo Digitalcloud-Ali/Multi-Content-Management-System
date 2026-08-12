@@ -1,0 +1,7 @@
+{
+  "name": "Tutorials",
+  "slug": "tutorials",
+  "version": "1.0.0",
+  "description": "Tutorials module migrated into plugin. onActivate will copy legacy tutorials/ into plugins/tutorials/www.",
+  "entry": "src/TutorialsPlugin.php"
+}

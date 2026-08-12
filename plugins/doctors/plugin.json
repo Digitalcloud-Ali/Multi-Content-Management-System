@@ -1,0 +1,7 @@
+{
+  "name": "Doctors",
+  "slug": "doctors",
+  "version": "1.0.0",
+  "description": "Doctors module migrated into plugin. onActivate will copy legacy doctors/ into plugins/doctors/www.",
+  "entry": "src/DoctorsPlugin.php"
+}
