@@ -4,7 +4,9 @@ includes/installed.lock
 includes/active_site.json
 
 # Runtime
-uploads/
+uploads/*
+!uploads/.htaccess
+!uploads/.gitkeep
 logs/
 *.log
 error_log

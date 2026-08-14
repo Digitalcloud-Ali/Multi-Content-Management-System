@@ -56,7 +56,7 @@ $currentUser = $currentUser ?? ['username' => $_SESSION['MM_Username'] ?? ''];
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container">
-            <a class="navbar-brand" href="index.php">
+            <a class="navbar-brand" href="<?php echo htmlspecialchars(mc_url(), ENT_QUOTES, 'UTF-8'); ?>">
                 <i class="fas fa-home"></i>
                 <?php echo htmlspecialchars(getSetting('site_name', getSetting('site_title', 'MultiCMS')), ENT_QUOTES, 'UTF-8'); ?>
             </a>
@@ -65,24 +65,23 @@ $currentUser = $currentUser ?? ['username' => $_SESSION['MM_Username'] ?? ''];
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
-                    <li class="nav-item"><a class="nav-link" href="index.php">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="index.php?page=blog">Blog</a></li>
-                    <li class="nav-item"><a class="nav-link" href="index.php?page=about">About</a></li>
-                    <li class="nav-item"><a class="nav-link" href="index.php?page=contact">Contact</a></li>
+                    <li class="nav-item"><a class="nav-link" href="<?php echo htmlspecialchars(mc_url(), ENT_QUOTES, 'UTF-8'); ?>">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="<?php echo htmlspecialchars(mc_url('blog'), ENT_QUOTES, 'UTF-8'); ?>">Blog</a></li>
+                    <li class="nav-item"><a class="nav-link" href="<?php echo htmlspecialchars(mc_url('about'), ENT_QUOTES, 'UTF-8'); ?>">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="<?php echo htmlspecialchars(mc_url('contact'), ENT_QUOTES, 'UTF-8'); ?>">Contact</a></li>
                 </ul>
-                <form class="d-flex me-3" action="index.php" method="GET">
-                    <input type="hidden" name="page" value="search">
+                <form class="d-flex me-3" action="<?php echo htmlspecialchars(mc_url('search'), ENT_QUOTES, 'UTF-8'); ?>" method="GET">
                     <input class="form-control me-2" type="search" name="q" placeholder="Search..."
                            value="<?php echo htmlspecialchars($_GET['q'] ?? '', ENT_QUOTES, 'UTF-8'); ?>">
                     <button class="btn btn-outline-light" type="submit"><i class="fas fa-search"></i></button>
                 </form>
                 <ul class="navbar-nav">
                     <?php if (isAuthenticated()): ?>
-                        <li class="nav-item"><a class="nav-link" href="index.php?page=profile"><?php echo htmlspecialchars($currentUser['username'] ?? 'User', ENT_QUOTES, 'UTF-8'); ?></a></li>
-                        <li class="nav-item"><a class="nav-link" href="index.php?page=logout">Logout</a></li>
+                        <li class="nav-item"><a class="nav-link" href="<?php echo htmlspecialchars(mc_url('profile'), ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars($currentUser['username'] ?? 'User', ENT_QUOTES, 'UTF-8'); ?></a></li>
+                        <li class="nav-item"><a class="nav-link" href="<?php echo htmlspecialchars(mc_url('logout'), ENT_QUOTES, 'UTF-8'); ?>">Logout</a></li>
                     <?php else: ?>
-                        <li class="nav-item"><a class="nav-link" href="index.php?page=login">Login</a></li>
-                        <li class="nav-item"><a class="nav-link" href="index.php?page=register">Register</a></li>
+                        <li class="nav-item"><a class="nav-link" href="<?php echo htmlspecialchars(mc_url('login'), ENT_QUOTES, 'UTF-8'); ?>">Login</a></li>
+                        <li class="nav-item"><a class="nav-link" href="<?php echo htmlspecialchars(mc_url('register'), ENT_QUOTES, 'UTF-8'); ?>">Register</a></li>
                     <?php endif; ?>
                 </ul>
             </div>

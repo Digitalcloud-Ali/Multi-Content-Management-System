@@ -1,47 +1,43 @@
 # Security Headers
 <IfModule mod_headers.c>
     Header always set X-Content-Type-Options nosniff
-    Header always set X-Frame-Options DENY
+    Header always set X-Frame-Options SAMEORIGIN
     Header always set X-XSS-Protection "1; mode=block"
     Header always set Referrer-Policy "strict-origin-when-cross-origin"
     Header always set Permissions-Policy "geolocation=(), microphone=(), camera=()"
 </IfModule>
 
-# Protect sensitive files
-<Files "*.log">
-    Order allow,deny
-    Deny from all
-</Files>
+# Protect sensitive files (basename match)
+<FilesMatch "(?i)^(db_config|env)\.php$">
+    Require all denied
+</FilesMatch>
 
-<Files "*.lock">
-    Order allow,deny
-    Deny from all
-</Files>
-
-<Files "db_config.php">
-    Order allow,deny
-    Deny from all
-</Files>
+<FilesMatch "(?i)\.(log|lock)$">
+    Require all denied
+</FilesMatch>
 
 <IfModule mod_rewrite.c>
     RewriteEngine On
 
-    # Block PHP under includes/
+    # If MultiCMS lives in a subdirectory, uncomment and set:
+    # RewriteBase /your-subdir/
+
+    # Block direct PHP under includes/
     RewriteRule ^includes/.*\.php$ - [F,L]
 
-    # Block PHP execution under images/ uploads
-    RewriteRule ^images/.*\.(?i:php|phtml|phar)$ - [F,L]
+    # Block PHP execution in upload / image dirs
+    RewriteRule ^(images|uploads)/.*\.(?i:php|phtml|phar|php\d+)$ - [F,L]
 
-    # Existing files/dirs (administrator, themes, plugins assets, images) — serve directly
+    # Existing files/dirs (administrator, themes, assets) — serve directly
     RewriteCond %{REQUEST_FILENAME} -f [OR]
     RewriteCond %{REQUEST_FILENAME} -d
     RewriteRule ^ - [L]
 
-    # Front controller for pretty ready-made pack URLs + clean routes
+    # Pretty permalinks → front controller
     RewriteRule ^(.*)$ index.php?mc_route=$1 [QSA,L]
 </IfModule>
 
-# Custom error pages
+# Custom error pages (document root relative; adjust if using a subdirectory)
 ErrorDocument 403 /themes/default/403.php
 ErrorDocument 404 /themes/default/404.php
 ErrorDocument 500 /themes/default/500.php

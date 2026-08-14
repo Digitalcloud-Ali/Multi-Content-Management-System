@@ -105,10 +105,21 @@ $active = json_decode((string) @file_get_contents($root . '/includes/active_site
 ok('active_site flagship', ($active['mode'] ?? '') === 'flagship' && ($active['slug'] ?? '') === 'blog');
 
 ok('uploads dir exists', is_dir($root . '/uploads'));
+ok('uploads htaccess deny php', is_file($root . '/uploads/.htaccess'));
+ok('root htaccess blocks uploads php', strpos((string) file_get_contents($root . '/.htaccess'), 'uploads') !== false);
 ok('no dreamweaver packs', count(glob($root . '/plugins/*/plugin.json')) === 0);
 ok('flagship admin ui', is_file($root . '/administrator/flagship_sites.php'));
 
 require_once $root . '/includes/bootstrap.php';
+ok('routing helpers loaded', function_exists('mc_url') && function_exists('mc_resolve_request'));
+$_GET = ['mc_route' => 'blog'];
+$resolved = mc_resolve_request(new ContentService());
+ok('resolve /blog', ($resolved['page'] ?? '') === 'blog');
+$_GET = ['mc_route' => 'post/welcome-to-multicms-blog'];
+$resolved = mc_resolve_request(new ContentService());
+ok('resolve post slug', ($resolved['page'] ?? '') === 'single' && !empty($resolved['post']['slug']));
+$_GET = [];
+
 $row = getDB()->queryOne("SELECT title, status FROM posts WHERE slug=?", 's', ['welcome-to-multicms-blog']);
 ok('post readable via bootstrap', ($row['status'] ?? '') === 'published');
 $page = getDB()->queryOne("SELECT title FROM pages WHERE slug=?", 's', ['about']);

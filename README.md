@@ -12,11 +12,49 @@ Open-source PHP/MySQL CMS. Install it on shared hosting or a VPS, run the web in
 3. Open `https://yoursite.com/install.php` and finish the wizard.
 4. Log in at `/administrator/login.php`.
 5. Use **Posts**, **Site Settings**, and optionally **Flagship Sites**.
-6. Delete or block `install.php` after install.
+6. Delete or block `install.php` (and `test_installation.php`) after install.
 
 At install you can choose **Fresh** (empty core) or a **Flagship site** (Blog, Business, Portfolio, Clinic, Nonprofit). Packages live under `sites/`.
 
 Do **not** commit `includes/db_config.php` or `includes/env.php`.
+
+## After install (what is created)
+
+| File | Purpose |
+|------|---------|
+| `includes/db_config.php` | Database credentials (auto-generated, gitignored) |
+| `includes/env.php` | Sets `MULTICMS_ENV` to `production` by default |
+| `includes/installed.lock` | Blocks re-running the installer (returns 403) |
+| `uploads/.htaccess` | Denies PHP execution in uploads |
+
+## Permalinks & `.htaccess`
+
+Root `.htaccess` (Apache + `mod_rewrite`) is included in the repo:
+
+- Rewrites clean URLs to `index.php?mc_route=…`
+- Blocks direct PHP under `includes/`, `images/`, and `uploads/`
+- Denies web access to `db_config.php` / `env.php` basenames where supported
+
+Examples after install:
+
+- `/blog` — post listing  
+- `/about`, `/contact` — pages  
+- `/post/your-post-slug` — single post  
+- Legacy `index.php?page=…` still works  
+
+If the site lives in a **subdirectory**, uncomment `RewriteBase /your-subdir/` in `.htaccess`.  
+Nginx needs an equivalent `try_files` rule (not shipped as Apache `.htaccess`).
+
+## Security baseline
+
+- Installer CSRF + password hashing (`password_hash`)
+- Installer locked after `installed.lock` exists
+- Admin/login CSRF on modern + legacy POST handlers
+- Prepared statements for DB access
+- Production-safe default environment via `env.php`
+- Upload dirs deny script execution (`.htaccess` + rewrite rules)
+
+Still required on your host: delete/block `install.php` after setup, use HTTPS, keep PHP/MySQL updated. No CMS is “zero risk” — report issues per [SECURITY.md](SECURITY.md).
 
 ## Requirements
 
@@ -24,7 +62,7 @@ Do **not** commit `includes/db_config.php` or `includes/env.php`.
 - MySQL 5.7+ / MariaDB 10.2+
 - Extensions: mysqli, gd, curl
 - Writable `includes/` and `uploads/`
-- Apache `mod_rewrite` (or nginx equivalent) optional for pretty URLs
+- Apache `mod_rewrite` for pretty URLs (query-string URLs work without it)
 
 ## Architecture
 
@@ -45,6 +83,8 @@ Do **not** commit `includes/db_config.php` or `includes/env.php`.
 
 ```bash
 php scripts/php-lint-smoke.php
+# With MySQL on 127.0.0.1:3307 (see CI):
+php scripts/smoke-phase2.php
 ```
 
 ## License

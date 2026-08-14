@@ -7,7 +7,7 @@
             <?php else: ?>
                 <?php foreach ($recentPosts as $p): ?>
                     <li class="list-group-item">
-                        <a href="index.php?page=<?php echo (int) ($p['id'] ?? $p['postid']); ?>">
+                        <a href="<?php echo htmlspecialchars(mc_post_url($p), ENT_QUOTES, 'UTF-8'); ?>">
                             <?php echo htmlspecialchars($p['title'] ?? ''); ?>
                         </a>
                     </li>
@@ -23,7 +23,7 @@
             <?php else: ?>
                 <?php foreach ($popularPosts as $p): ?>
                     <li class="list-group-item">
-                        <a href="index.php?page=<?php echo (int) ($p['id'] ?? $p['postid']); ?>">
+                        <a href="<?php echo htmlspecialchars(mc_post_url($p), ENT_QUOTES, 'UTF-8'); ?>">
                             <?php echo htmlspecialchars($p['title'] ?? ''); ?>
                         </a>
                     </li>

@@ -15,5 +15,5 @@ $pageTitle = $post['title'] ?? 'Post';
     <div class="post-content">
         <?php echo $post['content'] ?? ''; ?>
     </div>
-    <p class="mt-4"><a href="index.php?page=blog">&larr; Back to blog</a></p>
+    <p class="mt-4"><a href="<?php echo htmlspecialchars(mc_url('blog'), ENT_QUOTES, 'UTF-8'); ?>">&larr; Back to blog</a></p>
 </article>

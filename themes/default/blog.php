@@ -11,7 +11,7 @@ $posts = $result['posts'] ?? [];
     <?php foreach ($posts as $post): ?>
         <article class="mb-4 pb-3 border-bottom">
             <h2 class="h4">
-                <a href="index.php?page=<?php echo (int) ($post['id'] ?? $post['postid']); ?>">
+                <a href="<?php echo htmlspecialchars(mc_post_url($post), ENT_QUOTES, 'UTF-8'); ?>">
                     <?php echo htmlspecialchars($post['title'] ?? ''); ?>
                 </a>
             </h2>
@@ -28,7 +28,7 @@ $posts = $result['posts'] ?? [];
     <?php if (($result['pages'] ?? 1) > 1): ?>
         <nav>
             <?php for ($i = 1; $i <= $result['pages']; $i++): ?>
-                <a class="btn btn-sm <?php echo $i === $pageNum ? 'btn-primary' : 'btn-outline-primary'; ?>" href="index.php?page=blog&p=<?php echo $i; ?>"><?php echo $i; ?></a>
+                <a class="btn btn-sm <?php echo $i === $pageNum ? 'btn-primary' : 'btn-outline-primary'; ?>" href="<?php echo htmlspecialchars(mc_url('blog', ['p' => $i]), ENT_QUOTES, 'UTF-8'); ?>"><?php echo $i; ?></a>
             <?php endfor; ?>
         </nav>
     <?php endif; ?>

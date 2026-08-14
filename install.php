@@ -61,6 +61,10 @@ function checkRequirements() {
     if (!is_dir('uploads')) {
         @mkdir('uploads', 0755, true);
     }
+    $uploadsDeny = 'uploads/.htaccess';
+    if (!is_file($uploadsDeny)) {
+        @file_put_contents($uploadsDeny, "# Deny script execution in uploads\n<FilesMatch \"\\.(?i:php|phtml|phar|cgi|pl|py|jsp|asp|aspx)$\">\n    Require all denied\n</FilesMatch>\nOptions -ExecCGI\nRemoveHandler .php .phtml .php3 .php4 .php5 .php7 .php8\n");
+    }
     if (!is_dir('logs')) {
         @mkdir('logs', 0755, true);
     }
@@ -803,12 +807,11 @@ foreach ($requirements as $req) {
                         <div class="alert alert-info">
                             <h5><i class="fas fa-info-circle"></i> Next Steps:</h5>
                             <ul class="text-start">
-                                <li>Open Admin → Posts to publish your first content</li>
-                                <li>Open Admin → Site Settings to change the site title</li>
-                                <li>Delete or block <code>install.php</code> on the server</li>
-                                <li>For production, set <code>ENVIRONMENT</code> to <code>production</code> in <code>includes/bootstrap.php</code></li>
-                                <li>Do not commit <code>includes/db_config.php</code>; remove or lock down <code>install.php</code> / <code>test_installation.php</code></li>
-                                <li>Customize settings and add content</li>
+                                <li>Pretty URLs work via root <code>.htaccess</code> (Apache <code>mod_rewrite</code>)</li>
+                                <li>Config written: <code>includes/db_config.php</code>, <code>includes/env.php</code>, <code>includes/installed.lock</code></li>
+                                <li>Open Admin → Posts / Site Settings / Flagship Sites</li>
+                                <li>Delete or block <code>install.php</code> and <code>test_installation.php</code> on the server</li>
+                                <li>Do not commit <code>db_config.php</code> or <code>env.php</code> (already gitignored)</li>
                             </ul>
                         </div>
                         

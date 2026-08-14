@@ -16,4 +16,5 @@
 ## Notes
 
 - Flagship packages under `sites/` seed modern `posts`, `core_categories`, and `pages` (not old Dreamweaver packs).
+- Root `.htaccess` handles pretty permalinks; installer writes `db_config.php`, `env.php`, and `installed.lock`.
 - Do not commit `includes/db_config.php` or `includes/env.php`.

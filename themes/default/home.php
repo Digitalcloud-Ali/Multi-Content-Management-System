@@ -31,11 +31,11 @@ try {
             <?php echo getSetting('site_description', 'A modern content management system built with security and performance in mind.'); ?>
         </p>
         <div class="hero-buttons">
-            <a href="index.php?page=blog" class="btn btn-primary btn-lg me-3">
+            <a href="<?php echo htmlspecialchars(mc_url('blog'), ENT_QUOTES, 'UTF-8'); ?>" class="btn btn-primary btn-lg me-3">
                 <i class="fas fa-blog"></i> Read Our Blog
             </a>
             <?php if (!isAuthenticated()): ?>
-                <a href="index.php?page=register" class="btn btn-outline-primary btn-lg">
+                <a href="<?php echo htmlspecialchars(mc_url('register'), ENT_QUOTES, 'UTF-8'); ?>" class="btn btn-outline-primary btn-lg">
                     <i class="fas fa-user-plus"></i> Get Started
                 </a>
             <?php endif; ?>
@@ -85,7 +85,7 @@ try {
     <div class="container">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h2>Latest Articles</h2>
-            <a href="index.php?page=blog" class="btn btn-outline-primary">
+            <a href="<?php echo htmlspecialchars(mc_url('blog'), ENT_QUOTES, 'UTF-8'); ?>" class="btn btn-outline-primary">
                 View All Posts <i class="fas fa-arrow-right"></i>
             </a>
         </div>
@@ -96,7 +96,7 @@ try {
                 <div class="card h-100 post-card">
                     <div class="card-body">
                         <h5 class="card-title">
-                            <a href="index.php?page=<?php echo $post['id']; ?>" class="text-decoration-none">
+                            <a href="<?php echo htmlspecialchars(mc_post_url($post), ENT_QUOTES, 'UTF-8'); ?>" class="text-decoration-none">
                                 <?php echo htmlspecialchars($post['title']); ?>
                             </a>
                         </h5>
@@ -114,7 +114,7 @@ try {
                         </div>
                     </div>
                     <div class="card-footer bg-transparent">
-                        <a href="index.php?page=<?php echo $post['id']; ?>" class="btn btn-sm btn-outline-primary">
+                        <a href="<?php echo htmlspecialchars(mc_post_url($post), ENT_QUOTES, 'UTF-8'); ?>" class="btn btn-sm btn-outline-primary">
                             Read More <i class="fas fa-arrow-right"></i>
                         </a>
                     </div>
@@ -137,7 +137,7 @@ try {
                 <div class="card popular-post-card">
                     <div class="card-body">
                         <h5 class="card-title">
-                            <a href="index.php?page=<?php echo $post['id']; ?>" class="text-decoration-none">
+                            <a href="<?php echo htmlspecialchars(mc_post_url($post), ENT_QUOTES, 'UTF-8'); ?>" class="text-decoration-none">
                                 <?php echo htmlspecialchars($post['title']); ?>
                             </a>
                         </h5>
@@ -150,7 +150,7 @@ try {
                                 <span class="mx-2">•</span>
                                 <i class="fas fa-calendar"></i> <?php echo formatDate($post['created_at'], 'M j, Y'); ?>
                             </div>
-                            <a href="index.php?page=<?php echo $post['id']; ?>" class="btn btn-sm btn-primary">
+                            <a href="<?php echo htmlspecialchars(mc_post_url($post), ENT_QUOTES, 'UTF-8'); ?>" class="btn btn-sm btn-primary">
                                 Read More
                             </a>
                         </div>
@@ -171,7 +171,7 @@ try {
         <div class="row g-3">
             <?php foreach ($categories as $category): ?>
             <div class="col-md-3 col-sm-6">
-                <a href="index.php?page=blog&category=<?php echo $category['id']; ?>" 
+                <a href="<?php echo htmlspecialchars(mc_url('blog', ['category' => (int) ($category['id'] ?? $category['categoryid'] ?? 0)]), ENT_QUOTES, 'UTF-8'); ?>"
                    class="category-card text-decoration-none">
                     <div class="card text-center h-100">
                         <div class="card-body">
@@ -201,17 +201,17 @@ try {
         </p>
         <div class="cta-buttons">
             <?php if (!isAuthenticated()): ?>
-                <a href="index.php?page=register" class="btn btn-light btn-lg me-3">
+                <a href="<?php echo htmlspecialchars(mc_url('register'), ENT_QUOTES, 'UTF-8'); ?>" class="btn btn-light btn-lg me-3">
                     <i class="fas fa-user-plus"></i> Create Account
                 </a>
-                <a href="index.php?page=login" class="btn btn-outline-light btn-lg">
+                <a href="<?php echo htmlspecialchars(mc_url('login'), ENT_QUOTES, 'UTF-8'); ?>" class="btn btn-outline-light btn-lg">
                     <i class="fas fa-sign-in-alt"></i> Sign In
                 </a>
             <?php else: ?>
-                <a href="index.php?page=blog" class="btn btn-light btn-lg me-3">
+                <a href="<?php echo htmlspecialchars(mc_url('blog'), ENT_QUOTES, 'UTF-8'); ?>" class="btn btn-light btn-lg me-3">
                     <i class="fas fa-blog"></i> Start Writing
                 </a>
-                <a href="index.php?page=profile" class="btn btn-outline-light btn-lg">
+                <a href="<?php echo htmlspecialchars(mc_url('profile'), ENT_QUOTES, 'UTF-8'); ?>" class="btn btn-outline-light btn-lg">
                     <i class="fas fa-user"></i> View Profile
                 </a>
             <?php endif; ?>

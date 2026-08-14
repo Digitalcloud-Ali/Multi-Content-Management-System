@@ -17,17 +17,18 @@ try {
     logError("System check error: " . $e->getMessage(), 'ERROR');
     if (ENVIRONMENT === 'production') {
         echo "<!DOCTYPE html><html><head><title>System Maintenance</title></head><body><p>System maintenance.</p></body></html>";
-        exit;
+    } else {
+        displayError("Database connection failed. Check configuration.", 'error');
     }
-    displayError("Database connection failed. Check configuration.", 'error');
     exit;
 }
 
 $authService = new AuthService();
 $contentService = new ContentService();
-
-$page = $_GET['page'] ?? 'home';
-$page = Validator::sanitize($page);
+$resolved = mc_resolve_request($contentService);
+$page = $resolved['page'];
+$post = $resolved['post'];
+$cmsPage = $resolved['cms_page'];
 
 try {
     $popularPosts = $contentService->getPopularPosts(5);
@@ -65,37 +66,34 @@ include 'themes/default/header.php';
                         break;
                     case 'login':
                         if ($authService->isAuthenticated()) {
-                            safeRedirect('index.php', 'You are already logged in');
+                            safeRedirect(mc_url(), 'You are already logged in');
                         }
                         include 'themes/default/login.php';
                         break;
                     case 'register':
                         if ($authService->isAuthenticated()) {
-                            safeRedirect('index.php', 'You are already logged in');
+                            safeRedirect(mc_url(), 'You are already logged in');
                         }
                         include 'themes/default/register.php';
                         break;
                     case 'profile':
                         if (!$authService->isAuthenticated()) {
-                            safeRedirect('index.php?page=login', 'Please login to access your profile');
+                            safeRedirect(mc_url('login'), 'Please login to access your profile');
                         }
                         include 'themes/default/profile.php';
                         break;
                     case 'logout':
                         $authService->logout();
-                        safeRedirect('index.php', 'You have been logged out successfully');
+                        safeRedirect(mc_url(), 'You have been logged out successfully');
+                        break;
+                    case 'single':
+                        include 'themes/default/single-post.php';
+                        break;
+                    case 'cms_page':
+                        include 'themes/default/cms-page.php';
                         break;
                     default:
-                        if (is_numeric($page)) {
-                            $post = $contentService->getBlogPost($page);
-                            if ($post) {
-                                include 'themes/default/single-post.php';
-                            } else {
-                                include 'themes/default/404.php';
-                            }
-                        } else {
-                            include 'themes/default/404.php';
-                        }
+                        include 'themes/default/404.php';
                         break;
                 }
                 ?>

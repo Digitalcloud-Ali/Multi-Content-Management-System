@@ -103,6 +103,28 @@ class ContentService {
         }
     }
 
+    public function getBlogPostBySlug($slug) {
+        try {
+            $slug = trim((string) $slug);
+            if ($slug === '') {
+                return null;
+            }
+            $query = "SELECT p.*, p.postid AS id, c.name as category_name, u.username as author_name 
+                     FROM posts p 
+                     LEFT JOIN {$this->categoriesTable} c ON p.category_id = c.categoryid 
+                     LEFT JOIN users u ON p.author_id = u.userid 
+                     WHERE p.slug = ? AND p.status = 'published' LIMIT 1";
+            $post = $this->db->queryOne($query, 's', [$slug]);
+            if ($post) {
+                $this->incrementViewCount((int) $post['postid']);
+            }
+            return $post;
+        } catch (Exception $e) {
+            logError("Get blog post by slug error: " . $e->getMessage(), 'ERROR');
+            return null;
+        }
+    }
+
     /** Published CMS page by slug (flagship / pages table). */
     public function getPageBySlug($slug) {
         try {
