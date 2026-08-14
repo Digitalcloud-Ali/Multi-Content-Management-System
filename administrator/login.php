@@ -23,7 +23,7 @@ if (isset($_POST['datauser'])) {
   } else {
     $loginUsername = trim((string) $_POST['datauser']);
     $password = (string) $_POST['datapass'];
-    $MM_redirectLoginSuccess = "index.php";
+    $MM_redirectLoginSuccess = "dashboard.php";
     $MM_redirectLoginFailed = "login.php?status=fail";
 
     $user = null;

@@ -1,3 +1,4 @@
+-- SECURITY: Credential values scrubbed for public distribution. Do NOT import this dump for production passwords.
 -- phpMyAdmin SQL Dump
 -- version 3.3.9
 -- http://www.phpmyadmin.net
@@ -435,10 +436,10 @@ CREATE TABLE IF NOT EXISTS `members` (
 --
 
 INSERT INTO `members` (`memberid`, `users`, `passs`, `level`, `fullname`, `address`, `email`, `photo`, `zip`, `city`, `state`, `country`, `phone`, `yahooid`, `twitter`, `facebook`, `status`, `position`, `selecttopic`) VALUES
-(1, 'syed', 'raza', 'member', 'Syed Member', 'Oslo City', 'ask@rayice.com', '1000b053xmD7.jpg', '00000', 'Oslo', 'Oslo', 'Norway', '004744444444', '', '', '', 'active', 'gold', NULL),
-(5, 'syedraza', 'raza12', 'editor', 'Syed Editor', 'Oslo City', 'ask@rayice.com', '5favicon.png', '10250', 'Oslo', 'Oslo', 'Norway', '004744444444', NULL, NULL, NULL, 'active', 'gold', NULL),
-(8, 'admin', '123456', 'administrator', 'Syed Admin', 'Oslo City', 'ask@rayice.com', 'missing.png', '10250', 'Oslo', 'Select a region', 'Norway', '004744444444', NULL, NULL, NULL, 'active', 'bronze', NULL),
-(9, 'razashah', 'raza12', 'member', 'Syed Member', 'Oslo City', 'ask@rayice.com', NULL, '10250', 'Oslo', 'blue', 'Pakistan', '004744444444', NULL, NULL, NULL, 'pending', 'basic', NULL);
+(1, 'syed', '[SCRUBBED]', 'member', 'Syed Member', 'Oslo City', 'ask@rayice.com', '1000b053xmD7.jpg', '00000', 'Oslo', 'Oslo', 'Norway', '004744444444', '', '', '', 'active', 'gold', NULL),
+(5, 'syedraza', '[SCRUBBED]', 'editor', 'Syed Editor', 'Oslo City', 'ask@rayice.com', '5favicon.png', '10250', 'Oslo', 'Oslo', 'Norway', '004744444444', NULL, NULL, NULL, 'active', 'gold', NULL),
+(8, 'admin', '[SCRUBBED]', 'administrator', 'Syed Admin', 'Oslo City', 'ask@rayice.com', 'missing.png', '10250', 'Oslo', 'Select a region', 'Norway', '004744444444', NULL, NULL, NULL, 'active', 'bronze', NULL),
+(9, 'razashah', '[SCRUBBED]', 'member', 'Syed Member', 'Oslo City', 'ask@rayice.com', NULL, '10250', 'Oslo', 'blue', 'Pakistan', '004744444444', NULL, NULL, NULL, 'pending', 'basic', NULL);
 
 -- --------------------------------------------------------
 

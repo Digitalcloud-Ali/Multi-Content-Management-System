@@ -1,4 +1,6 @@
 <?php require_once('../includes/rayicecms.php'); ?>
+<?php if ($_SERVER['REQUEST_METHOD'] === 'POST') { multicms_require_csrf_post(); } ?>
+
 <?php
 //initialize the session
 if (!isset($_SESSION)) {
@@ -705,7 +707,9 @@ location.replace("/mobadmin/");
                           <td bgcolor="#FBFEFF" class="borderorangetable"><div class="texts"><?php echo $row_parts['part']; ?></div></td>
                           <td width="127" align="center" bgcolor="#FBFEFF" class="borderorangetable">
                             <div>
-                              <form id="form1" name="form1" method="POST" action="<?php echo $editFormAction; ?>">
+                              <form id="form1" name="form1" method="POST" action="<?php echo $editFormAction; ?>
+<?php if (function_exists('multicms_csrf_field')) { echo multicms_csrf_field(); } ?>
+<?php if (function_exists('multicms_csrf_field')) { echo multicms_csrf_field(); } ?>">
                                 <select name="status" class="formmenusimple" id="status">
                                   <option value="active" <?php if (!(strcmp("active", $row_parts['status']))) {echo "selected=\"selected\"";} ?>>active</option>
                                   <option value="disabled" <?php if (!(strcmp("disabled", $row_parts['status']))) {echo "selected=\"selected\"";} ?>>disabled</option>

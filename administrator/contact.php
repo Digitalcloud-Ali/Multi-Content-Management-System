@@ -1,4 +1,6 @@
 <?php require_once('../includes/rayicecms.php'); ?>
+<?php if ($_SERVER['REQUEST_METHOD'] === 'POST') { multicms_require_csrf_post(); } ?>
+
 <?php
 //initialize the session
 if (!isset($_SESSION)) {
@@ -837,6 +839,8 @@ location.replace("/mobadmin/");
   <table width="100%" border="0" cellpadding="8" cellspacing="1" bgcolor="#CCCCCC">
     <tr>
       <td height="47" align="left" bgcolor="#FFFFFF"><form method="post" enctype="multipart/form-data" name="update" id="update2">
+<?php if (function_exists('multicms_csrf_field')) { echo multicms_csrf_field(); } ?>
+<?php if (function_exists('multicms_csrf_field')) { echo multicms_csrf_field(); } ?>
         <table width="100%" height="141" border="0" cellpadding="4" cellspacing="1">
           <tr>
             <td width="101" height="22" bgcolor="#FAF1D1" class="texts"><strong>NAME:</strong></td>

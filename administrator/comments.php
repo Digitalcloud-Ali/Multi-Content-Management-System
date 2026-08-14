@@ -1,4 +1,6 @@
 <?php require_once('../includes/rayicecms.php'); ?>
+<?php if ($_SERVER['REQUEST_METHOD'] === 'POST') { multicms_require_csrf_post(); } ?>
+
 <?php
 //initialize the session
 if (!isset($_SESSION)) {
@@ -743,7 +745,9 @@ location.replace("/mobadmin/");
         <td bgcolor="#F8F8F8" class="borderorangetable"><?php echo $row_commentsoverview['comment']; ?></td>
       </tr>
       <tr>
-        <td height="1" colspan="2" bgcolor="#F8F8F8" class="textsmall"><form id="commentupdate" name="commentupdate" method="POST" action="<?php echo $editFormAction; ?>">
+        <td height="1" colspan="2" bgcolor="#F8F8F8" class="textsmall"><form id="commentupdate" name="commentupdate" method="POST" action="<?php echo $editFormAction; ?>
+<?php if (function_exists('multicms_csrf_field')) { echo multicms_csrf_field(); } ?>
+<?php if (function_exists('multicms_csrf_field')) { echo multicms_csrf_field(); } ?>">
           <span class="textsmallgreen">By : </span><?php echo $row_commentsoverview['name']; ?> / <span class="textsmallgreen">Topic :</span> <?php echo $row_commentsoverview['selecttopic']; ?> / <span class="textsmallgreen">Status : </span>
           <select name="status" class="formmenusimple" id="status">
             <option value="pending" <?php if (!(strcmp("pending", $row_commentsoverview['status']))) {echo "selected=\"selected\"";} ?>>pending</option>

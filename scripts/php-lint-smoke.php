@@ -13,6 +13,7 @@ $paths = [
     $root . '/administrator/plugins_prebuilt_sites.php',
     $root . '/administrator/posts.php',
     $root . '/administrator/settings_core.php',
+    $root . '/administrator/dashboard.php',
     $root . '/includes/Hooks.php',
 ];
 

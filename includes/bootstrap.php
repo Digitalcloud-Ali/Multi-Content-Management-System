@@ -10,8 +10,12 @@ if (!defined('APP_STARTED')) {
 }
 
 // Set error reporting based on environment
+if (is_file(__DIR__ . '/env.php')) {
+    require_once __DIR__ . '/env.php';
+}
 if (!defined('ENVIRONMENT')) {
-    define('ENVIRONMENT', 'development'); // Change to 'production' for live sites
+    // Production-safe default for public installs
+    define('ENVIRONMENT', defined('MULTICMS_ENV') ? MULTICMS_ENV : 'production');
 }
 
 // Include all modern classes

@@ -1,4 +1,6 @@
 <?php require_once('../includes/rayicecms.php'); ?>
+<?php if ($_SERVER['REQUEST_METHOD'] === 'POST') { multicms_require_csrf_post(); } ?>
+
 <?php
 //initialize the session
 if (!isset($_SESSION)) {
@@ -849,7 +851,9 @@ location.replace("/mobadmin/");
                       </tr>
                       <tr>
                         <td height="11" bgcolor="#FBFEFF" class="borderorangetable"><div class="texts">
-                          <form id="install" name="install" method="POST" action="<?php echo $editFormAction; ?>">
+                          <form id="install" name="install" method="POST" action="<?php echo $editFormAction; ?>
+<?php if (function_exists('multicms_csrf_field')) { echo multicms_csrf_field(); } ?>
+<?php if (function_exists('multicms_csrf_field')) { echo multicms_csrf_field(); } ?>">
                             <table width="100%" border="0" cellspacing="4" cellpadding="4">
                               <tr>
                                 <td width="96" bgcolor="#EFF4FA"><strong>THEME:</strong></td>

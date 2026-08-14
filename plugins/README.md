@@ -41,7 +41,7 @@ Core also ships `includes/Hooks.php` (`do_action` / `apply_filters`).
 
 ## Security note
 
-Legacy packs are Dreamweaver-era code. Phase 1–2 patched critical auth, CSRF on main write forms, some XSS escaping, and safer member photo uploads. They are **not** fully modernized.
+Ready-made packs are **legacy demos**. Prefer Fresh core for production. Phase 1–6 patched auth, CSRF on many write forms, XSS escaping, safer uploads, and admin CSRF — packs are still not fully modernized.
 
 ## Apply as main site
 

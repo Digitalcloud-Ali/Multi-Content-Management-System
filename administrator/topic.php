@@ -1,4 +1,6 @@
 <?php require_once('../includes/rayicecms.php'); ?>
+<?php if ($_SERVER['REQUEST_METHOD'] === 'POST') { multicms_require_csrf_post(); } ?>
+
 <?php
 //initialize the session
 if (!isset($_SESSION)) {
@@ -690,7 +692,9 @@ function MM_jumpMenu(targ,selObj,restore){ //v3.0
                     <td background="images/leftNavBg.png" class="admintitle">SELECT TOPIC</td>
                   </tr>
             </table>
-                <form method="POST" action="<?php echo $editFormAction; ?>" name="topicform" id="topicform"><table width="100%" border="0" cellpadding="8" cellspacing="1" bgcolor="#CCCCCC">
+                <form method="POST" action="<?php echo $editFormAction; ?>
+<?php if (function_exists('multicms_csrf_field')) { echo multicms_csrf_field(); } ?>
+<?php if (function_exists('multicms_csrf_field')) { echo multicms_csrf_field(); } ?>" name="topicform" id="topicform"><table width="100%" border="0" cellpadding="8" cellspacing="1" bgcolor="#CCCCCC">
                   <tr>
                     <td height="47" bgcolor="#FFFFFF"><table width="100%" border="0" cellspacing="4" cellpadding="4">
                       <tr>

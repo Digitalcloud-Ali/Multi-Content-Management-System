@@ -28,24 +28,20 @@ if ((isset($_GET['doLogout'])) &&($_GET['doLogout']=="true")){
     exit;
   }
 }
-?>
-<?php
-if (!isset($_SESSION)) {
-  session_start();
-}
-$MM_authorizedUsers = "administrator,editor";
+
+$MM_authorizedUsers = "administrator";
 $MM_donotCheckaccess = "true";
 
 // *** Restrict Access To Page: Grant or deny access to this page
 // isAuthorized provided by includes/LegacyAuth.php
 
-$MM_restrictGoTo = "index.php";
+$MM_restrictGoTo = "login.php";
 if (!((isset($_SESSION['MM_Username'])) && (isAuthorized("",$MM_authorizedUsers, $_SESSION['MM_Username'], $_SESSION['MM_UserGroup'])))) {   
   $MM_qsChar = "?";
   $MM_referrer = $_SERVER['PHP_SELF'];
   if (strpos($MM_restrictGoTo, "?")) $MM_qsChar = "&";
-  if (isset($_SERVER['QUERY_STRING']) && strlen($_SERVER['QUERY_STRING']) > 0) 
-  $MM_referrer .= "?" . $_SERVER['QUERY_STRING'];
+  if (isset($QUERY_STRING) && strlen($QUERY_STRING) > 0) 
+  $MM_referrer .= "?" . $QUERY_STRING;
   $MM_restrictGoTo = $MM_restrictGoTo. $MM_qsChar . "accesscheck=" . urlencode($MM_referrer);
   header("Location: ". $MM_restrictGoTo); 
   exit;
@@ -86,100 +82,53 @@ function GetSQLValueString($theValue, $theType, $theDefinedValue = "", $theNotDe
 }
 }
 
-$currentPage = $_SERVER["PHP_SELF"];
-
-$editFormAction = $_SERVER['PHP_SELF'];
-if (isset($_SERVER['QUERY_STRING'])) {
-  $editFormAction .= "?" . htmlentities($_SERVER['QUERY_STRING']);
-}
-
-if ((isset($_POST["MM_insert"])) && ($_POST["MM_insert"] == "pagesadd")) {
-  $insertSQL = sprintf("INSERT INTO friendlinks (linktitle, linkurl) VALUES (%s, %s)",
-                       GetSQLValueString($_POST['linktitle'], "text"),
-                       GetSQLValueString($_POST['linkurl'], "text"));
-
-  mysqli_select_db(dbconnect(),$database_rayicecms);
-  $Result1 = mysqli_query(dbconnect(),$insertSQL) or die(mysqli_connect_error());
-
-  $insertGoTo = "links.php";
-  if (isset($_SERVER['QUERY_STRING'])) {
-    $insertGoTo .= (strpos($insertGoTo, '?')) ? "&" : "?";
-    $insertGoTo .= $_SERVER['QUERY_STRING'];
-  }
-  header(sprintf("Location: %s", $insertGoTo));
-}
-
-if ((isset($_POST["MM_update"])) && ($_POST["MM_update"] == "pagesupdate")) {
-  $updateSQL = sprintf("UPDATE friendlinks SET linktitle=%s, linkurl=%s WHERE linkid=%s",
-                       GetSQLValueString($_POST['linktitle'], "text"),
-                       GetSQLValueString($_POST['linkurl'], "text"),
-                       GetSQLValueString($_POST['linkid'], "int"));
-
-  mysqli_select_db(dbconnect(),$database_rayicecms);
-  $Result1 = mysqli_query(dbconnect(),$updateSQL) or die(mysqli_connect_error());
-
-  $updateGoTo = "links.php";
-  if (isset($_SERVER['QUERY_STRING'])) {
-    $updateGoTo .= (strpos($updateGoTo, '?')) ? "&" : "?";
-    $updateGoTo .= $_SERVER['QUERY_STRING'];
-  }
-  header(sprintf("Location: %s", $updateGoTo));
-}
-
-if ((isset($_GET['linkiddelete'])) && ($_GET['linkiddelete'] != "")) {
-  $deleteSQL = sprintf("DELETE FROM friendlinks WHERE linkid=%s",
-                       GetSQLValueString($_GET['linkiddelete'], "int"));
-
-  mysqli_select_db(dbconnect(),$database_rayicecms);
-  $Result1 = mysqli_query(dbconnect(),$deleteSQL) or die(mysqli_connect_error());
-
-  $deleteGoTo = "links.php";
-  if (isset($_SERVER['QUERY_STRING'])) {
-    $deleteGoTo .= (strpos($deleteGoTo, '?')) ? "&" : "?";
-  }
-  header(sprintf("Location: %s", $deleteGoTo));
-}
-
 mysqli_select_db(dbconnect(),$database_rayicecms);
 $query_setting = "SELECT * FROM settings";
 $setting = mysqli_query(dbconnect(),$query_setting) or die(mysqli_connect_error());
 $row_setting = mysqli_fetch_assoc($setting);
 $totalRows_setting = mysqli_num_rows($setting);
 
-$maxRows_pagesoverview = 20;
-$pageNum_pagesoverview = 0;
-if (isset($_GET['pageNum_pagesoverview'])) {
-  $pageNum_pagesoverview = $_GET['pageNum_pagesoverview'];
-}
-$startRow_pagesoverview = $pageNum_pagesoverview * $maxRows_pagesoverview;
-
-mysqli_select_db(dbconnect(),$database_rayicecms);
-$query_pagesoverview = "SELECT * FROM friendlinks";
-$query_limit_pagesoverview = sprintf("%s LIMIT %d, %d", $query_pagesoverview, $startRow_pagesoverview, $maxRows_pagesoverview);
-$pagesoverview = mysqli_query(dbconnect(),$query_limit_pagesoverview) or die(mysqli_connect_error());
-$row_pagesoverview = mysqli_fetch_assoc($pagesoverview);
-
-if (isset($_GET['totalRows_pagesoverview'])) {
-  $totalRows_pagesoverview = $_GET['totalRows_pagesoverview'];
-} else {
-  $all_pagesoverview = mysqli_query(dbconnect(),$query_pagesoverview);
-  $totalRows_pagesoverview = mysqli_num_rows($all_pagesoverview);
-}
-$totalPages_pagesoverview = ceil($totalRows_pagesoverview/$maxRows_pagesoverview)-1;
-
-$colname_pagesupdate = "-1";
-if (isset($_GET['linkid'])) {
-  $colname_pagesupdate = $_GET['linkid'];
-}
-mysqli_select_db(dbconnect(),$database_rayicecms);
-$query_pagesupdate = sprintf("SELECT * FROM friendlinks WHERE linkid = %s", GetSQLValueString($colname_pagesupdate, "int"));
-$pagesupdate = mysqli_query(dbconnect(),$query_pagesupdate) or die(mysqli_connect_error());
-$row_pagesupdate = mysqli_fetch_assoc($pagesupdate);
-$totalRows_pagesupdate = mysqli_num_rows($pagesupdate);
-
 // this is for showing total comments record
 $_SERVER['selecttopic'] = $row_setting['selecttopic'];
 // this is end of showing comments
+
+$colname_totalcomments = "-1";
+if (isset($_SERVER['selecttopic'])) {
+  $colname_totalcomments = $_SERVER['selecttopic'];
+}
+mysqli_select_db(dbconnect(),$database_rayicecms);
+$query_totalcomments = sprintf("SELECT * FROM comments WHERE selecttopic = %s", GetSQLValueString($colname_totalcomments, "text"));
+$totalcomments = mysqli_query(dbconnect(),$query_totalcomments) or die(mysqli_connect_error());
+$row_totalcomments = mysqli_fetch_assoc($totalcomments);
+$totalRows_totalcomments = mysqli_num_rows($totalcomments);
+
+mysqli_select_db(dbconnect(),$database_rayicecms);
+$query_totalusers = "SELECT * FROM members";
+$totalusers = mysqli_query(dbconnect(),$query_totalusers) or die(mysqli_connect_error());
+$row_totalusers = mysqli_fetch_assoc($totalusers);
+$totalRows_totalusers = mysqli_num_rows($totalusers);
+
+$colname_totalcategories = "-1";
+if (isset($_SERVER['selecttopic'])) {
+  $colname_totalcategories = $_SERVER['selecttopic'];
+}
+mysqli_select_db(dbconnect(),$database_rayicecms);
+$query_totalcategories = sprintf("SELECT * FROM categories WHERE selecttopic = %s", GetSQLValueString($colname_totalcategories, "text"));
+$totalcategories = mysqli_query(dbconnect(),$query_totalcategories) or die(mysqli_connect_error());
+$row_totalcategories = mysqli_fetch_assoc($totalcategories);
+$totalRows_totalcategories = mysqli_num_rows($totalcategories);
+
+mysqli_select_db(dbconnect(),$database_rayicecms);
+$query_moduleslist = "SELECT * FROM parts WHERE type = 'module'";
+$moduleslist = mysqli_query(dbconnect(),$query_moduleslist) or die(mysqli_connect_error());
+$row_moduleslist = mysqli_fetch_assoc($moduleslist);
+$totalRows_moduleslist = mysqli_num_rows($moduleslist);
+
+mysqli_select_db(dbconnect(),$database_rayicecms);
+$query_componentslist = "SELECT * FROM parts WHERE type = 'component'";
+$componentslist = mysqli_query(dbconnect(),$query_componentslist) or die(mysqli_connect_error());
+$row_componentslist = mysqli_fetch_assoc($componentslist);
+$totalRows_componentslist = mysqli_num_rows($componentslist);
 
 mysqli_select_db(dbconnect(),$database_rayicecms);
 $query_contentparts = "SELECT * FROM parts WHERE partsid = 4";
@@ -211,22 +160,6 @@ $contentads = mysqli_query(dbconnect(),$query_contentads) or die(mysqli_connect_
 $row_contentads = mysqli_fetch_assoc($contentads);
 $totalRows_contentads = mysqli_num_rows($contentads);
 
-$queryString_pagesoverview = "";
-if (!empty($_SERVER['QUERY_STRING'])) {
-  $params = explode("&", $_SERVER['QUERY_STRING']);
-  $newParams = array();
-  foreach ($params as $param) {
-    if (stristr($param, "pageNum_pagesoverview") == false && 
-        stristr($param, "totalRows_pagesoverview") == false) {
-      array_push($newParams, $param);
-    }
-  }
-  if (count($newParams) != 0) {
-    $queryString_pagesoverview = "&" . htmlentities(implode("&", $newParams));
-  }
-}
-$queryString_pagesoverview = sprintf("&totalRows_pagesoverview=%d%s", $totalRows_pagesoverview, $queryString_pagesoverview);
-
 
 $colname_members = "-1";
 if (isset($_SESSION['MM_Username'])) {
@@ -241,8 +174,7 @@ $totalRows_members = mysqli_num_rows($members);
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-
-<title><?php echo $row_setting['title']; ?> - News</title>
+<title><?php echo $row_setting['title']; ?> - Welcome <?php echo $row_members['users']; ?></title>
 <link href="rayicecms.css" rel="stylesheet" type="text/css" />
 <link rel="stylesheet" type="text/css" href="css3/styles.css" />
 <link rel="shortcut icon" type="image/png" href="/images/<?php echo $row_setting['favicon']; ?>" />
@@ -251,44 +183,43 @@ if((navigator.userAgent.match(/iPhone/i)) || (navigator.userAgent.match(/iPod/i)
 {
 location.replace("/mobadmin/");
 }
-</script><script type="text/javascript" src="/includes/validate.js"></script>
-</head>
+</script></head>
 
 <body>
 <div id="main">
-
 <ul id="navigationMenu">
     <li>
 	    <a class="home" href="index.php">
-            <span>Home</span>
-        </a>
-    </li>
+            <span>Home</span>        </a>    </li>
     
     <li>
     	<a class="profile" href="profile.php">
-            <span>Profile</span>
-        </a>
-    </li>
+            <span>Profile</span>        </a>    </li>
     
     <li>
 	     <a class="config" href="setting.php">
-            <span>Config</span>
-         </a>
-    </li>
+            <span>Config</span>         </a>    </li>
     
     <li>
     	<a class="multicms" href="topic.php">
-            <span>MultiCMS</span>
-        </a>
-    </li>
+            <span>MultiCMS</span>        </a>    </li>
+
+    <li>
+    	<a class="multicms" href="posts.php">
+            <span>Posts (core)</span>        </a>    </li>
+
+    <li>
+    	<a class="multicms" href="settings_core.php">
+            <span>Site Settings (core)</span>        </a>    </li>
+
+    <li>
+    	<a class="multicms" href="plugins_prebuilt_sites.php">
+            <span>Ready Sites (legacy)</span>        </a>    </li>
     
     <li>
     	<a class="messages" href="contact.php">
-            <span>Messages</span>
-        </a>
-    </li>
+            <span>Messages</span>        </a>    </li>
 </ul>
-    
 </div>
 <div class="bgcontent">
 <div class="bginner">
@@ -317,8 +248,7 @@ location.replace("/mobadmin/");
 </table>
 <table border="0" align="center" cellpadding="8" cellspacing="0">
   <tr>
-    <td width="704">
-      
+    <td>
       <table width="200" border="0" cellpadding="0" cellspacing="0">
         <tr>
           <td height="8"></td>
@@ -418,8 +348,7 @@ location.replace("/mobadmin/");
               <table width="100%" border="0" cellpadding="0" cellspacing="0" class="leftmenu">
                 <tr>
                   <td height="35"><a href="blog.php">
-                    <div style="line-height:37px;"><img src="images/addressBook.png" alt="Portal Blog" width="14" height="14" border="0" style="padding-left:9px;padding-right:7px;" /> Portal / Blog
-                    </div></a></td>
+                    <div style="line-height:37px;"><img src="images/addressBook.png" alt="Portal Blog" width="14" height="14" border="0" style="padding-left:9px;padding-right:7px;" /> Portal / Blog                    </div></a></td>
                   </tr>
                 </table>
                 <table width="40" border="0" cellpadding="0" cellspacing="0">
@@ -436,8 +365,7 @@ location.replace("/mobadmin/");
               <table width="100%" border="0" cellpadding="0" cellspacing="0" class="leftmenu">
                 <tr>
                   <td height="35"><a href="custom.php">
-                    <div style="line-height:37px;"><img src="images/addressBook.png" alt="Portal Blog" width="14" height="14" border="0" style="padding-left:9px;padding-right:7px;" /> Custom
-                    </div></a></td>
+                    <div style="line-height:37px;"><img src="images/addressBook.png" alt="Portal Blog" width="14" height="14" border="0" style="padding-left:9px;padding-right:7px;" /> Custom                    </div></a></td>
                   </tr>
                 </table>
                 <table width="40" border="0" cellpadding="0" cellspacing="0">
@@ -455,8 +383,7 @@ location.replace("/mobadmin/");
                 <table width="100%" border="0" cellpadding="0" cellspacing="0" class="leftmenu">
                   <tr>
                     <td height="35"><a href="searchengine.php">
-                      <div style="line-height:37px;"><img src="images/blocks.png" alt="Search Engine" width="14" height="14" border="0" style="padding-left:9px;padding-right:7px;" /> Search Engine
-                      </div>
+                      <div style="line-height:37px;"><img src="images/blocks.png" alt="Search Engine" width="14" height="14" border="0" style="padding-left:9px;padding-right:7px;" /> Search Engine                      </div>
                       </a></td>
                     </tr>
                   </table>
@@ -474,8 +401,7 @@ location.replace("/mobadmin/");
                 <table width="100%" border="0" cellpadding="0" cellspacing="0" class="leftmenu">
                   <tr>
                     <td height="35"><a href="portfolio.php">
-                      <div style="line-height:37px;"><img src="images/user2.png" alt="Portfolio or Resume" width="14" height="14" border="0" style="padding-left:9px;padding-right:7px;" /> Portfolio / Resume
-                      </div>
+                      <div style="line-height:37px;"><img src="images/user2.png" alt="Portfolio or Resume" width="14" height="14" border="0" style="padding-left:9px;padding-right:7px;" /> Portfolio / Resume                      </div>
                       </a></td>
                     </tr>
                   </table>
@@ -493,8 +419,7 @@ location.replace("/mobadmin/");
                 <table width="100%" border="0" cellpadding="0" cellspacing="0" class="leftmenu">
                   <tr>
                     <td height="35"><a href="adposting.php">
-                      <div style="line-height:37px;"><img src="images/bandaid.png" alt="Ad Posting" width="14" height="14" border="0" style="padding-left:9px;padding-right:7px;" /> Ad Posting
-                      </div>
+                      <div style="line-height:37px;"><img src="images/bandaid.png" alt="Ad Posting" width="14" height="14" border="0" style="padding-left:9px;padding-right:7px;" /> Ad Posting                      </div>
                       </a></td>
                     </tr>
                   </table>
@@ -512,8 +437,7 @@ location.replace("/mobadmin/");
                 <table width="100%" border="0" cellpadding="0" cellspacing="0" class="leftmenu">
                   <tr>
                     <td height="35"><a href="videostreaming.php">
-                      <div style="line-height:37px;"><img src="images/coverflow.png" alt="Video Streaming" width="14" height="14" border="0" style="padding-left:9px;padding-right:7px;" /> Video Streaming
-                      </div>
+                      <div style="line-height:37px;"><img src="images/coverflow.png" alt="Video Streaming" width="14" height="14" border="0" style="padding-left:9px;padding-right:7px;" /> Video Streaming                      </div>
                       </a></td>
                     </tr>
                   </table>
@@ -530,8 +454,7 @@ location.replace("/mobadmin/");
                 <table width="100%" border="0" cellpadding="0" cellspacing="0" class="leftmenu">
                   <tr>
                     <td height="35"><a href="doctors.php">
-                      <div style="line-height:37px;"><img src="images/coverflow.png" alt="Dcotirs or Clinic" width="14" height="14" border="0" style="padding-left:9px;padding-right:7px;" /> Doctors / Clinic
-                      </div>
+                      <div style="line-height:37px;"><img src="images/coverflow.png" alt="Dcotirs or Clinic" width="14" height="14" border="0" style="padding-left:9px;padding-right:7px;" /> Doctors / Clinic                      </div>
                       </a></td>
                     </tr>
                   </table>
@@ -549,8 +472,7 @@ location.replace("/mobadmin/");
                 <table width="100%" border="0" cellpadding="0" cellspacing="0" class="leftmenu">
                   <tr>
                     <td height="35"><a href="imagegallery.php">
-                      <div style="line-height:37px;"><img src="images/image.png" alt="Image Gallery" width="14" height="14" border="0" style="padding-left:9px;padding-right:7px;" /> Image Gallery
-                      </div>
+                      <div style="line-height:37px;"><img src="images/image.png" alt="Image Gallery" width="14" height="14" border="0" style="padding-left:9px;padding-right:7px;" /> Image Gallery                      </div>
                       </a></td>
                     </tr>
                   </table>
@@ -568,8 +490,7 @@ location.replace("/mobadmin/");
                 <table width="100%" border="0" cellpadding="0" cellspacing="0" class="leftmenu">
                   <tr>
                     <td height="35"><a href="marketplace.php">
-                      <div style="line-height:37px;"><img src="images/mightyMouse.png" alt="Market Place" width="14" height="14" border="0" style="padding-left:9px;padding-right:7px;" /> Market Place
-                      </div>
+                      <div style="line-height:37px;"><img src="images/mightyMouse.png" alt="Market Place" width="14" height="14" border="0" style="padding-left:9px;padding-right:7px;" /> Market Place                      </div>
                       </a></td>
                     </tr>
                   </table>
@@ -587,8 +508,7 @@ location.replace("/mobadmin/");
                 <table width="100%" border="0" cellpadding="0" cellspacing="0" class="leftmenu">
                   <tr>
                     <td height="35"><a href="tutorials.php">
-                      <div style="line-height:37px;"><img src="images/paintBrush.png" alt="Tutorials" width="14" height="14" border="0" style="padding-left:9px;padding-right:7px;" /> Tutorials
-                      </div>
+                      <div style="line-height:37px;"><img src="images/paintBrush.png" alt="Tutorials" width="14" height="14" border="0" style="padding-left:9px;padding-right:7px;" /> Tutorials                      </div>
                       </a></td>
                     </tr>
                   </table>
@@ -736,188 +656,154 @@ location.replace("/mobadmin/");
 			  }
 			  ?></td>
               <td width="13">&nbsp;</td>
-              <td width="700" height="30" align="center" valign="top"><?php if ($totalRows_pagesupdate == 0) { // Show if recordset empty ?>
-                  <table width="100%" border="0" cellpadding="4" cellspacing="1" bgcolor="#CCCCCC">
-                    <tr>
-                      <td background="images/leftNavBg.png" class="admintitle">External links</td>
-                    </tr>
-                  </table>
-                  <table width="100%" border="0" cellpadding="8" cellspacing="1" bgcolor="#CCCCCC">
-                    <tr>
-                      <td height="47" align="left" bgcolor="#FFFFFF"><?php if ($totalRows_pagesoverview > 0) { // Show if recordset not empty ?>
-                          <table width="100%" border="0" cellspacing="2" cellpadding="4">
-                            <tr class="orangetitle" style="background-image:url(images/spinner-bg.gif);">
-                              <td width="32" align="center">ID</td>
-                              <td colspan="3">LINK</td>
-                            </tr>
-                            <?php do { ?>
-                              <tr>
-                                <td height="11" align="center" class="smallbut"><div class="textsmallred"><?php echo $row_pagesoverview['linkid']; ?></div></td>
-                                <td bgcolor="#FBFEFF" class="borderorangetable"><div class="texts"><?php echo $row_pagesoverview['linktitle']; ?></div></td>
-                                <td width="1" align="center" bgcolor="#FBFEFF" class="borderorangetable"><a href="links.php?linkid=<?php echo $row_pagesoverview['linkid']; ?>" class="textsmallgreen">
-                                  <div>Edit</div>
-                                </a></td>
-                                <td width="1" align="center" bgcolor="#FBFEFF" class="borderorangetable"><a href="links.php?linkiddelete=<?php echo $row_pagesoverview['linkid']; ?>" class="textsmallred" onClick="javascript:return confirm('Please Confirm Before Delete ?')">
-                                  <div>Delete</div>
-                                </a></td>
-                              </tr>
-                              <?php } while ($row_pagesoverview = mysqli_fetch_assoc($pagesoverview)); ?>
-                          </table>
-                          <table width="40" border="0" cellpadding="0" cellspacing="0">
-                            <tr>
-                              <td height="4"></td>
-                            </tr>
-                          </table>
-                          <table border="0" align="center" cellpadding="0" cellspacing="4">
-                            <tr>
-                              <td align="center" class="pagesmove"><a href="<?php printf("%s?pageNum_pagesoverview=%d%s", $currentPage, 0, $queryString_pagesoverview); ?>">&lt;</a></td>
-                              <td align="center" class="pagesmove"><a href="<?php printf("%s?pageNum_pagesoverview=%d%s", $currentPage, max(0, $pageNum_pagesoverview - 1), $queryString_pagesoverview); ?>">&lt;&lt;</a></td>
-                              <td align="center" class="pagesmove"><a href="<?php printf("%s?pageNum_pagesoverview=%d%s", $currentPage, min($totalPages_pagesoverview, $pageNum_pagesoverview + 1), $queryString_pagesoverview); ?>">&gt;&gt;</a></td>
-                              <td align="center" class="pagesmove"><a href="<?php printf("%s?pageNum_pagesoverview=%d%s", $currentPage, $totalPages_pagesoverview, $queryString_pagesoverview); ?>">&gt;</a></td>
-                            </tr>
-                          </table>
-                          <?php } // Show if recordset not empty ?>
-                        <?php if ($totalRows_pagesoverview == 0) { // Show if recordset empty ?>
-  <table width="100%" border="0" cellspacing="2" cellpadding="4">
-    <tr class="orangetitle">
-      <td width="32" align="center">NO LINKS FOUNDED</td>
-      </tr>
-  </table>
-  <?php } // Show if recordset empty ?></td>
-                    </tr>
-                  </table>
-                  <table width="40" border="0" cellpadding="0" cellspacing="0">
-                    <tr>
-                      <td height="4"></td>
-                    </tr>
-                  </table>
-                  <?php } // Show if recordset empty ?>
-                <?php if ($totalRows_pagesupdate > 0) { // Show if recordset not empty ?>
-                  <table width="100%" border="0" cellspacing="0" cellpadding="0">
-                    <tr>
-                      <td><table width="100%" border="0" cellpadding="4" cellspacing="1" bgcolor="#ECCF5E">
+              <td width="700" height="30" align="center" valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="8" class="bgtitles">
+                <tr>
+                  <td class="admintitlewhite">DASHBOARD</td>
+                  </tr>
+                </table>
+                <table width="100%" border="0" cellspacing="0" cellpadding="0" id="statistics">
+                  <tr>
+                    <td height="87"><div align="center">
+                      <table border="0" cellspacing="0" cellpadding="6">
                         <tr>
-                          <td align="center" bgcolor="#FAF1D1" class="texts"><a href="links.php" class="textsmallred">Back To Links</a></td>
+                          <td>
+                          <table width="32" border="0" cellpadding="0" cellspacing="0" class="smallbut">
+                            <tr>
+                              <td width="30" height="35" align="center"><div style="line-height:37px;"><a href="comments.php" class="orangetitle"><?php echo $totalRows_totalcomments ?></a> </div></td>
+                            </tr>
+                          </table>                            </td>
+                          <td class="texts4">Comments</td>
+                        </tr>
+                    </table>
+                    </div></td>
+                    <td><div align="center">
+                      <table border="0" cellspacing="0" cellpadding="6">
+                        <tr>
+                          <td><table width="32" border="0" cellpadding="0" cellspacing="0" class="smallbut">
+                            <tr>
+                              <td width="30" height="35" align="center"><div style="line-height:37px;"><a href="members.php" class="orangetitle"><?php echo $totalRows_totalusers ?></a></div></td>
+                            </tr>
+                          </table></td>
+                          <td class="texts4">Members</td>
                         </tr>
                       </table>
-                        <table width="40" border="0" cellpadding="0" cellspacing="0">
-                          <tr>
-                            <td height="4"></td>
+                    </div></td>
+                    <td><div align="center">
+                      <table border="0" cellspacing="0" cellpadding="6">
+                        <tr>
+                          <td><table width="32" border="0" cellpadding="0" cellspacing="0" class="smallbut">
+                            <tr>
+                              <td width="30" height="35" align="center"><div style="line-height:37px;"><a href="categories.php" class="orangetitle"><?php echo $totalRows_totalcategories ?></a></div></td>
+                              </tr>
+                            </table></td>
+                          <td class="texts4">Categories</td>
                           </tr>
                         </table>
-                        <table width="100%" border="0" cellpadding="4" cellspacing="1" bgcolor="#CCCCCC">
-                          <tr>
-                            <td background="images/leftNavBg.png" class="admintitle">link UPDATE</td>
-                          </tr>
-                        </table>
-                        <table width="100%" border="0" cellpadding="8" cellspacing="1" bgcolor="#CCCCCC">
-                          <tr>
-                            <td height="47" align="left" bgcolor="#FFFFFF"><form action="<?php echo $editFormAction; ?>" method="POST" enctype="multipart/form-data" name="pagesupdate" id="pagesupdate">
-                              <table width="100%" border="0" cellspacing="4" cellpadding="4">
-                                <tr>
-                                  <td width="69" class="texts"><strong>TITLE:</strong></td>
-                                  <td colspan="2"><input name="linktitle" type="text" class="form" id="linktitle" value="<?php echo $row_pagesupdate['linktitle']; ?>" /></td>
-                                </tr>
-                                <tr>
-                                  <td valign="top" class="texts"><strong>URL:</strong></td>
-                                  <td colspan="2">
-                                    <input name="linkurl" type="text" class="form" id="linkurl" value="<?php echo $row_pagesupdate['linkurl']; ?>" size="45" /></td>
-                                </tr>
-                                <tr>
-                                  <td><input name="linkid" type="hidden" id="linkid" value="<?php echo $row_pagesupdate['linkid']; ?>" /></td>
-                                  <td width="82"><input name="button" type="submit" class="button" id="button" value="Update" /></td>
-                                  <td width="491">&nbsp;</td>
-                                </tr>
-                              </table>
-                              <input type="hidden" name="MM_update" value="pagesupdate" />
-                            </form>
-                            <script language="JavaScript" type="text/javascript">
-
-  var frmvalidator  = new Validator("pagesupdate");
-  frmvalidator.addValidation("linkurl","req","Please Enter Website URL");
-
-  frmvalidator.addValidation("linktitle","maxlen=30","Max length for email is 30");
-  frmvalidator.addValidation("linktitle","req","Please Enter Website Title");
-  frmvalidator.addValidation("linktitle","alphanumeric_space","Only AlphaNumeric Characters Allow");
-
-
-</script></td>
-                          </tr>
-                        </table>
-                        <table width="40" border="0" cellpadding="0" cellspacing="0">
-                          <tr>
-                            <td height="4"></td>
-                          </tr>
-                        </table></td>
+                    </div></td>
                     </tr>
-                  </table>
-                  <table width="40" border="0" cellpadding="0" cellspacing="0">
-                    <tr>
-                      <td height="4"></td>
-                    </tr>
-                  </table>
-                  <?php } // Show if recordset not empty ?>
-                <?php if ($totalRows_pagesupdate == 0) { // Show if recordset empty ?>
-  <table width="100%" border="0" cellspacing="0" cellpadding="0">
-    <tr>
-      <td><table width="100%" border="0" cellpadding="4" cellspacing="1" bgcolor="#CCCCCC">
-        <tr>
-          <td background="images/leftNavBg.png" class="admintitle">ADD link</td>
-          </tr>
-        </table>
-        <table width="100%" border="0" cellpadding="8" cellspacing="1" bgcolor="#CCCCCC">
-          <tr>
-            <td height="47" align="left" bgcolor="#FFFFFF"><form action="<?php echo $editFormAction; ?>" method="POST" enctype="multipart/form-data" name="pagesadd" id="pagesadd">
-              <table width="100%" border="0" cellspacing="4" cellpadding="4">
-                <tr>
-                  <td width="69" class="texts"><strong>TITLE:</strong></td>
-                  <td colspan="2"><input name="linktitle" type="text" class="form" id="linktitle" /></td>
-                  </tr>
-                <tr>
-                  <td valign="top" class="texts"><strong>URL:</strong></td>
-                  <td colspan="2">
-                    <input name="linkurl" type="text" class="form" id="linkurl" value="" size="45" /></td>
-                </tr>
-                <tr>
-                  <td>&nbsp;</td>
-                  <td width="82"><input name="button" type="submit" class="button" id="button" value="Add" /></td>
-                  <td width="491">&nbsp;</td>
-                </tr>
                 </table>
-              <input type="hidden" name="MM_insert" value="pagesadd" />
-            </form>
-            <script language="JavaScript" type="text/javascript">
-
-  var frmvalidator  = new Validator("pagesadd");
-  frmvalidator.addValidation("linkurl","req","Please Enter Website URL");
-
-  frmvalidator.addValidation("linktitle","maxlen=30","Max length for email is 30");
-  frmvalidator.addValidation("linktitle","req","Please Enter Website Title");
-
-</script></td>
-            </tr>
-          </table>
-        <table width="40" border="0" cellpadding="0" cellspacing="0">
-          <tr>
-            <td height="4"></td>
-            </tr>
-          </table></td>
-      </tr>
-  </table>
-                  <table width="40" border="0" cellpadding="0" cellspacing="0">
-                    <tr>
-                      <td height="4"></td>
-                      </tr>
+                <table width="100%" border="0" cellpadding="4" cellspacing="1" bgcolor="#CCCCCC">
+                  <tr>
+                    <td background="images/leftNavBg.png" class="admintitle">CONFIGURATION</td>
+                  </tr>
+                </table>
+                <table width="100%" border="0" cellpadding="0" cellspacing="1" bgcolor="#CCCCCC">
+                  <tr class="orangetitle">
+                    <td height="47" align="center" bgcolor="#F8F8F8"><strong>INSTALLATION STATUS</strong></td>
+                    <td align="center" bgcolor="#F8F8F8"><strong>CURRENT TOPIC</strong></td>
+                    <td align="center" bgcolor="#F8F8F8"><strong>ONLINE STATUS</strong></td>
+                  </tr>
+                  <tr class="texts">
+                    <td height="47" align="center" bgcolor="#FFFFFF"><?php echo $row_setting['installed']; ?></td>
+                    <td align="center" bgcolor="#FFFFFF"><?php echo $row_setting['selecttopic']; ?></td>
+                    <td align="center" bgcolor="#FFFFFF"><?php echo $row_setting['onlinestatus']; ?></td>
+                  </tr>
+                </table>
+                <table width="40" border="0" cellpadding="0" cellspacing="0">
+                  <tr>
+                    <td height="4"></td>
+                  </tr>
+                </table>
+                <table width="100%" border="0" cellpadding="4" cellspacing="1" bgcolor="#CCCCCC">
+                  <tr>
+                    <td background="images/leftNavBg.png" class="admintitle">COMPONENTS</td>
+                  </tr>
+                </table>
+                <table width="100%" border="0" cellpadding="4" cellspacing="1" bgcolor="#CCCCCC">
+                  <tr>
+                    <td height="47" bgcolor="#FFFFFF"><?php do { ?>
+                        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                          <tr>
+                            <td width="24" align="center"><img src="images/arrowGrey.png" alt="Arrow" width="4" height="7" /></td>
+                            <td align="left" class="texts"><?php echo $row_componentslist['part']; ?></td>
+                            <?php
+							if($row_componentslist['status'] == 'active')
+							{
+							?>
+                            <td width="200" class="textsmallgreen"><?php echo $row_componentslist['status']; ?></td>
+                            <?php
+                            }
+                            ?>
+                            <?php
+							if($row_componentslist['status'] == 'disabled')
+							{
+							?>
+                            <td width="200" class="textsmallred"><?php echo $row_componentslist['status']; ?></td>
+                            <?php
+                            }
+                            ?>
+                            </tr>
+                        </table>
+                      <?php } while ($row_componentslist = mysqli_fetch_assoc($componentslist)); ?></td>
+                  </tr>
                   </table>
-                  <?php } // Show if recordset empty ?>
-<span class="textsmall"><?php echo $row_setting['footer']; ?></span></td>
+                <table width="40" border="0" cellpadding="0" cellspacing="0">
+                  <tr>
+                    <td height="4"></td>
+                  </tr>
+                </table>
+                <table width="100%" border="0" cellpadding="4" cellspacing="1" bgcolor="#CCCCCC">
+                  <tr>
+                    <td background="images/leftNavBg.png" class="admintitle">MODULES</td>
+                  </tr>
+                </table>
+                <table width="100%" border="0" cellpadding="0" cellspacing="1" bgcolor="#CCCCCC" class="effect6">
+                  <tr>
+                    <td height="47" bgcolor="#FFFFFF"><?php do { ?>
+                        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                          <tr>
+                            <td width="24" align="center"><img src="images/arrowGrey.png" alt="Arrow" width="4" height="7" /></td>
+                            <td align="left" class="texts"><?php echo $row_moduleslist['part']; ?></td>
+                             <?php
+							if($row_moduleslist['status'] == 'active')
+							{
+							?>
+                            <td width="200" class="textsmallgreen"><?php echo $row_moduleslist['status']; ?></td>
+                            <?php
+                            }
+                            ?>
+                            <?php
+							if($row_moduleslist['status'] == 'disabled')
+							{
+							?>
+                            <td width="200" class="textsmallred"><?php echo $row_moduleslist['status']; ?></td>
+                            <?php
+                            }
+                            ?>
+                            </tr>
+                        </table>
+                      <?php } while ($row_moduleslist = mysqli_fetch_assoc($moduleslist)); ?></td>
+                  </tr>
+                </table>
+                <span class="textsmall"><?php echo $row_setting['footer']; ?></span></td>
             </tr>
           </table></td>
       </tr>
     </table></td>
   </tr>
 </table>
-</div></div>
+</div>
+</div>
 </body>
 </html>
 <?php
@@ -935,7 +821,13 @@ mysqli_free_result($contentcontact);
 mysqli_free_result($contentads);
 
 mysqli_free_result($setting);
-mysqli_free_result($pagesoverview);
+mysqli_free_result($totalcomments);
 
-mysqli_free_result($pagesupdate);
+mysqli_free_result($totalusers);
+
+mysqli_free_result($totalcategories);
+
+mysqli_free_result($moduleslist);
+
+mysqli_free_result($componentslist);
 ?>

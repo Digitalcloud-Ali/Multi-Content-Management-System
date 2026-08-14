@@ -7,17 +7,16 @@ Open-source PHP/MySQL CMS. The **product core** is a modern installer + default 
 
 ## Status (honest)
 
-Phase 1–3 modernization focuses on:
+Phase 1–6 modernization focuses on:
 
-- Fresh install that writes/reads `includes/db_config.php`
+- Fresh install that writes/reads `includes/db_config.php` + production `includes/env.php`
 - Modern `users` / `posts` / `core_categories` schema for the core front door
 - Auth fixes (hashed passwords; legacy `isAuthorized` gate closed)
 - Quarantined ready-made packs with path bootstrap + critical auth patches
-- **Phase 2:** pretty front-controller URLs, legacy table bootstrap, Admin → Posts (core), CSRF/XSS/upload hardening, Composer + CI lint
-- **Phase 3:** minimal hooks API (`add_action` / `add_filter`), settings/parts/pages bridge on pack apply, broader XSS pass, Admin → Site Settings (core)
-- **Phase 4:** safer description output (`multicms_plain`), Blog pack sample seed, [demo-ready checklist](docs/DEMO_READY.md)
+- **Phase 2–4:** pretty URLs, posts admin, pack hardening, hooks, smoke/CI
+- **Phase 6 (publish gate):** uploads/, core admin dashboard, scrubbed SQL dump, production ENVIRONMENT default, install lockout, admin CSRF
 
-Ready-made packs are still largely Dreamweaver-era code. Prefer the fresh core for production. See [plugins/README.md](plugins/README.md).
+Ready-made packs are **legacy demos**, not recommended for production. Prefer Fresh core. See [plugins/README.md](plugins/README.md) and [docs/DEMO_READY.md](docs/DEMO_READY.md).
 
 ## Requirements
 
