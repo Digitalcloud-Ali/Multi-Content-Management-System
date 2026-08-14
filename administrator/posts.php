@@ -101,21 +101,21 @@ if ($editId > 0) {
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Posts (core) — MultiCMS Admin</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Posts — MultiCMS Admin</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body class="bg-light">
-<div class="container py-4">
+<?php
+$siteTitle = 'MultiCMS';
+$adminNavActive = 'posts';
+include __DIR__ . '/_nav.php';
+?>
+<div class="container pb-5">
     <div class="d-flex justify-content-between align-items-center mb-3">
-        <h1 class="h3 mb-0">Posts (core)</h1>
-        <div>
-            <a class="btn btn-outline-secondary btn-sm" href="index.php">Admin home</a>
-            <a class="btn btn-outline-primary btn-sm" href="settings_core.php">Site Settings</a>
-            <a class="btn btn-outline-secondary btn-sm" href="dashboard.php">Dashboard</a>
-            <a class="btn btn-outline-success btn-sm" href="../index.php?mc_core=1&page=blog" target="_blank">View blog</a>
-        </div>
+        <h1 class="h3 mb-0">Posts</h1>
+        <a class="btn btn-outline-success btn-sm" href="../index.php?page=blog" target="_blank" rel="noopener">View blog</a>
     </div>
-    <p class="text-muted">Modern core content for the fresh default site. Ready-made packs use their own legacy tables.</p>
 
     <?php if ($flash): ?>
         <div class="alert alert-info"><?php echo htmlspecialchars($flash); ?></div>
@@ -205,5 +205,6 @@ if ($editId > 0) {
         </div>
     </div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

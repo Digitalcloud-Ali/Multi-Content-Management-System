@@ -20,7 +20,7 @@ $conn = $db->getConnection();
 $flash = '';
 
 // Ensure legacy settings columns exist when possible
-if (class_exists('PluginManager')) {
+if (class_exists('PluginManager') && method_exists('PluginManager', 'bridgeLegacySettings')) {
     PluginManager::bridgeLegacySettings($conn);
 }
 
@@ -70,26 +70,21 @@ $themeVal = $row['theme'] ?? 'default';
 $onlineVal = $row['onlinestatus'] ?? 'yes';
 $metakeyVal = $row['metakey'] ?? '';
 $footerVal = $row['footer'] ?? '';
+$siteTitle = $row['site_title'] ?? ($row['title'] ?? 'MultiCMS');
+$adminNavActive = 'settings';
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Site Settings (core) — MultiCMS Admin</title>
+    <title>Site Settings — <?php echo htmlspecialchars($siteTitle, ENT_QUOTES, 'UTF-8'); ?></title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body class="bg-light">
-<div class="container py-4">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h1 class="h3 mb-0">Site Settings (core)</h1>
-        <div class="d-flex gap-2">
-            <a class="btn btn-outline-secondary btn-sm" href="index.php">Admin home</a>
-            <a class="btn btn-outline-primary btn-sm" href="posts.php">Posts (core)</a>
-            <a class="btn btn-outline-primary btn-sm" href="posts.php">Posts</a>
-            <a class="btn btn-outline-secondary btn-sm" href="dashboard.php">Dashboard</a>
-        </div>
-    </div>
+<?php include __DIR__ . '/_nav.php'; ?>
+<div class="container pb-5" style="max-width:720px;">
+    <h1 class="h3 mb-3">Site Settings</h1>
     <?php if ($flash): ?>
         <div class="alert alert-info"><?php echo htmlspecialchars($flash, ENT_QUOTES, 'UTF-8'); ?></div>
     <?php endif; ?>
@@ -134,7 +129,8 @@ $footerVal = $row['footer'] ?? '';
             </form>
         </div>
     </div>
-    <p class="text-muted small mt-3 mb-0">Writes both modern (<code>site_title</code>…) and legacy pack columns (<code>title</code>, <code>theme</code>, <code>onlinestatus</code>…).</p>
+    <p class="text-muted small mt-3 mb-0">Updates the public site title, description, and related settings.</p>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

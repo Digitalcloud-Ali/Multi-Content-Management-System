@@ -1,153 +1,146 @@
 <?php
-require_once('../includes/rayicecms.php');
+/**
+ * Modern admin login.
+ */
+require_once __DIR__ . '/../includes/bootstrap.php';
+require_once __DIR__ . '/../includes/LegacyAuth.php';
 
-mysqli_select_db(dbconnect(), $database_rayicecms);
-$query_setting = "SELECT * FROM settings WHERE settingid = 1";
-$setting = mysqli_query(dbconnect(), $query_setting) or die(mysqli_connect_error());
-$row_setting = mysqli_fetch_assoc($setting);
+Session::start();
 
-if (!isset($_SESSION)) {
-  session_start();
+if (isset($_GET['doLogout'])) {
+    $_SESSION = [];
+    if (session_status() === PHP_SESSION_ACTIVE) {
+        session_destroy();
+    }
+    header('Location: login.php');
+    exit;
 }
 
-$loginFormAction = $_SERVER['PHP_SELF'];
-if (isset($_GET['accesscheck'])) {
-  $_SESSION['PrevUrl'] = $_GET['accesscheck'];
+// Already signed in as admin → dashboard
+$isAdmin = (function_exists('hasRole') && (hasRole('admin') || hasRole('administrator')))
+    || (!empty($_SESSION['MM_UserGroup']) && in_array($_SESSION['MM_UserGroup'], ['admin', 'administrator'], true));
+if ($isAdmin && !empty($_SESSION['MM_Username'])) {
+    header('Location: dashboard.php');
+    exit;
+}
+
+$siteTitle = 'MultiCMS';
+try {
+    $row = getDB()->queryOne('SELECT site_title, title FROM settings WHERE settingid = 1');
+    if ($row) {
+        $siteTitle = $row['site_title'] ?? ($row['title'] ?? $siteTitle);
+    }
+} catch (Throwable $e) {
 }
 
 $loginError = '';
-
-if (isset($_POST['datauser'])) {
-  if (!multicms_csrf_validate($_POST['csrf_token'] ?? '')) {
-    $loginError = 'Invalid security token. Please try again.';
-  } else {
-    $loginUsername = trim((string) $_POST['datauser']);
-    $password = (string) $_POST['datapass'];
-    $MM_redirectLoginSuccess = "dashboard.php";
-    $MM_redirectLoginFailed = "login.php?status=fail";
-
-    $user = null;
-
-    // Prefer modern users table (Phase 1 core)
-    $stmt = mysqli_prepare(dbconnect(), "SELECT userid, username, password, role, status FROM users WHERE username = ? LIMIT 1");
-    if ($stmt) {
-      mysqli_stmt_bind_param($stmt, 's', $loginUsername);
-      mysqli_stmt_execute($stmt);
-      $res = mysqli_stmt_get_result($stmt);
-      $user = $res ? mysqli_fetch_assoc($res) : null;
-      mysqli_stmt_close($stmt);
-    }
-
-    $ok = false;
-    $group = '';
-
-    if ($user && ($user['status'] ?? '') === 'active') {
-      list($ok, $rehash) = multicms_verify_password_flexible($password, $user['password']);
-      if ($ok) {
-        $group = $user['role'] ?: 'admin';
-        if ($rehash) {
-          $newHash = password_hash($password, PASSWORD_DEFAULT);
-          $upd = mysqli_prepare(dbconnect(), "UPDATE users SET password = ? WHERE userid = ?");
-          if ($upd) {
-            mysqli_stmt_bind_param($upd, 'si', $newHash, $user['userid']);
-            mysqli_stmt_execute($upd);
-            mysqli_stmt_close($upd);
-          }
-        }
-      }
-    } else {
-      // Fallback: legacy members table (ready-made / old dumps)
-      $stmt = mysqli_prepare(dbconnect(), "SELECT memberid, users, passs, level FROM members WHERE users = ? LIMIT 1");
-      if ($stmt) {
-        mysqli_stmt_bind_param($stmt, 's', $loginUsername);
-        mysqli_stmt_execute($stmt);
-        $res = mysqli_stmt_get_result($stmt);
-        $legacy = $res ? mysqli_fetch_assoc($res) : null;
-        mysqli_stmt_close($stmt);
-        if ($legacy) {
-          list($ok, $rehash) = multicms_verify_password_flexible($password, $legacy['passs']);
-          if ($ok) {
-            $group = $legacy['level'] ?: 'administrator';
-            if ($rehash) {
-              $newHash = password_hash($password, PASSWORD_DEFAULT);
-              $upd = mysqli_prepare(dbconnect(), "UPDATE members SET passs = ? WHERE users = ?");
-              if ($upd) {
-                mysqli_stmt_bind_param($upd, 'ss', $newHash, $loginUsername);
-                mysqli_stmt_execute($upd);
-                mysqli_stmt_close($upd);
-              }
-            }
-          }
-        }
-      }
-    }
-
-    if ($ok) {
-      session_regenerate_id(true);
-      $_SESSION['MM_Username'] = $loginUsername;
-      $_SESSION['MM_UserGroup'] = $group;
-      header('Location: ' . $MM_redirectLoginSuccess);
-      exit;
-    }
-    header('Location: ' . $MM_redirectLoginFailed);
-    exit;
-  }
+if (!empty($_GET['status']) && $_GET['status'] === 'fail') {
+    $loginError = 'Invalid username or password.';
 }
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['datauser'])) {
+    if (!multicms_csrf_validate($_POST['csrf_token'] ?? '')) {
+        $loginError = 'Invalid security token. Please try again.';
+    } else {
+        $loginUsername = trim((string) $_POST['datauser']);
+        $password = (string) $_POST['datapass'];
+        $ok = false;
+        $group = '';
+
+        $user = getDB()->queryOne(
+            "SELECT userid, username, password, role, status FROM users WHERE username = ? LIMIT 1",
+            's',
+            [$loginUsername]
+        );
+
+        if ($user && ($user['status'] ?? '') === 'active') {
+            list($ok, $rehash) = multicms_verify_password_flexible($password, $user['password']);
+            if ($ok) {
+                $group = $user['role'] ?: 'admin';
+                if ($rehash) {
+                    $newHash = password_hash($password, PASSWORD_DEFAULT);
+                    getDB()->execute('UPDATE users SET password = ? WHERE userid = ?', 'si', [$newHash, (int) $user['userid']]);
+                }
+            }
+        } else {
+            // Optional legacy members table
+            try {
+                $legacy = getDB()->queryOne(
+                    'SELECT memberid, users, passs, level FROM members WHERE users = ? LIMIT 1',
+                    's',
+                    [$loginUsername]
+                );
+                if ($legacy) {
+                    list($ok, $rehash) = multicms_verify_password_flexible($password, $legacy['passs']);
+                    if ($ok) {
+                        $group = $legacy['level'] ?: 'administrator';
+                        if ($rehash) {
+                            $newHash = password_hash($password, PASSWORD_DEFAULT);
+                            getDB()->execute('UPDATE members SET passs = ? WHERE users = ?', 'ss', [$newHash, $loginUsername]);
+                        }
+                    }
+                }
+            } catch (Throwable $e) {
+                // members table may not exist on Fresh installs
+            }
+        }
+
+        if ($ok) {
+            session_regenerate_id(true);
+            $_SESSION['MM_Username'] = $loginUsername;
+            $_SESSION['MM_UserGroup'] = $group;
+            header('Location: dashboard.php');
+            exit;
+        }
+        header('Location: login.php?status=fail');
+        exit;
+    }
+}
+
+$logoUrl = '../content/assets/logo-normal.png';
 ?>
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<title><?php echo htmlspecialchars($row_setting['title'] ?? $row_setting['site_title'] ?? 'MultiCMS'); ?> - Login Box</title>
-<link href="rayicecms.css" rel="stylesheet" type="text/css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Admin login — <?php echo htmlspecialchars($siteTitle, ENT_QUOTES, 'UTF-8'); ?></title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body>
-<div class="bgcontent">
-<div class="bginner">
-<table width="100%" height="34" border="0" cellpadding="0" cellspacing="0">
-  <tr>
-    <td align="center" bgcolor="#000000" class="texts4">Administrator Section</td>
-  </tr>
-</table>
-<p>&nbsp;</p>
-<table width="300" border="0" align="center" cellpadding="12" cellspacing="0">
-  <tr>
-    <td bgcolor="#db3300"><table width="88" height="88" border="0" align="center" cellpadding="0" cellspacing="0">
-      <tr>
-        <td width="91" height="88" align="center" class="topbigbuttons"><a href="index.php" class="headbuttons">
-          <div title="Back to Home!"><img src="../content/assets/logo-normal.png" alt="Back to Home" width="122" height="111" border="0" /></div>
-        </a></td>
-      </tr>
-    </table></td>
-  </tr>
-  <tr>
-    <td bgcolor="#FFFFFF"><form id="form1" name="form1" method="POST" action="<?php echo htmlspecialchars($loginFormAction); ?>">
-      <?php echo multicms_csrf_field(); ?>
-      <table width="100%" border="0" cellspacing="4" cellpadding="4">
-        <tr>
-          <td width="1" class="texts"><strong>USERNAME:</strong></td>
-          <td><input name="datauser" type="text" class="form" id="textfield" placeholder="Username" required /></td>
-        </tr>
-        <tr>
-          <td class="texts"><strong>PASSWORD:</strong></td>
-          <td><input name="datapass" type="password" class="form" id="textfield2" placeholder="Password" required /></td>
-        </tr>
-        <tr>
-          <td>&nbsp;</td>
-          <td><input name="button" type="submit" class="button" id="button" value="Login" /></td>
-        </tr>
-      </table>
-      <?php if (!empty($_GET['status']) && $_GET['status'] === 'fail'): ?>
-      <div style="color:#990000; text-align:center; background:#D5E8FF;">Login Failed</div>
-      <?php endif; ?>
-      <?php if ($loginError): ?>
-      <div style="color:#990000; text-align:center; background:#D5E8FF;"><?php echo htmlspecialchars($loginError); ?></div>
-      <?php endif; ?>
-    </form></td>
-  </tr>
-</table>
-</div>
+<body class="bg-light">
+<div class="container py-5" style="max-width:420px;">
+    <div class="text-center mb-4">
+        <?php if (is_file(__DIR__ . '/../content/assets/logo-normal.png')): ?>
+            <img src="<?php echo htmlspecialchars($logoUrl, ENT_QUOTES, 'UTF-8'); ?>" alt="" height="64" class="mb-3">
+        <?php endif; ?>
+        <h1 class="h4 mb-1">MultiCMS Admin</h1>
+        <p class="text-muted small mb-0"><?php echo htmlspecialchars($siteTitle, ENT_QUOTES, 'UTF-8'); ?></p>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body p-4">
+            <?php if ($loginError): ?>
+                <div class="alert alert-danger py-2"><?php echo htmlspecialchars($loginError, ENT_QUOTES, 'UTF-8'); ?></div>
+            <?php endif; ?>
+            <form method="post" action="login.php" autocomplete="on">
+                <?php echo multicms_csrf_field(); ?>
+                <div class="mb-3">
+                    <label class="form-label" for="datauser">Username</label>
+                    <input class="form-control" type="text" name="datauser" id="datauser" required autofocus>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="datapass">Password</label>
+                    <input class="form-control" type="password" name="datapass" id="datapass" required>
+                </div>
+                <button class="btn btn-primary w-100" type="submit">Log in</button>
+            </form>
+        </div>
+    </div>
+
+    <p class="text-center small text-muted mt-3 mb-0">
+        <a href="../index.php">← Back to site</a>
+        · Developed by <a href="https://digitalcloud.no" target="_blank" rel="noopener">DigitalCloud.no</a>
+    </p>
 </div>
 </body>
 </html>
-<?php
-mysqli_free_result($setting);

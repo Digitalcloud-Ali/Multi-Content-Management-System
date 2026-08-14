@@ -79,6 +79,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 $db = getDB();
 $settings = $db->queryOne('SELECT * FROM settings WHERE settingid = 1') ?: [];
 $siteTitle = $settings['site_title'] ?? ($settings['title'] ?? 'MultiCMS');
+$adminNavActive = 'updates';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -89,14 +90,10 @@ $siteTitle = $settings['site_title'] ?? ($settings['title'] ?? 'MultiCMS');
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body class="bg-light">
-<div class="container py-4" style="max-width:800px;">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <h1 class="h3 mb-1">Updates &amp; Backup</h1>
-            <p class="text-muted mb-0">Checks GitHub for newer MultiCMS versions</p>
-        </div>
-        <a class="btn btn-outline-secondary btn-sm" href="dashboard.php">Dashboard</a>
-    </div>
+<?php include __DIR__ . '/_nav.php'; ?>
+<div class="container pb-5" style="max-width:800px;">
+    <h1 class="h3 mb-1">Updates &amp; Backup</h1>
+    <p class="text-muted mb-4">Checks GitHub for newer MultiCMS versions</p>
 
     <?php if ($message): ?><div class="alert alert-success"><?php echo htmlspecialchars($message, ENT_QUOTES, 'UTF-8'); ?></div><?php endif; ?>
     <?php if ($error): ?><div class="alert alert-danger"><?php echo htmlspecialchars($error, ENT_QUOTES, 'UTF-8'); ?></div><?php endif; ?>
@@ -183,5 +180,6 @@ $siteTitle = $settings['site_title'] ?? ($settings['title'] ?? 'MultiCMS');
         </div>
     </div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

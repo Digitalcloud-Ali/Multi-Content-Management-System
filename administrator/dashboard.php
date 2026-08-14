@@ -33,8 +33,7 @@ try {
 }
 
 $updateCheck = UpdateService::checkForUpdates(false);
-$localVer = UpdateService::localVersion();
-$username = htmlspecialchars((string) $_SESSION['MM_Username'], ENT_QUOTES, 'UTF-8');
+$adminNavActive = 'dashboard';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -45,17 +44,12 @@ $username = htmlspecialchars((string) $_SESSION['MM_Username'], ENT_QUOTES, 'UTF
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body class="bg-light">
-<div class="container py-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <h1 class="h3 mb-1">MultiCMS Admin</h1>
-            <p class="text-muted mb-0">Signed in as <?php echo $username; ?> · v<?php echo htmlspecialchars((string) ($localVer['version'] ?? ''), ENT_QUOTES, 'UTF-8'); ?></p>
-        </div>
-        <a class="btn btn-outline-secondary btn-sm" href="login.php?doLogout=true">Logout</a>
-    </div>
+<?php include __DIR__ . '/_nav.php'; ?>
+<div class="container pb-5">
+    <h1 class="h3 mb-3">Dashboard</h1>
 
     <?php if (!empty($updateCheck['update_available'])): ?>
-        <div class="alert alert-warning d-flex justify-content-between align-items-center">
+        <div class="alert alert-warning d-flex justify-content-between align-items-center flex-wrap gap-2">
             <div>
                 <strong>Update available:</strong>
                 v<?php echo htmlspecialchars((string) ($updateCheck['remote']['version'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>
@@ -85,8 +79,8 @@ $username = htmlspecialchars((string) $_SESSION['MM_Username'], ENT_QUOTES, 'UTF
         <div class="col-md-4">
             <div class="card shadow-sm h-100">
                 <div class="card-body">
-                    <div class="text-muted small">Front door</div>
-                    <a href="<?php echo htmlspecialchars(function_exists('mc_url') ? mc_url() : '../index.php', ENT_QUOTES, 'UTF-8'); ?>" target="_blank" rel="noopener">View site</a>
+                    <div class="text-muted small">Site</div>
+                    <div class="fw-semibold"><?php echo htmlspecialchars($siteTitle, ENT_QUOTES, 'UTF-8'); ?></div>
                 </div>
             </div>
         </div>
@@ -101,5 +95,6 @@ $username = htmlspecialchars((string) $_SESSION['MM_Username'], ENT_QUOTES, 'UTF
 
     <p class="text-muted small mb-0">Installer is locked after setup — no need to delete <code>install.php</code>.</p>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
