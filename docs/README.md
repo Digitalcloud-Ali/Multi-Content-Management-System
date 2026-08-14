@@ -1,8 +1,10 @@
 # MultiCMS documentation
 
-- [Installation guide](INSTALLATION_GUIDE.md) — install wizard and requirements  
-- [Demo / production checklist](DEMO_READY.md) — quick go-live checklist  
+Human documentation for GitHub. **Not required** to run the CMS on hosting (you can skip uploading `docs/` if you want a smaller deploy).
 
-Also see the root [README.md](../README.md), [CONTRIBUTING.md](../CONTRIBUTING.md), and [SECURITY.md](../SECURITY.md).
+- [Installation guide](INSTALLATION_GUIDE.md)  
+- [Demo / production checklist](DEMO_READY.md)  
+
+Also see the root [README.md](../README.md).
 
 Developed by [DigitalCloud.no](https://digitalcloud.no).

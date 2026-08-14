@@ -49,8 +49,8 @@ $currentUser = $currentUser ?? ['username' => $_SESSION['MM_Username'] ?? ''];
     <meta name="description" content="<?php echo htmlspecialchars(getSetting('site_description', 'A modern content management system'), ENT_QUOTES, 'UTF-8'); ?>">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link href="themes/default/style.css" rel="stylesheet">
-    <link rel="icon" type="image/x-icon" href="images/favicon.png">
+    <link href="<?php echo htmlspecialchars(mc_theme_url('style.css'), ENT_QUOTES, 'UTF-8'); ?>" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="<?php echo htmlspecialchars((function_exists('mc_base_path') ? mc_base_path() : '') . '/content/assets/favicon.png', ENT_QUOTES, 'UTF-8'); ?>">
     <meta name="csrf-token" content="<?php echo htmlspecialchars(generateCsrfToken(), ENT_QUOTES, 'UTF-8'); ?>">
 </head>
 <body>

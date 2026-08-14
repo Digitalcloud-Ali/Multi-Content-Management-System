@@ -1,11 +1,11 @@
 <?php
 /**
  * Flagship site packages — 1-click complete starter sites on MultiCMS core.
- * Packages live under /sites/<slug>/ (manifest.json + content.json).
+ * Packages live under content/sites/<slug>/ (manifest.json + content.json).
  */
 class FlagshipSite {
     public static function sitesPath() {
-        return dirname(__DIR__) . '/sites';
+        return dirname(__DIR__) . '/content/sites';
     }
 
     /**

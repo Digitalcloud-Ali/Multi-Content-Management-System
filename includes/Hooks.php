@@ -47,7 +47,7 @@ class Multicms_Hooks {
     }
 
     /**
-     * Load plugins/<slug>/hooks.php once (and optional includes/hooks.php).
+     * Load content/plugins/<slug>/hooks.php once (and optional includes/hooks.php).
      */
     public static function ensurePluginHooksLoaded() {
         if (self::$loadedPluginHooks) {
@@ -60,7 +60,7 @@ class Multicms_Hooks {
             require_once $coreHooks;
         }
 
-        $plugins = __DIR__ . '/../plugins';
+        $plugins = dirname(__DIR__) . '/content/plugins';
         if (!is_dir($plugins)) {
             return;
         }

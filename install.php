@@ -63,19 +63,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 // Function to check system requirements
 function checkRequirements() {
-    // Ensure uploads exists for writable check / first install
-    if (!is_dir('uploads')) {
-        @mkdir('uploads', 0755, true);
+    // Ensure content runtime dirs exist
+    foreach (['content/uploads', 'content/backups', 'logs'] as $dir) {
+        if (!is_dir($dir)) {
+            @mkdir($dir, 0755, true);
+        }
     }
-    $uploadsDeny = 'uploads/.htaccess';
+    $uploadsDeny = 'content/uploads/.htaccess';
     if (!is_file($uploadsDeny)) {
         @file_put_contents($uploadsDeny, "# Deny script execution in uploads\n<FilesMatch \"\\.(?i:php|phtml|phar|cgi|pl|py|jsp|asp|aspx)$\">\n    Require all denied\n</FilesMatch>\nOptions -ExecCGI\nRemoveHandler .php .phtml .php3 .php4 .php5 .php7 .php8\n");
     }
-    if (!is_dir('logs')) {
-        @mkdir('logs', 0755, true);
-    }
-    if (!is_dir('backups')) {
-        @mkdir('backups', 0755, true);
+    $backupsDeny = 'content/backups/.htaccess';
+    if (!is_file($backupsDeny)) {
+        @file_put_contents($backupsDeny, "Require all denied\nDeny from all\n");
     }
 
     $rewriteOk = true;
@@ -148,10 +148,10 @@ function checkRequirements() {
         ],
         'writable_dirs' => [
             'name' => 'Writable folders',
-            'required' => 'includes, uploads, backups',
-            'current' => (is_writable('includes') && is_writable('uploads') && is_writable('backups')) ? 'Writable' : 'Not writable',
-            'status' => is_writable('includes') && is_writable('uploads') && is_writable('backups'),
-            'description' => 'Installer must write config, uploads, and backups'
+            'required' => 'includes, content/uploads, content/backups',
+            'current' => (is_writable('includes') && is_writable('content/uploads') && is_writable('content/backups')) ? 'Writable' : 'Not writable',
+            'status' => is_writable('includes') && is_writable('content/uploads') && is_writable('content/backups'),
+            'description' => 'Installer must write config, uploads, and backups under content/'
         ],
         'install_path' => [
             'name' => 'Detected install path',

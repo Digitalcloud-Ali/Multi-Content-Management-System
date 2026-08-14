@@ -85,7 +85,7 @@ $siteTitle = $settings['site_title'] ?? ($settings['title'] ?? 'MultiCMS');
     </div>
 
     <?php if (empty($packages)): ?>
-        <p class="text-muted">No packages found under <code>sites/</code>.</p>
+        <p class="text-muted">No packages found under <code>content/sites/</code>.</p>
     <?php else: ?>
         <?php foreach ($packages as $pkg): ?>
             <div class="card shadow-sm mb-3">

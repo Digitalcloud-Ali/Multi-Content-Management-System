@@ -6,12 +6,13 @@ includes/env.php
 includes/site_path.php
 includes/update_check_cache.json
 
-# Runtime
-uploads/*
-!uploads/.htaccess
-!uploads/.gitkeep
-backups/*
-!backups/.htaccess
+# Runtime under content/
+content/uploads/*
+!content/uploads/.htaccess
+!content/uploads/.gitkeep
+content/backups/*
+!content/backups/.htaccess
+
 logs/
 *.log
 error_log
@@ -29,5 +30,5 @@ Thumbs.db
 *.swp
 *.swo
 
-# Composer (if added later)
+# Composer
 /vendor/

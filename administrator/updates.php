@@ -139,7 +139,7 @@ $siteTitle = $settings['site_title'] ?? ($settings['title'] ?? 'MultiCMS');
     <div class="card shadow-sm mb-4">
         <div class="card-body">
             <h2 class="h5">Create backup</h2>
-            <p class="small text-muted">Saves a ZIP of site files plus a SQL dump of the database into <code>backups/</code> (not web-accessible).</p>
+            <p class="small text-muted">Saves a ZIP of site files plus a SQL dump of the database into <code>content/backups/</code> (not web-accessible).</p>
             <form method="post">
                 <?php echo multicms_csrf_field(); ?>
                 <input type="hidden" name="action" value="backup">

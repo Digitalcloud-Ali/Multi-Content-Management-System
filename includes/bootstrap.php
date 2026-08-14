@@ -21,7 +21,7 @@ if (!defined('ENVIRONMENT')) {
     define('ENVIRONMENT', defined('MULTICMS_ENV') ? MULTICMS_ENV : 'production');
 }
 
-// Include all modern classes
+require_once __DIR__ . '/Paths.php';
 require_once __DIR__ . '/modern_functions.php';
 require_once __DIR__ . '/Hooks.php';
 require_once __DIR__ . '/Database.php';

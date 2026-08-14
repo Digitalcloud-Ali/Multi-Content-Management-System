@@ -42,8 +42,9 @@ try {
 }
 
 $currentUser = $authService->getCurrentUser();
+$theme = mc_theme_path();
 
-include 'themes/default/header.php';
+include $theme . '/header.php';
 ?>
 
 <div class="main-content">
@@ -53,56 +54,56 @@ include 'themes/default/header.php';
                 <?php
                 switch ($page) {
                     case 'home':
-                        include 'themes/default/home.php';
+                        include $theme . '/home.php';
                         break;
                     case 'blog':
-                        include 'themes/default/blog.php';
+                        include $theme . '/blog.php';
                         break;
                     case 'about':
-                        include 'themes/default/about.php';
+                        include $theme . '/about.php';
                         break;
                     case 'contact':
-                        include 'themes/default/contact.php';
+                        include $theme . '/contact.php';
                         break;
                     case 'login':
                         if ($authService->isAuthenticated()) {
                             safeRedirect(mc_url(), 'You are already logged in');
                         }
-                        include 'themes/default/login.php';
+                        include $theme . '/login.php';
                         break;
                     case 'register':
                         if ($authService->isAuthenticated()) {
                             safeRedirect(mc_url(), 'You are already logged in');
                         }
-                        include 'themes/default/register.php';
+                        include $theme . '/register.php';
                         break;
                     case 'profile':
                         if (!$authService->isAuthenticated()) {
                             safeRedirect(mc_url('login'), 'Please login to access your profile');
                         }
-                        include 'themes/default/profile.php';
+                        include $theme . '/profile.php';
                         break;
                     case 'logout':
                         $authService->logout();
                         safeRedirect(mc_url(), 'You have been logged out successfully');
                         break;
                     case 'single':
-                        include 'themes/default/single-post.php';
+                        include $theme . '/single-post.php';
                         break;
                     case 'cms_page':
-                        include 'themes/default/cms-page.php';
+                        include $theme . '/cms-page.php';
                         break;
                     default:
-                        include 'themes/default/404.php';
+                        include $theme . '/404.php';
                         break;
                 }
                 ?>
             </div>
             <div class="col-md-4">
-                <?php include 'themes/default/sidebar.php'; ?>
+                <?php include $theme . '/sidebar.php'; ?>
             </div>
         </div>
     </div>
 </div>
 
-<?php include 'themes/default/footer.php'; ?>
+<?php include $theme . '/footer.php'; ?>

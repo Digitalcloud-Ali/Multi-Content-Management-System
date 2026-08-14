@@ -2,7 +2,7 @@
 
 Flagship packages are **complete starter sites** for MultiCMS (not old Dreamweaver packs).
 
-Each folder under `sites/<slug>/` contains:
+Each folder under `content/sites/<slug>/` contains:
 
 - `manifest.json` — name, description, version  
 - `content.json` — site title/description, categories, posts, pages  

@@ -15,7 +15,7 @@
 
 ## Notes
 
-- Flagship packages under `sites/` seed modern `posts`, `core_categories`, and `pages` (not old Dreamweaver packs).
-- Root `.htaccess` handles pretty permalinks; installer auto-sets `RewriteBase` and writes `db_config.php`, `env.php`, `site_path.php`, and `installed.lock`.
+- Flagship packages under `content/sites/` seed modern `posts`, `core_categories`, and `pages`.
+- Layout: core in `includes/` + `administrator/`; themes/uploads/flagships in `content/`.
 - Admin → Updates & Backup checks GitHub `version.json` and can backup / update / restore.
 - Do not commit `includes/db_config.php` or `includes/env.php`.

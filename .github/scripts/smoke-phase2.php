@@ -6,7 +6,7 @@
 error_reporting(E_ALL);
 ini_set('display_errors', '1');
 
-$root = dirname(__DIR__);
+$root = dirname(__DIR__, 2);
 chdir($root);
 $fail = 0;
 
@@ -104,17 +104,18 @@ ok('re-apply skips duplicates', $postCount2 >= $postCount && !empty($again['succ
 $active = json_decode((string) @file_get_contents($root . '/includes/active_site.json'), true);
 ok('active_site flagship', ($active['mode'] ?? '') === 'flagship' && ($active['slug'] ?? '') === 'blog');
 
-ok('uploads dir exists', is_dir($root . '/uploads'));
-ok('uploads htaccess deny php', is_file($root . '/uploads/.htaccess'));
-ok('root htaccess blocks uploads php', strpos((string) file_get_contents($root . '/.htaccess'), 'uploads') !== false);
-ok('no dreamweaver packs', count(glob($root . '/plugins/*/plugin.json')) === 0);
+ok('uploads dir exists', is_dir($root . '/content/uploads'));
+ok('uploads htaccess deny php', is_file($root . '/content/uploads/.htaccess'));
+ok('root htaccess blocks uploads php', strpos((string) file_get_contents($root . '/.htaccess'), 'content/uploads') !== false || strpos((string) file_get_contents($root . '/.htaccess'), 'uploads') !== false);
+ok('no dreamweaver packs', count(glob($root . '/content/plugins/*/plugin.json')) === 0);
+ok('content layout', is_dir($root . '/content/themes/default') && is_dir($root . '/content/sites/blog'));
 ok('version.json present', is_file($root . '/version.json'));
 $ver = json_decode((string) file_get_contents($root . '/version.json'), true);
 ok('version semver', !empty($ver['version']));
 ok('InstallPath class', is_file($root . '/includes/InstallPath.php'));
 ok('UpdateService class', is_file($root . '/includes/UpdateService.php'));
 ok('updates admin ui', is_file($root . '/administrator/updates.php'));
-ok('backups htaccess', is_file($root . '/backups/.htaccess'));
+ok('backups htaccess', is_file($root . '/content/backups/.htaccess'));
 
 require_once $root . '/includes/bootstrap.php';
 ok('routing helpers loaded', function_exists('mc_url') && function_exists('mc_resolve_request'));
@@ -137,7 +138,7 @@ ok('about page readable', !empty($page['title']));
 ok('CSRF reject', multicms_csrf_validate('bad') === false);
 ok('dashboard file', is_file($root . '/administrator/dashboard.php'));
 
-passthru('php "' . $root . '/scripts/php-lint-smoke.php"', $lintCode);
+passthru('php "' . $root . '/.github/scripts/php-lint-smoke.php"', $lintCode);
 ok('php-lint-smoke', $lintCode === 0);
 
 echo PHP_EOL . ($fail === 0 ? 'ALL PASS' : "$fail FAILED") . PHP_EOL;

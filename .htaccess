@@ -25,10 +25,10 @@
     # Block direct PHP under includes/
     RewriteRule ^includes/.*\.php$ - [F,L]
 
-    # Block PHP execution in upload / image dirs
-    RewriteRule ^(images|uploads)/.*\.(?i:php|phtml|phar|php\d+)$ - [F,L]
+    # Block PHP execution in content uploads / assets
+    RewriteRule ^content/(uploads|assets)/.*\.(?i:php|phtml|phar|php\d+)$ - [F,L]
 
-    # Existing files/dirs (administrator, themes, assets) — serve directly
+    # Existing files/dirs — serve directly
     RewriteCond %{REQUEST_FILENAME} -f [OR]
     RewriteCond %{REQUEST_FILENAME} -d
     RewriteRule ^ - [L]
@@ -37,7 +37,6 @@
     RewriteRule ^(.*)$ index.php?mc_route=$1 [QSA,L]
 </IfModule>
 
-# Custom error pages (document root relative; adjust if using a subdirectory)
-ErrorDocument 403 /themes/default/403.php
-ErrorDocument 404 /themes/default/404.php
-ErrorDocument 500 /themes/default/500.php
+ErrorDocument 403 /content/themes/default/403.php
+ErrorDocument 404 /content/themes/default/404.php
+ErrorDocument 500 /content/themes/default/500.php

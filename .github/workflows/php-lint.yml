@@ -16,7 +16,7 @@ jobs:
           php-version: '8.2'
           extensions: mysqli, gd, curl
       - name: Syntax smoke test
-        run: php scripts/php-lint-smoke.php
+        run: php .github/scripts/php-lint-smoke.php
 
   acceptance-smoke:
     runs-on: ubuntu-latest
@@ -47,4 +47,4 @@ jobs:
             sleep 2
           done
       - name: Phase acceptance smoke
-        run: php scripts/smoke-phase2.php
+        run: php .github/scripts/smoke-phase2.php

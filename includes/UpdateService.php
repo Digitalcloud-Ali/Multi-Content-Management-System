@@ -22,7 +22,7 @@ class UpdateService {
     }
 
     public static function backupsDir() {
-        $dir = self::root() . '/backups';
+        $dir = self::root() . '/content/backups';
         if (!is_dir($dir)) {
             @mkdir($dir, 0755, true);
         }
@@ -163,7 +163,6 @@ class UpdateService {
         }
 
         $root = self::root();
-        $skip = ['backups', '.git', 'vendor', 'node_modules'];
         $iterator = new RecursiveIteratorIterator(
             new RecursiveDirectoryIterator($root, FilesystemIterator::SKIP_DOTS),
             RecursiveIteratorIterator::SELF_FIRST
@@ -173,7 +172,10 @@ class UpdateService {
             $full = $file->getPathname();
             $rel = ltrim(str_replace('\\', '/', substr($full, strlen($root))), '/');
             $top = explode('/', $rel)[0];
-            if (in_array($top, $skip, true)) {
+            if (in_array($top, ['.git', 'vendor', 'node_modules', '.github', 'docs'], true)) {
+                continue;
+            }
+            if ($top === 'backups' || $rel === 'content/backups' || strpos($rel, 'content/backups/') === 0) {
                 continue;
             }
             if ($file->isDir()) {
@@ -222,7 +224,7 @@ class UpdateService {
             return ['success' => false, 'message' => 'PHP zip extension required.'];
         }
 
-        $tmp = self::root() . '/backups/_restore_' . time();
+        $tmp = self::backupsDir() . '/_restore_' . time();
         @mkdir($tmp, 0755, true);
         $zip = new ZipArchive();
         if ($zip->open($path) !== true) {
@@ -320,10 +322,10 @@ class UpdateService {
         if (in_array($rel, $protected, true)) {
             return true;
         }
-        if (strpos($rel, 'uploads/') === 0 || $rel === 'uploads') {
+        if (strpos($rel, 'content/uploads/') === 0 || $rel === 'content/uploads' || strpos($rel, 'uploads/') === 0 || $rel === 'uploads') {
             return true;
         }
-        if (strpos($rel, 'backups/') === 0 || $rel === 'backups') {
+        if (strpos($rel, 'content/backups/') === 0 || $rel === 'content/backups' || strpos($rel, 'backups/') === 0 || $rel === 'backups') {
             return true;
         }
         return false;

@@ -82,17 +82,17 @@ class InstallPath {
             $edBase = rtrim($rewrite, '/');
             $content = preg_replace(
                 '/^ErrorDocument\s+403\s+.+$/mi',
-                'ErrorDocument 403 ' . $edBase . '/themes/default/403.php',
+                'ErrorDocument 403 ' . $edBase . '/content/themes/default/403.php',
                 $content
             );
             $content = preg_replace(
                 '/^ErrorDocument\s+404\s+.+$/mi',
-                'ErrorDocument 404 ' . $edBase . '/themes/default/404.php',
+                'ErrorDocument 404 ' . $edBase . '/content/themes/default/404.php',
                 $content
             );
             $content = preg_replace(
                 '/^ErrorDocument\s+500\s+.+$/mi',
-                'ErrorDocument 500 ' . $edBase . '/themes/default/500.php',
+                'ErrorDocument 500 ' . $edBase . '/content/themes/default/500.php',
                 $content
             );
             @file_put_contents($htaccess, $content);

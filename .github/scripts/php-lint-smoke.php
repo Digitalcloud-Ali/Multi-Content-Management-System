@@ -2,11 +2,11 @@
 /**
  * Lightweight syntax smoke test for core PHP files.
  */
-$root = dirname(__DIR__);
+$root = dirname(__DIR__, 2);
 $paths = [
     $root . '/includes',
-    $root . '/themes/default',
-    $root . '/sites',
+    $root . '/content/themes/default',
+    $root . '/content/sites',
     $root . '/install.php',
     $root . '/index.php',
     $root . '/administrator/login.php',
@@ -20,6 +20,7 @@ $paths = [
     $root . '/includes/FlagshipSite.php',
     $root . '/includes/UpdateService.php',
     $root . '/includes/InstallPath.php',
+    $root . '/includes/Paths.php',
 ];
 
 $files = [];

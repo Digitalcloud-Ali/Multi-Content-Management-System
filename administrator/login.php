@@ -114,7 +114,7 @@ if (isset($_POST['datauser'])) {
     <td bgcolor="#db3300"><table width="88" height="88" border="0" align="center" cellpadding="0" cellspacing="0">
       <tr>
         <td width="91" height="88" align="center" class="topbigbuttons"><a href="index.php" class="headbuttons">
-          <div title="Back to Home!"><img src="../images/logo-normal.png" alt="Back to Home" width="122" height="111" border="0" /></div>
+          <div title="Back to Home!"><img src="../content/assets/logo-normal.png" alt="Back to Home" width="122" height="111" border="0" /></div>
         </a></td>
       </tr>
     </table></td>
