@@ -10,9 +10,11 @@ Open-source PHP/MySQL CMS. Install it on shared hosting or a VPS, run the web in
 
 1. Upload this project to your web root **or a subfolder** (e.g. `yoursite.com/cms/`).
 2. Create a MySQL database in your host panel.
-3. Open `/install.php` (or `/cms/install.php`) — the wizard checks your host (green = OK, red = fix first).
+3. Open `/install.php` (or `/cms/install.php`) — green/red host check, then choose **Fresh** or a **Flagship** starter.
 4. Log in at `/administrator/login.php`.
 5. Use **Posts**, **Site Settings**, **Flagship Sites**, and **Updates & Backup**.
+
+**Flagships included:** Blog, Business, Portfolio, Clinic, Nonprofit (`sites/`).
 
 Install path and pretty URLs are detected automatically — you do **not** edit `RewriteBase` by hand.  
 `install.php` stays after setup and only shows “already installed” (like WordPress).
@@ -47,7 +49,7 @@ Admin → **Updates & Backup**:
 3. **Backup & update** creates a ZIP+SQL backup first, then downloads the latest code from GitHub (keeps DB login, uploads, and path config).
 4. **Restore** can reload database (and optionally files) from a backup.
 
-When we ship a new release, bump `version.json` on `master` — every installed site can see it in Admin.
+When we bump `version.json` on `master`, GitHub Actions publishes a [Release](https://github.com/Digitalcloud-Ali/Multi-Content-Management-System/releases) and every installed site can see it in Admin.
 
 ## Security baseline
 
