@@ -122,7 +122,7 @@ if($row_setting['onlinestatus'] == "yes")
         <td valign="top"><div class="title"><?php echo multicms_h($row_welcome['title']); ?></div>
           <table>
             <tr>
-              <td height="36"><?php echo $row_welcome['description']; ?></td>
+              <td height="36"><?php echo multicms_plain($row_welcome['description'], 400); ?></td>
             </tr>
         </table>
         

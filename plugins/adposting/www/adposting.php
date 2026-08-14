@@ -204,7 +204,7 @@ if($row_setting['onlinestatus'] == "yes")
                     <td bgcolor="#F9F9F9" class="posttitle"><a href="adposting.php?adpostingid=<?php echo $row_adposting['adpostingid']; ?>" class="title"><?php echo multicms_h($row_adposting['title']); ?></a></td>
                     </tr>
                   <tr>
-                    <td valign="top" bgcolor="#F9F9F9"><p><?php echo $row_adposting['description']; ?></p>
+                    <td valign="top" bgcolor="#F9F9F9"><p><?php echo multicms_plain($row_adposting['description'], 400); ?></p>
                       <p>&nbsp;<?php echo multicms_h($row_adposting['adpostingurl']); ?></p>
                       <p><span class="textsmall"><?php echo multicms_h($row_adposting['owner']); ?> / <?php echo $row_adposting['date']; ?> / View : <?php echo $row_adposting['views']; ?> / Rating : <?php echo $row_adposting['rating']; ?> / <?php echo multicms_h($row_adposting['catename']); ?></span></p></td>
                     </tr>

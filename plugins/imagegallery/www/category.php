@@ -156,7 +156,7 @@ if($row_setting['onlinestatus'] == "yes")
                   <td rowspan="2"><a href="image.php?imageid=<?php echo $row_image['imageid']; ?>"><img src="images/gallery/<?php echo $row_image['imageurl']; ?>" width="115" height="97" border="0"></a></td>
                 </tr>
                 <tr>
-                  <td valign="top" class="texts"><p><?php echo $row_image['description']; ?></p>
+                  <td valign="top" class="texts"><p><?php echo multicms_plain($row_image['description'], 400); ?></p>
                       <p><span class="textsmall"><?php echo multicms_h($row_image['users']); ?> / <?php echo $row_image['date']; ?> / <a href="category.php?catename=<?php echo multicms_h($row_image['catename']); ?>"><?php echo multicms_h($row_image['catename']); ?></a></span></p></td>
                 </tr>
               </table><div align="center"><a href="<?php printf("%s?pageNum_image=%d%s", $currentPage, 0, $queryString_image); ?>" class="navigationbuttons">FIRST</a> <a href="<?php printf("%s?pageNum_image=%d%s", $currentPage, max(0, $pageNum_image - 1), $queryString_image); ?>" class="navigationbuttons">PREVIOUS</a> <a href="<?php printf("%s?pageNum_image=%d%s", $currentPage, min($totalPages_image, $pageNum_image + 1), $queryString_image); ?>" class="navigationbuttons">NEXT</a> <a href="<?php printf("%s?pageNum_image=%d%s", $currentPage, $totalPages_image, $queryString_image); ?>" class="navigationbuttons">LAST</a></div>

@@ -259,7 +259,7 @@ if(($row_video['status'] == "published") && ($row_video['videotype'] == "embed")
                   <td><table class="tables">
                       <tr>
                         <td><a href="video.php?videoid=<?php echo $row_video['videoid']; ?>"><img src="images/videoimages/<?php echo $row_video['imageurl']; ?>" width="115" height="97" border="0"></a></td>
-                        <td><?php echo $row_video['description']; ?></td>
+                        <td><?php echo multicms_plain($row_video['description'], 400); ?></td>
                       </tr>
                   </table></td>
                 </tr>

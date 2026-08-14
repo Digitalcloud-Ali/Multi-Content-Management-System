@@ -69,88 +69,110 @@ if (!function_exists('dbconnect')) {
 }
 
 // Helper function to get database instance
-function getDB() {
-    return Database::getInstance();
+if (!function_exists('getDB')) {
+    function getDB() {
+        return Database::getInstance();
+    }
 }
 
 // Helper function to get session instance
-function getSession() {
-    return Session::class;
+if (!function_exists('getSession')) {
+    function getSession() {
+        return Session::class;
+    }
 }
 
 // Helper function to get validator instance
-function getValidator() {
-    return new Validator();
+if (!function_exists('getValidator')) {
+    function getValidator() {
+        return new Validator();
+    }
 }
 
 // Helper function to safely redirect
-function safeRedirect($url, $message = '') {
-    ErrorHandler::safeRedirect($url, $message);
+if (!function_exists('safeRedirect')) {
+    function safeRedirect($url, $message = '') {
+        ErrorHandler::safeRedirect($url, $message);
+    }
 }
 
 // Helper function to display errors
-function displayError($message, $type = 'error') {
-    ErrorHandler::displayError($message, $type);
+if (!function_exists('displayError')) {
+    function displayError($message, $type = 'error') {
+        ErrorHandler::displayError($message, $type);
+    }
 }
 
 // Helper function to log errors
-function logError($message, $level = 'ERROR') {
-    ErrorHandler::log($message, $level);
+if (!function_exists('logError')) {
+    function logError($message, $level = 'ERROR') {
+        ErrorHandler::log($message, $level);
+    }
 }
 
 // Helper function to get current user
-function getCurrentUser() {
-    if (!class_exists('AuthService')) {
-        return null;
+if (!function_exists('getCurrentUser')) {
+    function getCurrentUser() {
+        if (!class_exists('AuthService')) {
+            return null;
+        }
+        $authService = new AuthService();
+        return $authService->getCurrentUser();
     }
-    
-    $authService = new AuthService();
-    return $authService->getCurrentUser();
 }
 
 // Helper function to check if user is authenticated
-function isAuthenticated() {
-    if (!class_exists('AuthService')) {
-        return false;
+if (!function_exists('isAuthenticated')) {
+    function isAuthenticated() {
+        if (!class_exists('AuthService')) {
+            return !empty($_SESSION['MM_Username']);
+        }
+        $authService = new AuthService();
+        return $authService->isAuthenticated();
     }
-    
-    $authService = new AuthService();
-    return $authService->isAuthenticated();
 }
 
 // Helper function to check if user has specific role
-function hasRole($role) {
-    if (!class_exists('AuthService')) {
-        return false;
+if (!function_exists('hasRole')) {
+    function hasRole($role) {
+        if (!class_exists('AuthService')) {
+            if (empty($_SESSION['MM_UserGroup'])) {
+                return false;
+            }
+            return strcasecmp((string) $_SESSION['MM_UserGroup'], (string) $role) === 0
+                || (strcasecmp((string) $role, 'admin') === 0 && strcasecmp((string) $_SESSION['MM_UserGroup'], 'administrator') === 0);
+        }
+        $authService = new AuthService();
+        return $authService->hasRole($role);
     }
-    
-    $authService = new AuthService();
-    return $authService->hasRole($role);
 }
 
 // Helper function to require authentication
-function requireAuth() {
-    if (!class_exists('AuthService')) {
-        header('Location: index.php?page=login');
-        exit;
+if (!function_exists('requireAuth')) {
+    function requireAuth() {
+        if (!class_exists('AuthService')) {
+            header('Location: index.php?page=login');
+            exit;
+        }
+        $authService = new AuthService();
+        $authService->requireAuth();
     }
-    
-    $authService = new AuthService();
-    $authService->requireAuth();
 }
 
 // Helper function to require specific role
-function requireRole($role) {
-    if (!class_exists('AuthService')) {
-        header('Location: index.php?page=login');
-        exit;
+if (!function_exists('requireRole')) {
+    function requireRole($role) {
+        if (!class_exists('AuthService')) {
+            header('Location: index.php?page=login');
+            exit;
+        }
+        $authService = new AuthService();
+        $authService->requireRole($role);
     }
-    
-    $authService = new AuthService();
-    $authService->requireRole($role);
 }
 
 // Helper function to get settings
+if (!function_exists('getSetting')) {
 function getSetting($key, $default = null) {
     static $cache = null;
     if ($cache === null) {
@@ -179,34 +201,45 @@ function getSetting($key, $default = null) {
     }
     return $cache[$key] ?? $default;
 }
+} // getSetting
 
 // Helper function to sanitize input
+if (!function_exists('sanitizeInput')) {
 function sanitizeInput($input, $type = 'string') {
     return Validator::sanitize($input, $type);
 }
+}
 
 // Helper function to validate input
+if (!function_exists('validateInput')) {
 function validateInput($data, $rules) {
     $validator = new Validator();
     return $validator->validate($data, $rules);
 }
+}
 
 // Helper function to get validation errors
+if (!function_exists('getValidationErrors')) {
 function getValidationErrors() {
     if (!isset($GLOBALS['validator'])) {
         return [];
     }
     return $GLOBALS['validator']->getErrors();
 }
+}
 
 // Helper function to generate CSRF token
+if (!function_exists('generateCsrfToken')) {
 function generateCsrfToken() {
     return Session::generateCsrfToken();
 }
+}
 
 // Helper function to validate CSRF token
+if (!function_exists('validateCsrfToken')) {
 function validateCsrfToken($token) {
     return Session::validateCsrfToken($token);
+}
 }
 
 // Helper function to set flash message

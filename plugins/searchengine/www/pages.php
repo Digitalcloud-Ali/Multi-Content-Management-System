@@ -172,7 +172,7 @@ if($row_setting['onlinestatus'] == "yes")
 <div style="float:right; padding:0; padding-top:0px; width:83%;position: relative;">
 <div class="title"><?php echo multicms_h($row_pagesdetail['title']); ?></div>
 <?php if ($totalRows_pagesdetail > 0) { // Show if recordset not empty ?>
-<div style="height:2px;" class="texts"><?php echo $row_pagesdetail['description']; ?></div>
+<div style="height:2px;" class="texts"><?php echo multicms_plain($row_pagesdetail['description'], 400); ?></div>
       <?php } // Show if recordset not empty ?>
       <?php if ($totalRows_pagesdetail == 0) { // Show if recordset empty ?>
                   No Results Found

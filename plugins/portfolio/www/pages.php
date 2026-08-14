@@ -104,7 +104,7 @@ if($row_setting['onlinestatus'] == "yes")
       <div class="title"><?php echo multicms_h($row_pagesdetail['title']); ?></div>
       <table class="tables">
         <tr>
-          <td class="texts"><?php echo $row_pagesdetail['description']; ?></td>
+          <td class="texts"><?php echo multicms_plain($row_pagesdetail['description'], 400); ?></td>
         </tr>
       </table>
       <?php } // Show if recordset not empty ?>

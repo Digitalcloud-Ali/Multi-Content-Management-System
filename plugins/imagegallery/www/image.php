@@ -196,7 +196,7 @@ if($row_setting['onlinestatus'] == "yes")
                               <table class="tables">
                                 <tr>
                                   <td><img src="images/gallery/<?php echo $row_image['imageurl']; ?>" width="100%" height="600" border="0">
-                                  <?php echo $row_image['description']; ?></a></td>
+                                  <?php echo multicms_plain($row_image['description'], 400); ?></a></td>
                                 </tr>
                               </table>
                           </div>
@@ -213,7 +213,7 @@ if($row_setting['onlinestatus'] == "yes")
                   <td><table width="100%" border="0" cellpadding="4" cellspacing="0">
                       <tr>
                         <td width="1"><a href="image.php?imageid=<?php echo $row_image['imageid']; ?>"><img src="images/gallery/<?php echo $row_image['imageurl']; ?>" width="115" height="97" border="0"></a></td>
-                        <td valign="top"><?php echo $row_image['description']; ?></td>
+                        <td valign="top"><?php echo multicms_plain($row_image['description'], 400); ?></td>
                       </tr>
                   </table></td>
                 </tr>

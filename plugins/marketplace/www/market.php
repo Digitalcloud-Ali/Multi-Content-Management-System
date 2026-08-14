@@ -190,7 +190,7 @@ if($row_setting['onlinestatus'] == "yes")
      <table width="100%">
                   <tr>
                     <td width="1" valign="top"><a href="market.php?marketid=<?php echo $row_market['marketid']; ?>"><img src="images/market/<?php echo $row_market['imageurl']; ?>" width="120" height="120" border="0"></a></td>
-                    <td valign="top"><p><?php echo $row_market['description']; ?></p>
+                    <td valign="top"><p><?php echo multicms_plain($row_market['description'], 400); ?></p>
                       <p><span class="textsmall"><a href="profile.php?users=<?php echo multicms_h($row_market['owner']); ?>"><?php echo multicms_h($row_market['owner']); ?></a> / <?php echo $row_market['date']; ?> / View : <?php echo $row_market['views']; ?> / Rating : <?php echo $row_market['rating']; ?> / <a href="category.php?catename=<?php echo multicms_h($row_market['catename']); ?>"><?php echo multicms_h($row_market['catename']); ?></a></span></p></td>
                     <td align="center" valign="top"><?php if ($totalRows_members > 0) { // Show if recordset not empty ?>
                       <p><br>

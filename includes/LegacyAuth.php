@@ -112,6 +112,23 @@ if (!function_exists('multicms_h')) {
     }
 }
 
+if (!function_exists('multicms_plain')) {
+    /**
+     * Strip tags then escape — for legacy description fields that may contain HTML.
+     */
+    function multicms_plain($value, $maxLen = 0) {
+        $text = trim(html_entity_decode(strip_tags((string) $value), ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+        if ($maxLen > 0 && function_exists('mb_substr')) {
+            if (mb_strlen($text) > $maxLen) {
+                $text = mb_substr($text, 0, $maxLen) . '…';
+            }
+        } elseif ($maxLen > 0 && strlen($text) > $maxLen) {
+            $text = substr($text, 0, $maxLen) . '...';
+        }
+        return htmlspecialchars($text, ENT_QUOTES, 'UTF-8');
+    }
+}
+
 if (!function_exists('multicms_require_csrf_post')) {
     function multicms_require_csrf_post() {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {

@@ -225,8 +225,19 @@ $_FILES['photo'] = [
 $up2 = multicms_safe_upload('photo', $dest);
 ok('upload rejects .php. in filename', empty($up2['success']), json_encode($up2));
 
+ok('multicms_plain strips tags', multicms_plain('<b>Hi</b> & x') === 'Hi &amp; x');
+
+// Re-apply blog to exercise Phase 4 seed hook
+$conn->query("DELETE FROM blog");
+require_once $root . '/includes/Hooks.php';
+$apply2 = PluginManager::applySiteAsMain('blog', $conn);
+ok('re-apply blog for seed', !empty($apply2['success']));
+$blogCount = (int) ($conn->query('SELECT COUNT(*) AS c FROM blog')->fetch_assoc()['c'] ?? 0);
+ok('blog sample post seeded', $blogCount >= 1, 'count=' . $blogCount);
+
 ok('composer.json present', is_file($root . '/composer.json'));
 ok('php-lint workflow present', is_file($root . '/.github/workflows/php-lint.yml'));
+ok('demo-ready checklist present', is_file($root . '/docs/DEMO_READY.md'));
 ok('Hooks API loaded', function_exists('do_action') && function_exists('apply_filters'));
 
 $hookFired = false;
@@ -235,7 +246,6 @@ add_action('multicms_smoke_probe', function () use (&$hookFired) {
 });
 do_action('multicms_smoke_probe');
 ok('hooks do_action fires', $hookFired === true);
-$filtered = apply_filters('multicms_smoke_filter', 'a');
 add_filter('multicms_smoke_filter', function ($v) { return $v . 'b'; });
 $filtered = apply_filters('multicms_smoke_filter', 'a');
 ok('hooks apply_filters works', $filtered === 'ab');

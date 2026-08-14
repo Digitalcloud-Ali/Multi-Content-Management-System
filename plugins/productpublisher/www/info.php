@@ -153,7 +153,7 @@ if($row_setting['onlinestatus'] == "yes")
       <div style="padding-left:7px; padding-top:7px;">
         <?php do { ?>
         <div class="orangetitle"><a href="info.php?newsid=<?php echo $row_pagesdetail['newsid']; ?>"><?php echo multicms_h($row_pagesdetail['title']); ?></a></div>
-        <div class="texts" style="padding-bottom:7px;"><?php echo $row_pagesdetail['description']; ?></div>
+        <div class="texts" style="padding-bottom:7px;"><?php echo multicms_plain($row_pagesdetail['description'], 400); ?></div>
         <?php } while ($row_pagesdetail = mysqli_fetch_assoc($pagesdetail)); ?>
       </div>
       <?php } // Show if recordset not empty ?>
@@ -163,7 +163,7 @@ if($row_setting['onlinestatus'] == "yes")
       <?php } // Show if recordset empty ?>
       <?php if ($totalRows_pagesdetail1 > 0) { // Show if recordset not empty ?>
       <div class="title"><?php echo multicms_h($row_pagesdetail1['title']); ?></div>
-      <div class="texts" style="padding-left:7px; padding-top:7px;"><?php echo $row_pagesdetail1['description']; ?></div>
+      <div class="texts" style="padding-left:7px; padding-top:7px;"><?php echo multicms_plain($row_pagesdetail1['description'], 400); ?></div>
       <?php } // Show if recordset not empty ?>
 
 <?php

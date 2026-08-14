@@ -152,7 +152,7 @@ if($row_setting['onlinestatus'] == "yes")
                   <td width="24" rowspan="2"><a href="image.php?imageid=<?php echo $row_image['imageid']; ?>"><img src="images/gallery/<?php echo $row_image['imageurl']; ?>" width="115" height="97" border="0"></a></td>
                 </tr>
                 <tr>
-                  <td valign="top" class="texts"><p><?php echo $row_image['description']; ?></p>
+                  <td valign="top" class="texts"><p><?php echo multicms_plain($row_image['description'], 400); ?></p>
                       <p><span class="textsmall"><?php echo multicms_h($row_image['users']); ?> / <?php echo $row_image['date']; ?> / <a href="category.php?catename=<?php echo multicms_h($row_image['catename']); ?>"><?php echo multicms_h($row_image['catename']); ?></a></span></p></td>
                 </tr>
               </table>

@@ -158,7 +158,7 @@ if($row_setting['onlinestatus'] == "yes")
                     <td align="center"><p><a href="productpublisher.php?productpublisherid=<?php echo $row_productpublisher['productpublisherid']; ?>"><img src="images/productpublisher/<?php echo $row_productpublisher['imageurl']; ?>" width="231" height="207" border="0"></a></p></td>
                   </tr>
                   <tr>
-                    <td align="center" valign="top"><p><?php echo $row_productpublisher['description']; ?></p>
+                    <td align="center" valign="top"><p><?php echo multicms_plain($row_productpublisher['description'], 400); ?></p>
                       <p><a href="<?php echo multicms_h($row_productpublisher['productpublisherurl']); ?>"><strong>BUY NOW</strong></a></p>
                       <p><span class="textsmall"><?php echo multicms_h($row_productpublisher['owner']); ?> / <?php echo $row_productpublisher['date']; ?> / View : <?php echo $row_productpublisher['views']; ?> / Rating : <?php echo $row_productpublisher['rating']; ?> / <?php echo multicms_h($row_productpublisher['catename']); ?></span></p></td>
                   </tr>

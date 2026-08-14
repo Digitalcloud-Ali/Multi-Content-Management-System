@@ -1,139 +1,91 @@
+<?php
+/**
+ * Theme header — dual mode:
+ * - Ready-made packs set $row_setting + $theme_path (Dreamweaver chrome)
+ * - Modern core uses getSetting() / Bootstrap
+ */
+$packMode = !empty($row_setting) && is_array($row_setting) && isset($theme_path);
+if ($packMode) {
+    $siteTitle = htmlspecialchars((string) ($row_setting['title'] ?? 'MultiCMS'), ENT_QUOTES, 'UTF-8');
+    $topic = htmlspecialchars((string) ($row_setting['selecttopic'] ?? 'blog'), ENT_QUOTES, 'UTF-8');
+    ?>
+<div class="pack-header" style="padding:12px 16px;background:#1a1a1a;color:#fff;margin-bottom:8px;">
+  <strong style="font-size:1.1rem;"><?php echo $siteTitle; ?></strong>
+  <span style="opacity:.7;margin-left:8px;"><?php echo $topic; ?></span>
+  <nav style="margin-top:8px;">
+    <a href="index.php" style="color:#fff;margin-right:12px;">Home</a>
+    <a href="search.php" style="color:#fff;margin-right:12px;">Search</a>
+    <a href="contact.php" style="color:#fff;margin-right:12px;">Contact</a>
+    <?php if (!empty($_SESSION['MM_Username'])): ?>
+      <a href="account.php" style="color:#fff;margin-right:12px;">Account</a>
+      <a href="<?php echo htmlspecialchars($_SERVER['PHP_SELF'] ?? 'index.php', ENT_QUOTES, 'UTF-8'); ?>?doLogout=true" style="color:#fff;">Logout</a>
+    <?php else: ?>
+      <a href="login.php" style="color:#fff;margin-right:12px;">Login</a>
+      <a href="register.php" style="color:#fff;">Register</a>
+    <?php endif; ?>
+  </nav>
+</div>
+    <?php
+    return;
+}
+
+if (!function_exists('getSetting')) {
+    function getSetting($key, $default = null) { return $default; }
+}
+if (!function_exists('generateCsrfToken')) {
+    function generateCsrfToken() { return ''; }
+}
+if (!function_exists('isAuthenticated')) {
+    function isAuthenticated() { return !empty($_SESSION['MM_Username']); }
+}
+$currentUser = $currentUser ?? ['username' => $_SESSION['MM_Username'] ?? ''];
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo getSetting('site_title', 'Multi-Content Management System'); ?></title>
-    <meta name="description" content="<?php echo getSetting('site_description', 'A modern content management system'); ?>">
-    
-    <!-- Bootstrap CSS -->
+    <title><?php echo htmlspecialchars(getSetting('site_title', 'Multi-Content Management System'), ENT_QUOTES, 'UTF-8'); ?></title>
+    <meta name="description" content="<?php echo htmlspecialchars(getSetting('site_description', 'A modern content management system'), ENT_QUOTES, 'UTF-8'); ?>">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    
-    <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    
-    <!-- Custom CSS -->
     <link href="themes/default/style.css" rel="stylesheet">
-    
-    <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="images/favicon.png">
-    
-    <!-- CSRF Token for AJAX requests -->
-    <meta name="csrf-token" content="<?php echo generateCsrfToken(); ?>">
+    <meta name="csrf-token" content="<?php echo htmlspecialchars(generateCsrfToken(), ENT_QUOTES, 'UTF-8'); ?>">
 </head>
 <body>
-    <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container">
             <a class="navbar-brand" href="index.php">
                 <i class="fas fa-home"></i>
-                <?php echo getSetting('site_name', 'RayCMS'); ?>
+                <?php echo htmlspecialchars(getSetting('site_name', getSetting('site_title', 'MultiCMS')), ENT_QUOTES, 'UTF-8'); ?>
             </a>
-            
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="index.php">
-                            <i class="fas fa-home"></i> Home
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="index.php?page=blog">
-                            <i class="fas fa-blog"></i> Blog
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="index.php?page=about">
-                            <i class="fas fa-info-circle"></i> About
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="index.php?page=contact">
-                            <i class="fas fa-envelope"></i> Contact
-                        </a>
-                    </li>
+                    <li class="nav-item"><a class="nav-link" href="index.php">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="index.php?page=blog">Blog</a></li>
+                    <li class="nav-item"><a class="nav-link" href="index.php?page=about">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="index.php?page=contact">Contact</a></li>
                 </ul>
-                
-                <!-- Search Form -->
                 <form class="d-flex me-3" action="index.php" method="GET">
                     <input type="hidden" name="page" value="search">
-                    <input class="form-control me-2" type="search" name="q" placeholder="Search..." 
-                           value="<?php echo htmlspecialchars($_GET['q'] ?? ''); ?>">
-                    <button class="btn btn-outline-light" type="submit">
-                        <i class="fas fa-search"></i>
-                    </button>
+                    <input class="form-control me-2" type="search" name="q" placeholder="Search..."
+                           value="<?php echo htmlspecialchars($_GET['q'] ?? '', ENT_QUOTES, 'UTF-8'); ?>">
+                    <button class="btn btn-outline-light" type="submit"><i class="fas fa-search"></i></button>
                 </form>
-                
-                <!-- User Menu -->
                 <ul class="navbar-nav">
                     <?php if (isAuthenticated()): ?>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" 
-                               data-bs-toggle="dropdown">
-                                <i class="fas fa-user"></i>
-                                <?php echo htmlspecialchars($currentUser['username'] ?? 'User'); ?>
-                            </a>
-                            <ul class="dropdown-menu dropdown-menu-end">
-                                <?php if (hasRole('administrator')): ?>
-                                    <li>
-                                        <a class="dropdown-item" href="administrator/">
-                                            <i class="fas fa-cog"></i> Admin Panel
-                                        </a>
-                                    </li>
-                                    <li><hr class="dropdown-divider"></li>
-                                <?php endif; ?>
-                                
-                                <li>
-                                    <a class="dropdown-item" href="index.php?page=profile">
-                                        <i class="fas fa-user-edit"></i> Profile
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item" href="index.php?page=my-posts">
-                                        <i class="fas fa-file-alt"></i> My Posts
-                                    </a>
-                                </li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li>
-                                    <a class="dropdown-item" href="index.php?page=logout">
-                                        <i class="fas fa-sign-out-alt"></i> Logout
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
+                        <li class="nav-item"><a class="nav-link" href="index.php?page=profile"><?php echo htmlspecialchars($currentUser['username'] ?? 'User', ENT_QUOTES, 'UTF-8'); ?></a></li>
+                        <li class="nav-item"><a class="nav-link" href="index.php?page=logout">Logout</a></li>
                     <?php else: ?>
-                        <li class="nav-item">
-                            <a class="nav-link" href="index.php?page=login">
-                                <i class="fas fa-sign-in-alt"></i> Login
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="index.php?page=register">
-                                <i class="fas fa-user-plus"></i> Register
-                            </a>
-                        </li>
+                        <li class="nav-item"><a class="nav-link" href="index.php?page=login">Login</a></li>
+                        <li class="nav-item"><a class="nav-link" href="index.php?page=register">Register</a></li>
                     <?php endif; ?>
                 </ul>
             </div>
         </div>
     </nav>
-    
-    <!-- Flash Messages -->
-    <?php displayFlashMessages(); ?>
-    
-    <!-- Main Content Container -->
-    <main class="main-content">
-        <div class="container py-4">
-            <!-- Page Header -->
-            <?php if (isset($pageTitle)): ?>
-                <div class="page-header mb-4">
-                    <h1 class="display-4"><?php echo htmlspecialchars($pageTitle); ?></h1>
-                    <?php if (isset($pageSubtitle)): ?>
-                        <p class="lead text-muted"><?php echo htmlspecialchars($pageSubtitle); ?></p>
-                    <?php endif; ?>
-                </div>
-            <?php endif; ?>
+    <main class="container py-4">

@@ -156,7 +156,7 @@ if($row_setting['onlinestatus'] == "yes")
                   <td colspan="2"><?php echo multicms_h($row_blog['users']); ?> / <?php echo $row_blog['dates']; ?> / <a href="category.php?catename=<?php echo multicms_h($row_blog['catename']); ?>"><?php echo multicms_h($row_blog['catename']); ?></a></td>
                 </tr>
                 <tr>
-                  <td colspan="2"><img src="images/post/<?php echo $row_blog['photo']; ?>" width="200" height="200" align="left" style="padding:16px;" />  <?php echo substr($row_blog['description'],0,1400); ?>.... <a href="blog.php?blogid=<?php echo $row_blog['blogid']; ?>">Read More</a></td>
+                  <td colspan="2"><img src="images/post/<?php echo multicms_h($row_blog['photo']); ?>" width="200" height="200" align="left" style="padding:16px;" />  <?php echo multicms_plain($row_blog['description'], 400); ?> <a href="blog.php?blogid=<?php echo (int) $row_blog['blogid']; ?>">Read More</a></td>
                 </tr>
                 <tr>
                   <td></td>

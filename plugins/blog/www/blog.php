@@ -197,7 +197,7 @@ if($row_setting['onlinestatus'] == "yes")
         <td valign="top"><?php if ($totalRows_blog > 0) { // Show if recordset not empty ?>
               <div class="title"><?php echo multicms_h($row_blog['title']); ?></div><table class="tables">
                 <tr>
-                  <td class="texts"><img src="images/post/<?php echo $row_blog['photo']; ?>" width="200" height="200" align="left" style="padding:16px;" /> <?php echo $row_blog['description']; ?></td>
+                  <td class="texts"><img src="images/post/<?php echo $row_blog['photo']; ?>" width="200" height="200" align="left" style="padding:16px;" /> <?php echo multicms_plain($row_blog['description'], 400); ?></td>
                   <tr><td class="texts"><?php echo multicms_h($row_blog['users']); ?> / <?php echo $row_blog['dates']; ?> / <a href="category.php?catename=<?php echo multicms_h($row_blog['catename']); ?>"><?php echo multicms_h($row_blog['catename']); ?></a></td></tr>
                 </tr>
                 <tr>

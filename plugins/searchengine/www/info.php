@@ -181,7 +181,7 @@ if($row_setting['onlinestatus'] == "yes")
     <div style="padding-left:5px; padding-top:5px;">
       <div class="admintitle"><a href="info.php?newsid=<?php echo $row_pagesdetail['newsid']?>"><?php echo multicms_h($row_pagesdetail['title']); ?></a></div>
     </div>
-    <div style="height:2px;" class="texts"><?php echo $row_pagesdetail['description']; ?></div>
+    <div style="height:2px;" class="texts"><?php echo multicms_plain($row_pagesdetail['description'], 400); ?></div>
     
     <div style="height:22px;"></div>
     <?php } while ($row_pagesdetail = mysqli_fetch_assoc($pagesdetail)); ?>
@@ -193,7 +193,7 @@ if($row_setting['onlinestatus'] == "yes")
   <div style="padding-left:0px; padding-top:0px;">
     <div class="title"><?php echo multicms_h($row_pagesdetail1['title']); ?></div>
   </div>
-    <div class="texts"><?php echo $row_pagesdetail1['description']; ?></div>
+    <div class="texts"><?php echo multicms_plain($row_pagesdetail1['description'], 400); ?></div>
         
         <?php } // Show if recordset not empty ?>
 

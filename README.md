@@ -15,6 +15,7 @@ Phase 1–3 modernization focuses on:
 - Quarantined ready-made packs with path bootstrap + critical auth patches
 - **Phase 2:** pretty front-controller URLs, legacy table bootstrap, Admin → Posts (core), CSRF/XSS/upload hardening, Composer + CI lint
 - **Phase 3:** minimal hooks API (`add_action` / `add_filter`), settings/parts/pages bridge on pack apply, broader XSS pass, Admin → Site Settings (core)
+- **Phase 4:** safer description output (`multicms_plain`), Blog pack sample seed, [demo-ready checklist](docs/DEMO_READY.md)
 
 Ready-made packs are still largely Dreamweaver-era code. Prefer the fresh core for production. See [plugins/README.md](plugins/README.md).
 
