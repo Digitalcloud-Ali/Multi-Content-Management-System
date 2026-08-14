@@ -85,7 +85,7 @@ After install, manage content at `/administrator/posts.php` and site metadata at
 #### Complete
 - Installation finished successfully
 - Access your admin panel or view your site
-- **Important**: Delete `install.php` for security
+- **Important**: After install, `install.php` only shows “already installed” — you do not need to delete it
 
 ## Post-Installation
 
@@ -107,7 +107,7 @@ After install, manage content at `/administrator/posts.php` and site metadata at
 - Configure navigation menus
 
 ### 4. Security Cleanup
-- Delete `install.php` file
+- Leave `install.php` in place — it will report that the site is already installed
 - Delete `install_complete.php` file
 - Ensure `.htaccess` is properly configured
 - Set up SSL certificate (recommended)

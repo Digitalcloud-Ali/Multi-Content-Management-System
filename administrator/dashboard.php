@@ -85,7 +85,7 @@ $username = htmlspecialchars((string) $_SESSION['MM_Username'], ENT_QUOTES, 'UTF
         <a class="list-group-item list-group-item-action" href="flagship_sites.php"><strong>Flagship Sites</strong> — apply a complete starter site</a>
     </div>
 
-    <p class="text-muted small mb-0">Delete or block <code>install.php</code> after install.</p>
+    <p class="text-muted small mb-0">Installer is locked after setup — no need to delete <code>install.php</code>.</p>
 </div>
 </body>
 </html>

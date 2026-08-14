@@ -12,11 +12,10 @@ Open-source PHP/MySQL CMS. Install it on shared hosting or a VPS, run the web in
 3. Open `https://yoursite.com/install.php` and finish the wizard.
 4. Log in at `/administrator/login.php`.
 5. Use **Posts**, **Site Settings**, and optionally **Flagship Sites**.
-6. Delete or block `install.php` (and `test_installation.php`) after install.
 
 At install you can choose **Fresh** (empty core) or a **Flagship site** (Blog, Business, Portfolio, Clinic, Nonprofit). Packages live under `sites/`.
 
-Do **not** commit `includes/db_config.php` or `includes/env.php`.
+After install, `install.php` can stay — it only shows “already installed” (same idea as WordPress). Do **not** commit `includes/db_config.php` or `includes/env.php`.
 
 ## After install (what is created)
 
@@ -54,7 +53,7 @@ Nginx needs an equivalent `try_files` rule (not shipped as Apache `.htaccess`).
 - Production-safe default environment via `env.php`
 - Upload dirs deny script execution (`.htaccess` + rewrite rules)
 
-Still required on your host: delete/block `install.php` after setup, use HTTPS, keep PHP/MySQL updated. No CMS is “zero risk” — report issues per [SECURITY.md](SECURITY.md).
+Still recommended on your host: use HTTPS and keep PHP/MySQL updated. No CMS is “zero risk” — report issues per [SECURITY.md](SECURITY.md).
 
 ## Requirements
 

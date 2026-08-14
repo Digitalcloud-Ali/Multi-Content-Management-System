@@ -11,7 +11,7 @@
 2. Create MySQL database  
 3. Open `/install.php` — choose **Fresh** or a **Flagship** starter (e.g. Blog)  
 4. Log in → Admin dashboard → Posts / Site Settings / Flagship Sites  
-5. Delete or block `install.php`  
+5. Done — `install.php` stays locked (no delete required)  
 
 ## Notes
 

@@ -4,12 +4,18 @@
  * Modern, secure installation process with verification steps
  */
 
-// Prevent access if already installed (do not serve the wizard)
+// Prevent access if already installed (same idea as WordPress — file can stay)
 if (file_exists('includes/installed.lock')) {
-    http_response_code(403);
-    header('Content-Type: text/plain; charset=utf-8');
-    echo "MultiCMS is already installed. Remove includes/installed.lock only if you intend to reinstall.\n";
-    echo "Delete or block this install.php file on production hosts.\n";
+    http_response_code(200);
+    header('Content-Type: text/html; charset=utf-8');
+    echo '<!DOCTYPE html><html><head><meta charset="utf-8"><title>Already installed</title>';
+    echo '<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"></head>';
+    echo '<body class="bg-light"><div class="container py-5" style="max-width:560px">';
+    echo '<h1 class="h3">MultiCMS is already installed</h1>';
+    echo '<p class="text-muted">The installer cannot run again while <code>includes/installed.lock</code> exists.</p>';
+    echo '<p><a class="btn btn-primary" href="administrator/login.php">Log in to Admin</a> ';
+    echo '<a class="btn btn-outline-secondary" href="index.php">View site</a></p>';
+    echo '</div></body></html>';
     exit;
 }
 
@@ -810,8 +816,7 @@ foreach ($requirements as $req) {
                                 <li>Pretty URLs work via root <code>.htaccess</code> (Apache <code>mod_rewrite</code>)</li>
                                 <li>Config written: <code>includes/db_config.php</code>, <code>includes/env.php</code>, <code>includes/installed.lock</code></li>
                                 <li>Open Admin → Posts / Site Settings / Flagship Sites</li>
-                                <li>Delete or block <code>install.php</code> and <code>test_installation.php</code> on the server</li>
-                                <li>Do not commit <code>db_config.php</code> or <code>env.php</code> (already gitignored)</li>
+                                <li><code>install.php</code> stays on the site — it will only show “already installed” (like WordPress)</li>
                             </ul>
                         </div>
                         
@@ -826,8 +831,8 @@ foreach ($requirements as $req) {
                         
                         <div class="mt-4">
                             <small class="text-muted">
-                                <i class="fas fa-shield-alt"></i> 
-                                For security, you can now delete the install.php file
+                                <i class="fas fa-shield-alt"></i>
+                                install.php is now locked — same idea as WordPress (no need to delete it)
                             </small>
                         </div>
                     </div>
