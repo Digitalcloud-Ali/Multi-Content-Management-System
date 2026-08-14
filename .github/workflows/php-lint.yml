@@ -1,4 +1,4 @@
-name: PHP Lint
+name: PHP Lint and Smoke
 
 on:
   push:
@@ -14,5 +14,37 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.2'
+          extensions: mysqli, gd, curl
       - name: Syntax smoke test
         run: php scripts/php-lint-smoke.php
+
+  acceptance-smoke:
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: smoke_test_pass
+          MYSQL_DATABASE: multicms_smoke
+        ports:
+          - 3307:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -uroot -psmoke_test_pass --silent"
+          --health-interval=5s
+          --health-timeout=5s
+          --health-retries=20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mysqli, gd, curl
+      - name: Wait for MySQL
+        run: |
+          for i in $(seq 1 30); do
+            php -r "mysqli_report(MYSQLI_REPORT_OFF); \$m=@new mysqli('127.0.0.1','root','smoke_test_pass','',3307); exit(\$m->connect_error?1:0);" && break
+            sleep 2
+          done
+      - name: Phase acceptance smoke
+        run: php scripts/smoke-phase2.php
