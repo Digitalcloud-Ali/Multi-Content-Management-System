@@ -1,8 +1,0 @@
-{
-    "name": "Video Stream",
-    "slug": "videostream",
-    "type": "site",
-    "version": "1.0.0",
-    "description": "Video streaming ready-made site",
-    "entry": "src/VideoStreamPlugin.php"
-}

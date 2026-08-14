@@ -1,8 +1,0 @@
-{
-    "name": "Doctors",
-    "slug": "doctors",
-    "type": "site",
-    "version": "1.0.0",
-    "description": "Doctors / clinic directory ready-made site",
-    "entry": "src/DoctorsPlugin.php"
-}

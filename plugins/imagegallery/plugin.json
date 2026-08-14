@@ -1,8 +1,0 @@
-{
-    "name": "Image Gallery",
-    "slug": "imagegallery",
-    "type": "site",
-    "version": "1.0.0",
-    "description": "Image gallery ready-made site",
-    "entry": "src/ImageGalleryPlugin.php"
-}

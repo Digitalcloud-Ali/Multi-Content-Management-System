@@ -110,7 +110,8 @@ if ($editId > 0) {
         <h1 class="h3 mb-0">Posts (core)</h1>
         <div>
             <a class="btn btn-outline-secondary btn-sm" href="index.php">Admin home</a>
-            <a class="btn btn-outline-primary btn-sm" href="plugins_prebuilt_sites.php">Ready Sites</a>
+            <a class="btn btn-outline-primary btn-sm" href="settings_core.php">Site Settings</a>
+            <a class="btn btn-outline-secondary btn-sm" href="dashboard.php">Dashboard</a>
             <a class="btn btn-outline-success btn-sm" href="../index.php?mc_core=1&page=blog" target="_blank">View blog</a>
         </div>
     </div>

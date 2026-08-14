@@ -6,7 +6,7 @@ $posts = $result['posts'] ?? [];
 ?>
 <h1 class="mb-4">Blog</h1>
 <?php if (empty($posts)): ?>
-    <p class="text-muted">No published posts yet. Create content after install, or apply a ready-made site pack from Admin.</p>
+    <p class="text-muted">No published posts yet. Create content from Admin → Posts.</p>
 <?php else: ?>
     <?php foreach ($posts as $post): ?>
         <article class="mb-4 pb-3 border-bottom">

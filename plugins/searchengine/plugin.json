@@ -1,8 +1,0 @@
-{
-    "name": "Search Engine",
-    "slug": "searchengine",
-    "type": "site",
-    "version": "1.0.0",
-    "description": "Search directory ready-made site",
-    "entry": "src/SearchEnginePlugin.php"
-}

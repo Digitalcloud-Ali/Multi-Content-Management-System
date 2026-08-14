@@ -168,30 +168,17 @@ function handleSiteConfig() {
         exit;
     }
     
-    if (!isset($_POST['site_title']) || !isset($_POST['site_description']) || !isset($_POST['site_mode'])) {
+    if (!isset($_POST['site_title']) || !isset($_POST['site_description'])) {
         $_SESSION['install_error'] = 'All site configuration fields are required';
         return;
     }
 
-    $mode = $_POST['site_mode'] === 'readymade' ? 'readymade' : 'fresh';
-    $topic = 'default';
-
-    if ($mode === 'readymade') {
-        require_once __DIR__ . '/includes/PluginManager.php';
-        $slug = basename((string) ($_POST['site_topic'] ?? ''));
-        if (!$slug || !PluginManager::getSiteModule($slug)) {
-            $_SESSION['install_error'] = 'Please choose a ready-made site plugin';
-            return;
-        }
-        $topic = $slug;
-    }
-    
     $_SESSION['site_config'] = [
         'title' => trim($_POST['site_title']),
         'description' => trim($_POST['site_description']),
-        'mode' => $mode,
-        'topic' => $topic,
-        'admin_email' => trim($_POST['admin_email']),
+        'mode' => 'fresh',
+        'topic' => 'default',
+        'admin_email' => trim($_POST['admin_email'] ?? ''),
         'timezone' => $_POST['timezone'] ?? 'UTC'
     ];
     
@@ -260,13 +247,9 @@ function performInstallation() {
         // Create configuration file
         createConfigFile($db_config);
         
-        // Apply fresh default or ready-made site plugin as main site
+        // Always Fresh core (ready-made packs removed from product)
         require_once __DIR__ . '/includes/PluginManager.php';
-        if (($site_config['mode'] ?? 'fresh') === 'readymade') {
-            PluginManager::applySiteAsMain($site_config['topic'], $connection);
-        } else {
-            PluginManager::applyFreshDefault($connection);
-        }
+        PluginManager::applyFreshDefault($connection);
 
         // Create installed lock file
         file_put_contents('includes/installed.lock', date('Y-m-d H:i:s'));
@@ -644,42 +627,8 @@ foreach ($requirements as $req) {
                             <label for="site_description" class="form-label">Site Description</label>
                             <textarea class="form-control" id="site_description" name="site_description" rows="3" required><?php echo htmlspecialchars($_SESSION['site_config']['description'] ?? ''); ?></textarea>
                         </div>
-                        
-                        <?php
-                        require_once __DIR__ . '/includes/PluginManager.php';
-                        $readyMadeSites = PluginManager::listSiteModules();
-                        $selectedMode = $_SESSION['site_config']['mode'] ?? 'fresh';
-                        $selectedTopic = $_SESSION['site_config']['topic'] ?? '';
-                        ?>
-                        <div class="form-group">
-                            <label class="form-label">Start mode</label>
-                            <div style="display:flex;flex-direction:column;gap:8px">
-                                <label style="font-weight:normal">
-                                    <input type="radio" name="site_mode" value="fresh" <?php echo $selectedMode === 'fresh' ? 'checked' : ''; ?>
-                                           onchange="document.getElementById('site_topic_wrap').style.display='none'">
-                                    Fresh default — modern MultiCMS theme (start empty)
-                                </label>
-                                <label style="font-weight:normal">
-                                    <input type="radio" name="site_mode" value="readymade" <?php echo $selectedMode === 'readymade' ? 'checked' : ''; ?>
-                                           onchange="document.getElementById('site_topic_wrap').style.display='block'">
-                                    Ready-made site — apply a packaged site plugin now
-                                </label>
-                            </div>
-                        </div>
 
-                        <div class="form-group" id="site_topic_wrap" style="<?php echo $selectedMode === 'readymade' ? '' : 'display:none'; ?>">
-                            <label for="site_topic" class="form-label">Ready-made site</label>
-                            <select class="form-select" id="site_topic" name="site_topic">
-                                <option value="">Select a site plugin...</option>
-                                <?php foreach ($readyMadeSites as $site): ?>
-                                    <option value="<?php echo htmlspecialchars($site['slug']); ?>"
-                                        <?php echo $selectedTopic === $site['slug'] ? 'selected' : ''; ?>>
-                                        <?php echo htmlspecialchars($site['name']); ?> — <?php echo htmlspecialchars($site['description']); ?>
-                                    </option>
-                                <?php endforeach; ?>
-                            </select>
-                            <small class="form-text text-muted">You can also switch later from Admin → Ready-made Sites.</small>
-                        </div>
+                        <p class="text-muted">Installs the modern MultiCMS theme. You can create posts from Admin after setup.</p>
                         
                         <div class="form-group">
                             <label for="admin_email" class="form-label">Admin Email</label>
@@ -769,7 +718,9 @@ foreach ($requirements as $req) {
                         <div class="alert alert-info">
                             <h5><i class="fas fa-info-circle"></i> Next Steps:</h5>
                             <ul class="text-start">
-                                <li>Open the site front door (fresh core) or Admin → Ready Sites for legacy packs</li>
+                                <li>Open Admin → Posts to publish your first content</li>
+                                <li>Open Admin → Site Settings to change the site title</li>
+                                <li>Delete or block <code>install.php</code> on the server</li>
                                 <li>For production, set <code>ENVIRONMENT</code> to <code>production</code> in <code>includes/bootstrap.php</code></li>
                                 <li>Do not commit <code>includes/db_config.php</code>; remove or lock down <code>install.php</code> / <code>test_installation.php</code></li>
                                 <li>Customize settings and add content</li>

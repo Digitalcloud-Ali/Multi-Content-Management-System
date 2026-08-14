@@ -1,8 +1,0 @@
-{
-    "name": "Portfolio",
-    "slug": "portfolio",
-    "type": "site",
-    "version": "1.0.0",
-    "description": "Portfolio ready-made site",
-    "entry": "src/PortfolioPlugin.php"
-}

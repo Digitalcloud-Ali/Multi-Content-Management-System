@@ -11,7 +11,7 @@ if ($packMode) {
   <?php if ($footerHtml !== ''): ?>
     <?php echo $footerHtml; ?>
   <?php else: ?>
-    &copy; <?php echo date('Y'); ?> <?php echo $siteTitle; ?> — MultiCMS ready-made site
+    &copy; <?php echo date('Y'); ?> <?php echo $siteTitle; ?>
   <?php endif; ?>
 </div>
 </body>

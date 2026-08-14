@@ -1,8 +1,0 @@
-{
-    "name": "Blog",
-    "slug": "blog",
-    "type": "site",
-    "version": "1.0.0",
-    "description": "Blog / portal ready-made site",
-    "entry": "src/BlogPlugin.php"
-}

@@ -1,9 +1,4 @@
-# Unsupported leftover — `custom/`
+# Unsupported
 
-This root folder is a **legacy topic pack** that was not migrated into `plugins/custom` during Phase 1.
-
-- Prefer ready-made packs under `plugins/*/www/`
-- Prefer the modern core (`index.php` + `themes/default`) for new installs
-- Do not treat `custom/` as part of the MultiCMS core product
-
-It may be moved or removed in a later phase.
+The root `custom/` folder is not part of the supported MultiCMS product.
+Use Admin → Posts for content.

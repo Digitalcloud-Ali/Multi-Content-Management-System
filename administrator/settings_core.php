@@ -86,7 +86,8 @@ $footerVal = $row['footer'] ?? '';
         <div class="d-flex gap-2">
             <a class="btn btn-outline-secondary btn-sm" href="index.php">Admin home</a>
             <a class="btn btn-outline-primary btn-sm" href="posts.php">Posts (core)</a>
-            <a class="btn btn-outline-primary btn-sm" href="plugins_prebuilt_sites.php">Ready Sites</a>
+            <a class="btn btn-outline-primary btn-sm" href="posts.php">Posts</a>
+            <a class="btn btn-outline-secondary btn-sm" href="dashboard.php">Dashboard</a>
         </div>
     </div>
     <?php if ($flash): ?>

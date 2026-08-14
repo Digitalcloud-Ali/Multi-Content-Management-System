@@ -3,54 +3,38 @@
 [![PHP Version](https://img.shields.io/badge/PHP-7.4%2B-blue.svg)](https://www.php.net/)
 [![License](https://img.shields.io/badge/License-GPL%20v3-green.svg)](LICENSE.md)
 
-Open-source PHP/MySQL CMS. The **product core** is a modern installer + default theme. **Ready-made sites** are an optional flagship **plugin** layer (legacy packs under `plugins/`), not the core itself.
+Open-source PHP/MySQL CMS. Install it on shared hosting or a VPS, run the web installer, then publish posts from admin.
 
-## Status (honest)
+## Quick start
 
-Phase 1–6 modernization focuses on:
+1. Upload this project to your web root (or clone with git).
+2. Create a MySQL database in your host panel.
+3. Open `https://yoursite.com/install.php` and finish the wizard.
+4. Log in at `/administrator/login.php`.
+5. Use **Posts** and **Site Settings**.
+6. Delete or block `install.php` after install.
 
-- Fresh install that writes/reads `includes/db_config.php` + production `includes/env.php`
-- Modern `users` / `posts` / `core_categories` schema for the core front door
-- Auth fixes (hashed passwords; legacy `isAuthorized` gate closed)
-- Quarantined ready-made packs with path bootstrap + critical auth patches
-- **Phase 2–4:** pretty URLs, posts admin, pack hardening, hooks, smoke/CI
-- **Phase 6 (publish gate):** uploads/, core admin dashboard, scrubbed SQL dump, production ENVIRONMENT default, install lockout, admin CSRF
-
-Ready-made packs are **legacy demos**, not recommended for production. Prefer Fresh core. See [plugins/README.md](plugins/README.md) and [docs/DEMO_READY.md](docs/DEMO_READY.md).
+Do **not** commit `includes/db_config.php` or `includes/env.php`.
 
 ## Requirements
 
 - PHP 7.4+ (8.x recommended)
 - MySQL 5.7+ / MariaDB 10.2+
 - Extensions: mysqli, gd, curl
-- Writable `includes/` (for install) and ideally an `uploads/` directory
-- Apache `mod_rewrite` (or nginx equivalent) for pretty pack URLs
-
-## Quick start
-
-1. Upload or clone this repository to your web root.
-2. Optionally run `composer dump-autoload` (classmap for core includes).
-3. Visit `/install.php` and complete the wizard.
-4. Choose **Fresh default** (recommended) or optionally a ready-made site pack.
-5. For production, set `ENVIRONMENT` to `production` in [`includes/bootstrap.php`](includes/bootstrap.php).
-6. Delete or block `install.php` after install if your host allows; keep `includes/installed.lock`.
-
-Do **not** commit `includes/db_config.php`.
+- Writable `includes/` and `uploads/`
+- Apache `mod_rewrite` (or nginx equivalent) optional for pretty URLs
 
 ## Architecture
 
 | Layer | Path | Role |
 |-------|------|------|
-| Core | `index.php`, `includes/`, `themes/default/`, `install.php` | Primary product |
-| Admin | `administrator/` (Posts, Site Settings, Ready Sites) | Legacy admin + modern core screens |
-| Ready-made sites | `plugins/<slug>/www/` | Optional legacy site packs (served via front controller when active) |
-| Hooks | `includes/Hooks.php`, `plugins/<slug>/hooks.php` | Minimal actions/filters API |
-| Theme packages | `plugins/prebuilt-sites/` | Optional theme demos |
+| Core | `index.php`, `includes/`, `themes/default/`, `install.php` | The product |
+| Admin | `administrator/` (dashboard, posts, settings) | Manage the site |
 
 ## Documentation
 
 - [Installation guide](docs/INSTALLATION_GUIDE.md)
-- [Plugins / ready-made sites](plugins/README.md)
+- [Demo / production checklist](docs/DEMO_READY.md)
 - [Security policy](SECURITY.md)
 - [Contributing](CONTRIBUTING.md)
 
@@ -58,8 +42,6 @@ Do **not** commit `includes/db_config.php`.
 
 ```bash
 php scripts/php-lint-smoke.php
-# or
-composer lint
 ```
 
 ## License

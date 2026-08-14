@@ -1,11 +1,9 @@
 <?php
 /**
  * Main Entry Point - Multi-Content Management System
- * Front controller for fresh core + ready-made site packs
  */
 
 require_once 'includes/bootstrap.php';
-require_once 'includes/PluginManager.php';
 
 try {
     $db = getDB();
@@ -14,28 +12,6 @@ try {
     if (!$settings || !isset($settings['installed']) || $settings['installed'] !== 'yes') {
         header("Location: install.php");
         exit;
-    }
-
-    $topic = $settings['selecttopic'] ?? 'default';
-    if ($topic && $topic !== 'default' && is_dir(__DIR__ . '/plugins/' . basename($topic) . '/www')) {
-        $route = $_GET['mc_route'] ?? '';
-        if ($route === '' || $route === null) {
-            $uri = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH);
-            $base = rtrim(str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? '/')), '/');
-            if ($base === '\\' || $base === '.') {
-                $base = '';
-            }
-            if ($base && strpos($uri, $base) === 0) {
-                $uri = substr($uri, strlen($base));
-            }
-            $uri = ltrim((string) $uri, '/');
-            $route = ($uri === '' || $uri === 'index.php') ? '' : $uri;
-        }
-if (empty($_GET['mc_core'])) {
-            do_action('multicms_before_front_dispatch', $topic, $route);
-            PluginManager::dispatchActiveSite(basename($topic), $route);
-            exit;
-        }
     }
 } catch (Exception $e) {
     logError("System check error: " . $e->getMessage(), 'ERROR');

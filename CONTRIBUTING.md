@@ -1,6 +1,6 @@
 # Contributing to MultiCMS
 
-Thanks for your interest. MultiCMS is being modernized: the **core** (installer, `includes/`, `themes/default`) is the product; **ready-made site packs** under `plugins/*/www` are optional legacy plugins.
+Thanks for your interest. MultiCMS is a Fresh-core CMS (installer, `includes/`, `themes/default`, admin Posts/Settings). Plugin packs will be redesigned later.
 
 ## Before you start
 

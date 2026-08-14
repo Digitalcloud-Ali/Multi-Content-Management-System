@@ -1,8 +1,0 @@
-{
-    "name": "Tutorials",
-    "slug": "tutorials",
-    "type": "site",
-    "version": "1.0.0",
-    "description": "Tutorials / learning ready-made site",
-    "entry": "src/TutorialsPlugin.php"
-}

@@ -1,32 +1,19 @@
-# MultiCMS demo / production checklist
+# Install & production checklist
 
 ## Automated
 
-- [x] `php scripts/php-lint-smoke.php` — 0 failures
-- [x] `composer dump-autoload` — succeeds
-- [x] `php scripts/smoke-phase2.php` against Docker MySQL — **ALL PASS**
-- [x] GitHub Actions: PHP Lint + MySQL acceptance smoke
+- [x] `php scripts/php-lint-smoke.php`
+- [x] GitHub Actions PHP lint (+ smoke when MySQL available)
 
-## Publish gate (Phase 6)
+## Operator (on your hosting)
 
-- [x] `uploads/` shipped (with `.htaccess` denying PHP)
-- [x] Fresh admin lands on `administrator/dashboard.php` (no fatal on missing pack tables)
-- [x] `includes/raycms.sql` credentials scrubbed
-- [x] `ENVIRONMENT` defaults to `production`; installer writes `includes/env.php`
-- [x] `install.php` returns 403 when `installed.lock` exists
-- [x] Legacy administrator POST handlers require CSRF
+1. Upload files / clone repo  
+2. Create MySQL database  
+3. Open `/install.php` and finish the wizard  
+4. Log in → Admin dashboard → Posts / Site Settings  
+5. Delete or block `install.php`  
 
-## Manual click-through (operator)
+## Notes
 
-- [ ] Fresh install via `/install.php` (Fresh default)
-- [ ] Admin login → dashboard → **Posts (core)** → published post on `index.php?page=blog`
-- [ ] **Site Settings (core)** → change title
-- [ ] Delete or block `install.php` on the host after install
-- [ ] Ready-made packs treated as demos only
-
-## Security baseline (honest)
-
-- Prefer Fresh core for production
-- Ready-made packs are Dreamweaver-era demos with partial hardening
-- Do not commit `includes/db_config.php` or `includes/env.php`
-- Do not import `raycms.sql` for live passwords (scrubbed; structure/demo only)
+- Ready-made packs were removed; this product is Fresh core only.
+- Do not commit `includes/db_config.php` or `includes/env.php`.

@@ -14,21 +14,21 @@ Before installing, ensure your server meets these requirements:
 - **Permissions**: Writable `includes/` and `uploads/` directories
 - **Web Server**: Apache (with mod_rewrite) or Nginx
 
-## Pretty URLs / ready-made packs (Phase 2)
+## Pretty URLs (optional)
 
-Apache: the bundled `.htaccess` rewrites non-file requests to `index.php?mc_route=...` so an active ready-made pack is served from the site root.
+Apache: the bundled `.htaccess` can rewrite unknown paths to `index.php`.
 
-Nginx example (document root = MultiCMS root):
+Nginx example:
 
 ```nginx
 location / {
-    try_files $uri $uri/ /index.php?mc_route=$uri&$args;
+    try_files $uri $uri/ /index.php?$args;
 }
 location ~ ^/includes/.*\.php$ { deny all; }
 location ~* /images/.*\.(php|phtml|phar)$ { deny all; }
 ```
 
-After install, manage core content at `/administrator/posts.php`, site metadata at `/administrator/settings_core.php`, and ready-made packs at `/administrator/plugins_prebuilt_sites.php`. Prefer **Fresh default**; use Ready Sites only when you accept legacy-pack risk.
+After install, manage content at `/administrator/posts.php` and site metadata at `/administrator/settings_core.php`.
 
 ## Installation Process
 
@@ -64,7 +64,7 @@ After install, manage core content at `/administrator/posts.php`, site metadata 
 #### Site Configuration
 - **Site Title**: Your website's name
 - **Site Description**: Brief description of your site
-- **Start mode**: Fresh default, or a ready-made site plugin (blog, marketplace, doctors, …). Switch later from Admin → Ready-made Sites.
+- **Start mode**: Modern MultiCMS theme (Fresh core)
 - **Admin Email**: Primary administrator email address
 - **Timezone**: Select your local timezone
 - Click "Continue to Admin Setup"

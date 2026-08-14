@@ -1,8 +1,0 @@
-{
-    "name": "Product Publisher",
-    "slug": "productpublisher",
-    "type": "site",
-    "version": "1.0.0",
-    "description": "Product catalog ready-made site",
-    "entry": "src/ProductPublisherPlugin.php"
-}

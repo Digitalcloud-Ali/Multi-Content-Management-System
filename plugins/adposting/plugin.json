@@ -1,8 +1,0 @@
-{
-    "name": "Ad Posting",
-    "slug": "adposting",
-    "type": "site",
-    "version": "1.0.0",
-    "description": "Classified ads ready-made site",
-    "entry": "src/AdpostingPlugin.php"
-}

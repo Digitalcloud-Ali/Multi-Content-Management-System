@@ -1,9 +1,0 @@
-{
-  "name": "Digitalcloud Portfolio",
-  "slug": "digitalcloud-portfolio",
-  "version": "1.0.0",
-  "theme": "digitalcloud-portfolio-theme",
-  "thumbnail": "thumbnail.jpg",
-  "preview": "preview.html",
-  "description": "A simple portfolio demo site built by Digitalcloud.no"
-}

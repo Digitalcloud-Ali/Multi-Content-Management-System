@@ -1,7 +1,0 @@
-{
-  "name": "Prebuilt Sites (by Digitalcloud)",
-  "slug": "prebuilt-sites",
-  "version": "1.0.0",
-  "description": "A collection of pre-built site packages (themes + demo) provided by Digitalcloud.no.",
-  "entry": "PrebuiltSitesPlugin.php"
-}

@@ -1,8 +1,0 @@
-{
-    "name": "Marketplace",
-    "slug": "marketplace",
-    "type": "site",
-    "version": "1.0.0",
-    "description": "Marketplace / classifieds ready-made site",
-    "entry": "src/MarketplacePlugin.php"
-}
