@@ -1,0 +1,7 @@
+{
+  "name": "Portfolio",
+  "slug": "portfolio",
+  "version": "1.0.0",
+  "description": "Portfolio module migrated into plugin. onActivate will copy legacy portfolio/ into plugins/portfolio/www.",
+  "entry": "src/PortfolioPlugin.php"
+}

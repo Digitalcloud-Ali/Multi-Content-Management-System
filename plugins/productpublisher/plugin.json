@@ -1,0 +1,7 @@
+{
+  "name": "ProductPublisher",
+  "slug": "productpublisher",
+  "version": "1.0.0",
+  "description": "ProductPublisher module migrated into plugin. onActivate will copy legacy productpublisher/ into plugins/productpublisher/www.",
+  "entry": "src/ProductPublisherPlugin.php"
+}
