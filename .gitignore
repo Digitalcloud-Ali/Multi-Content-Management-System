@@ -2,11 +2,16 @@
 includes/db_config.php
 includes/installed.lock
 includes/active_site.json
+includes/env.php
+includes/site_path.php
+includes/update_check_cache.json
 
 # Runtime
 uploads/*
 !uploads/.htaccess
 !uploads/.gitkeep
+backups/*
+!backups/.htaccess
 logs/
 *.log
 error_log
@@ -26,5 +31,3 @@ Thumbs.db
 
 # Composer (if added later)
 /vendor/
-
-includes/env.php

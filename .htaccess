@@ -19,8 +19,8 @@
 <IfModule mod_rewrite.c>
     RewriteEngine On
 
-    # If MultiCMS lives in a subdirectory, uncomment and set:
-    # RewriteBase /your-subdir/
+    # Auto-set at install (InstallPath). Safe default for web-root installs:
+    RewriteBase /
 
     # Block direct PHP under includes/
     RewriteRule ^includes/.*\.php$ - [F,L]

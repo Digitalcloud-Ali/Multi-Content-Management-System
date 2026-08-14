@@ -32,6 +32,8 @@ try {
 } catch (Throwable $e) {
 }
 
+$updateCheck = UpdateService::checkForUpdates(false);
+$localVer = UpdateService::localVersion();
 $username = htmlspecialchars((string) $_SESSION['MM_Username'], ENT_QUOTES, 'UTF-8');
 ?>
 <!DOCTYPE html>
@@ -47,10 +49,21 @@ $username = htmlspecialchars((string) $_SESSION['MM_Username'], ENT_QUOTES, 'UTF
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
             <h1 class="h3 mb-1">MultiCMS Admin</h1>
-            <p class="text-muted mb-0">Signed in as <?php echo $username; ?></p>
+            <p class="text-muted mb-0">Signed in as <?php echo $username; ?> · v<?php echo htmlspecialchars((string) ($localVer['version'] ?? ''), ENT_QUOTES, 'UTF-8'); ?></p>
         </div>
         <a class="btn btn-outline-secondary btn-sm" href="login.php?doLogout=true">Logout</a>
     </div>
+
+    <?php if (!empty($updateCheck['update_available'])): ?>
+        <div class="alert alert-warning d-flex justify-content-between align-items-center">
+            <div>
+                <strong>Update available:</strong>
+                v<?php echo htmlspecialchars((string) ($updateCheck['remote']['version'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>
+                is on GitHub (you have v<?php echo htmlspecialchars((string) ($updateCheck['local'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>).
+            </div>
+            <a class="btn btn-sm btn-warning" href="updates.php">Review &amp; update</a>
+        </div>
+    <?php endif; ?>
 
     <div class="row g-3 mb-4">
         <div class="col-md-4">
@@ -73,7 +86,7 @@ $username = htmlspecialchars((string) $_SESSION['MM_Username'], ENT_QUOTES, 'UTF
             <div class="card shadow-sm h-100">
                 <div class="card-body">
                     <div class="text-muted small">Front door</div>
-                    <a href="../index.php" target="_blank" rel="noopener">View site</a>
+                    <a href="<?php echo htmlspecialchars(function_exists('mc_url') ? mc_url() : '../index.php', ENT_QUOTES, 'UTF-8'); ?>" target="_blank" rel="noopener">View site</a>
                 </div>
             </div>
         </div>
@@ -83,6 +96,7 @@ $username = htmlspecialchars((string) $_SESSION['MM_Username'], ENT_QUOTES, 'UTF
         <a class="list-group-item list-group-item-action" href="posts.php"><strong>Posts</strong> — create and publish content</a>
         <a class="list-group-item list-group-item-action" href="settings_core.php"><strong>Site Settings</strong> — title, description, online status</a>
         <a class="list-group-item list-group-item-action" href="flagship_sites.php"><strong>Flagship Sites</strong> — apply a complete starter site</a>
+        <a class="list-group-item list-group-item-action" href="updates.php"><strong>Updates &amp; Backup</strong> — GitHub updates, backup, restore</a>
     </div>
 
     <p class="text-muted small mb-0">Installer is locked after setup — no need to delete <code>install.php</code>.</p>

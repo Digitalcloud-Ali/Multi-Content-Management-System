@@ -2,74 +2,76 @@
 
 [![PHP Version](https://img.shields.io/badge/PHP-7.4%2B-blue.svg)](https://www.php.net/)
 [![License](https://img.shields.io/badge/License-GPL%20v3-green.svg)](LICENSE.md)
+[![Version](https://img.shields.io/badge/version-1.2.0-blue.svg)](version.json)
 
 Open-source PHP/MySQL CMS. Install it on shared hosting or a VPS, run the web installer, then publish posts from admin.
 
 ## Quick start
 
-1. Upload this project to your web root (or clone with git).
+1. Upload this project to your web root **or a subfolder** (e.g. `yoursite.com/cms/`).
 2. Create a MySQL database in your host panel.
-3. Open `https://yoursite.com/install.php` and finish the wizard.
+3. Open `/install.php` (or `/cms/install.php`) — the wizard checks your host (green = OK, red = fix first).
 4. Log in at `/administrator/login.php`.
-5. Use **Posts**, **Site Settings**, and optionally **Flagship Sites**.
+5. Use **Posts**, **Site Settings**, **Flagship Sites**, and **Updates & Backup**.
 
-At install you can choose **Fresh** (empty core) or a **Flagship site** (Blog, Business, Portfolio, Clinic, Nonprofit). Packages live under `sites/`.
+Install path and pretty URLs are detected automatically — you do **not** edit `RewriteBase` by hand.  
+`install.php` stays after setup and only shows “already installed” (like WordPress).
 
-After install, `install.php` can stay — it only shows “already installed” (same idea as WordPress). Do **not** commit `includes/db_config.php` or `includes/env.php`.
+Do **not** commit `includes/db_config.php` or `includes/env.php`.
 
-## After install (what is created)
+## After install (created automatically)
 
 | File | Purpose |
 |------|---------|
-| `includes/db_config.php` | Database credentials (auto-generated, gitignored) |
-| `includes/env.php` | Sets `MULTICMS_ENV` to `production` by default |
-| `includes/installed.lock` | Blocks re-running the installer (returns 403) |
-| `uploads/.htaccess` | Denies PHP execution in uploads |
+| `includes/db_config.php` | Database credentials |
+| `includes/env.php` | `MULTICMS_ENV=production` |
+| `includes/site_path.php` | Detected URL base (`/` or `/cms`) |
+| `includes/installed.lock` | Locks the installer |
+| `.htaccess` `RewriteBase` | Written to match that path |
+| `uploads/.htaccess` | Blocks PHP in uploads |
 
-## Permalinks & `.htaccess`
+## Permalinks
 
-Root `.htaccess` (Apache + `mod_rewrite`) is included in the repo:
+Root `.htaccess` + front controller:
 
-- Rewrites clean URLs to `index.php?mc_route=…`
-- Blocks direct PHP under `includes/`, `images/`, and `uploads/`
-- Denies web access to `db_config.php` / `env.php` basenames where supported
+- `/blog`, `/about`, `/contact`
+- `/post/your-post-slug`
+- Legacy `index.php?page=…` still works
 
-Examples after install:
+## Updates from GitHub (all installs)
 
-- `/blog` — post listing  
-- `/about`, `/contact` — pages  
-- `/post/your-post-slug` — single post  
-- Legacy `index.php?page=…` still works  
+Admin → **Updates & Backup**:
 
-If the site lives in a **subdirectory**, uncomment `RewriteBase /your-subdir/` in `.htaccess`.  
-Nginx needs an equivalent `try_files` rule (not shipped as Apache `.htaccess`).
+1. Checks `version.json` on GitHub (`master`) every few hours (or “Check again now”).
+2. Dashboard shows a banner when a newer version exists.
+3. **Backup & update** creates a ZIP+SQL backup first, then downloads the latest code from GitHub (keeps DB login, uploads, and path config).
+4. **Restore** can reload database (and optionally files) from a backup.
+
+When we ship a new release, bump `version.json` on `master` — every installed site can see it in Admin.
 
 ## Security baseline
 
-- Installer CSRF + password hashing (`password_hash`)
-- Installer locked after `installed.lock` exists
-- Admin/login CSRF on modern + legacy POST handlers
-- Prepared statements for DB access
-- Production-safe default environment via `env.php`
-- Upload dirs deny script execution (`.htaccess` + rewrite rules)
-
-Still recommended on your host: use HTTPS and keep PHP/MySQL updated. No CMS is “zero risk” — report issues per [SECURITY.md](SECURITY.md).
+- Installer CSRF + password hashing  
+- Installer locked after setup  
+- Admin CSRF  
+- Prepared statements  
+- Upload / backups folders deny web script execution  
+- Update flow refuses to overwrite `db_config.php`, `env.php`, lock, uploads, backups  
 
 ## Requirements
 
-- PHP 7.4+ (8.x recommended)
-- MySQL 5.7+ / MariaDB 10.2+
-- Extensions: mysqli, gd, curl
-- Writable `includes/` and `uploads/`
-- Apache `mod_rewrite` for pretty URLs (query-string URLs work without it)
+- PHP 7.4+ (8.x recommended)  
+- MySQL 5.7+ / MariaDB 10.2+  
+- Extensions: mysqli, gd, curl, zip, json  
+- Writable `includes/`, `uploads/`, `backups/`  
 
 ## Architecture
 
 | Layer | Path | Role |
 |-------|------|------|
 | Core | `index.php`, `includes/`, `themes/default/`, `install.php` | The product |
-| Flagship sites | `sites/<slug>/` | Optional 1-click complete starters |
-| Admin | `administrator/` (dashboard, posts, settings, flagship) | Manage the site |
+| Flagship sites | `sites/<slug>/` | Optional 1-click starters |
+| Admin | dashboard, posts, settings, flagship, updates | Manage + update |
 
 ## Documentation
 
@@ -82,7 +84,6 @@ Still recommended on your host: use HTTPS and keep PHP/MySQL updated. No CMS is 
 
 ```bash
 php scripts/php-lint-smoke.php
-# With MySQL on 127.0.0.1:3307 (see CI):
 php scripts/smoke-phase2.php
 ```
 

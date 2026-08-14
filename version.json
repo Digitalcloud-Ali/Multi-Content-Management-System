@@ -1,0 +1,8 @@
+{
+  "version": "1.2.0",
+  "released": "2026-08-15",
+  "channel": "stable",
+  "notes": "Auto install path, host compatibility checks, admin updates from GitHub with backup/restore.",
+  "github": "Digitalcloud-Ali/Multi-Content-Management-System",
+  "compare_url": "https://github.com/Digitalcloud-Ali/Multi-Content-Management-System/releases"
+}

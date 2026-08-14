@@ -74,42 +74,97 @@ function checkRequirements() {
     if (!is_dir('logs')) {
         @mkdir('logs', 0755, true);
     }
+    if (!is_dir('backups')) {
+        @mkdir('backups', 0755, true);
+    }
+
+    $rewriteOk = true;
+    if (function_exists('apache_get_modules')) {
+        $mods = apache_get_modules();
+        $rewriteOk = in_array('mod_rewrite', $mods, true);
+    } elseif (isset($_SERVER['SERVER_SOFTWARE']) && stripos((string) $_SERVER['SERVER_SOFTWARE'], 'apache') !== false) {
+        // Cannot probe modules reliably (CGI/FPM) — treat as unknown/ok with note
+        $rewriteOk = true;
+    }
+
     $requirements = [
         'php_version' => [
             'name' => 'PHP Version',
-            'required' => '7.4.0',
+            'required' => '7.4.0+',
             'current' => PHP_VERSION,
             'status' => version_compare(PHP_VERSION, '7.4.0', '>='),
             'description' => 'PHP 7.4 or higher is required'
         ],
         'mysql' => [
-            'name' => 'MySQL Extension',
+            'name' => 'MySQL Extension (mysqli)',
             'required' => 'Available',
             'current' => extension_loaded('mysqli') ? 'Available' : 'Not Available',
             'status' => extension_loaded('mysqli'),
-            'description' => 'MySQLi extension is required for database connectivity'
+            'description' => 'Required for the database'
+        ],
+        'json' => [
+            'name' => 'JSON Extension',
+            'required' => 'Available',
+            'current' => extension_loaded('json') ? 'Available' : 'Not Available',
+            'status' => extension_loaded('json'),
+            'description' => 'Required for settings and updates'
+        ],
+        'mbstring' => [
+            'name' => 'mbstring Extension',
+            'required' => 'Recommended',
+            'current' => extension_loaded('mbstring') ? 'Available' : 'Not Available',
+            'status' => extension_loaded('mbstring'),
+            'description' => 'Recommended for text handling',
+            'optional' => true,
         ],
         'gd' => [
             'name' => 'GD Extension',
             'required' => 'Available',
             'current' => extension_loaded('gd') ? 'Available' : 'Not Available',
             'status' => extension_loaded('gd'),
-            'description' => 'GD extension is required for image processing'
+            'description' => 'Required for image processing'
         ],
         'curl' => [
             'name' => 'cURL Extension',
             'required' => 'Available',
             'current' => extension_loaded('curl') ? 'Available' : 'Not Available',
             'status' => extension_loaded('curl'),
-            'description' => 'cURL extension is required for external API calls'
+            'description' => 'Required to check GitHub for updates'
+        ],
+        'zip' => [
+            'name' => 'ZIP Extension',
+            'required' => 'Available',
+            'current' => class_exists('ZipArchive') ? 'Available' : 'Not Available',
+            'status' => class_exists('ZipArchive'),
+            'description' => 'Required for backups and one-click updates'
+        ],
+        'mod_rewrite' => [
+            'name' => 'Apache mod_rewrite / pretty URLs',
+            'required' => 'Recommended',
+            'current' => $rewriteOk ? 'OK / assumed available' : 'Not detected',
+            'status' => $rewriteOk,
+            'description' => 'Needed for clean permalinks (/blog, /post/slug). Query URLs still work without it.',
+            'optional' => true,
         ],
         'writable_dirs' => [
-            'name' => 'Directory Permissions',
-            'required' => 'Writable',
-            'current' => is_writable('includes') && is_writable('uploads') ? 'Writable' : 'Not Writable',
-            'status' => is_writable('includes') && is_writable('uploads'),
-            'description' => 'includes and uploads directories must be writable'
-        ]
+            'name' => 'Writable folders',
+            'required' => 'includes, uploads, backups',
+            'current' => (is_writable('includes') && is_writable('uploads') && is_writable('backups')) ? 'Writable' : 'Not writable',
+            'status' => is_writable('includes') && is_writable('uploads') && is_writable('backups'),
+            'description' => 'Installer must write config, uploads, and backups'
+        ],
+        'install_path' => [
+            'name' => 'Detected install path',
+            'required' => 'Auto',
+            'current' => (function () {
+                require_once __DIR__ . '/includes/InstallPath.php';
+                $b = InstallPath::detectBasePath();
+                return $b === '' ? 'Web root (/)' : $b;
+            })(),
+            'status' => true,
+            'description' => 'RewriteBase will be set automatically — no manual .htaccess edit needed',
+            'optional' => true,
+        ],
     ];
     
     return $requirements;
@@ -265,9 +320,11 @@ function performInstallation() {
         // Insert initial data
         insertInitialData($connection, $site_config, $admin_config);
         
-        // Create configuration file
         createConfigFile($db_config);
-        
+
+        require_once __DIR__ . '/includes/InstallPath.php';
+        InstallPath::apply(__DIR__);
+
         require_once __DIR__ . '/includes/PluginManager.php';
         require_once __DIR__ . '/includes/FlagshipSite.php';
 
@@ -494,7 +551,7 @@ if ($current_step === 'installation') {
 $requirements = checkRequirements();
 $all_requirements_met = true;
 foreach ($requirements as $req) {
-    if (!$req['status']) {
+    if (!$req['status'] && empty($req['optional'])) {
         $all_requirements_met = false;
         break;
     }
@@ -597,20 +654,32 @@ foreach ($requirements as $req) {
                     <?php break; ?>
 
                 <?php case 'requirements': ?>
-                    <h2><i class="fas fa-clipboard-check"></i> System Requirements</h2>
-                    <p>Please ensure your server meets the following requirements:</p>
+                    <h2><i class="fas fa-clipboard-check"></i> Host compatibility check</h2>
+                    <p>We checked this hosting automatically. <span class="text-success fw-bold">Green</span> = ready, <span class="text-danger fw-bold">Red</span> = must fix before install.</p>
                     
                     <?php foreach ($requirements as $req): ?>
-                        <div class="requirement-item <?php echo $req['status'] ? 'requirement-success' : 'requirement-error'; ?>">
+                        <div class="requirement-item <?php echo $req['status'] ? 'requirement-success' : (empty($req['optional']) ? 'requirement-error' : 'requirement-success'); ?>" style="<?php echo (!$req['status'] && !empty($req['optional'])) ? 'background:#fff3cd;border-color:#ffecb5;' : ''; ?>">
                             <div class="d-flex justify-content-between align-items-center">
                                 <div>
-                                    <strong><?php echo htmlspecialchars($req['name']); ?></strong>
+                                    <strong>
+                                        <?php if ($req['status']): ?>
+                                            <span class="text-success"><i class="fas fa-check-circle"></i></span>
+                                        <?php elseif (!empty($req['optional'])): ?>
+                                            <span class="text-warning"><i class="fas fa-exclamation-circle"></i></span>
+                                        <?php else: ?>
+                                            <span class="text-danger"><i class="fas fa-times-circle"></i></span>
+                                        <?php endif; ?>
+                                        <?php echo htmlspecialchars($req['name']); ?>
+                                    </strong>
                                     <br>
                                     <small class="text-muted"><?php echo htmlspecialchars($req['description']); ?></small>
                                 </div>
                                 <div class="text-end">
-                                    <div class="fw-bold"><?php echo htmlspecialchars($req['current']); ?></div>
-                                    <small class="text-muted">Required: <?php echo htmlspecialchars($req['required']); ?></small>
+                                    <div class="fw-bold <?php echo $req['status'] ? 'text-success' : (empty($req['optional']) ? 'text-danger' : 'text-warning'); ?>">
+                                        <?php echo $req['status'] ? 'PASS' : (empty($req['optional']) ? 'FAIL' : 'WARN'); ?>
+                                    </div>
+                                    <div><?php echo htmlspecialchars($req['current']); ?></div>
+                                    <small class="text-muted">Need: <?php echo htmlspecialchars($req['required']); ?></small>
                                 </div>
                             </div>
                         </div>
@@ -618,14 +687,16 @@ foreach ($requirements as $req) {
                     
                     <div class="mt-4">
                         <?php if ($all_requirements_met): ?>
+                            <div class="alert alert-success"><i class="fas fa-check"></i> This host looks compatible. Continue when ready.</div>
                             <a href="install.php?step=database" class="btn btn-success btn-install">
                                 <i class="fas fa-arrow-right"></i> Continue to Database Setup
                             </a>
                         <?php else: ?>
-                            <div class="alert alert-warning">
+                            <div class="alert alert-danger">
                                 <i class="fas fa-exclamation-triangle"></i> 
-                                Please fix the requirements above before continuing.
+                                Fix the red items with your host (enable PHP extensions / folder permissions), then refresh this page.
                             </div>
+                            <a href="install.php?step=requirements" class="btn btn-outline-primary">Refresh check</a>
                         <?php endif; ?>
                     </div>
                     <?php break; ?>
@@ -813,10 +884,10 @@ foreach ($requirements as $req) {
                         <div class="alert alert-info">
                             <h5><i class="fas fa-info-circle"></i> Next Steps:</h5>
                             <ul class="text-start">
-                                <li>Pretty URLs work via root <code>.htaccess</code> (Apache <code>mod_rewrite</code>)</li>
-                                <li>Config written: <code>includes/db_config.php</code>, <code>includes/env.php</code>, <code>includes/installed.lock</code></li>
-                                <li>Open Admin → Posts / Site Settings / Flagship Sites</li>
-                                <li><code>install.php</code> stays on the site — it will only show “already installed” (like WordPress)</li>
+                                <li>Pretty URLs: RewriteBase was set automatically for this install path</li>
+                                <li>Config written: <code>includes/db_config.php</code>, <code>includes/env.php</code>, <code>includes/site_path.php</code>, lock file</li>
+                                <li>Open Admin → Posts / Site Settings / Flagship Sites / Updates &amp; Backup</li>
+                                <li><code>install.php</code> stays locked (like WordPress)</li>
                             </ul>
                         </div>
                         

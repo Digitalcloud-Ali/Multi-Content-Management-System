@@ -13,6 +13,9 @@ if (!defined('APP_STARTED')) {
 if (is_file(__DIR__ . '/env.php')) {
     require_once __DIR__ . '/env.php';
 }
+if (is_file(__DIR__ . '/site_path.php')) {
+    require_once __DIR__ . '/site_path.php';
+}
 if (!defined('ENVIRONMENT')) {
     // Production-safe default for public installs
     define('ENVIRONMENT', defined('MULTICMS_ENV') ? MULTICMS_ENV : 'production');
@@ -29,6 +32,8 @@ require_once __DIR__ . '/LegacyAuth.php';
 require_once __DIR__ . '/PluginManager.php';
 require_once __DIR__ . '/FlagshipSite.php';
 require_once __DIR__ . '/Routing.php';
+require_once __DIR__ . '/InstallPath.php';
+require_once __DIR__ . '/UpdateService.php';
 
 // Include service classes
 require_once __DIR__ . '/services/AuthService.php';

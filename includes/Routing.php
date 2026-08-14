@@ -5,6 +5,9 @@
 
 if (!function_exists('mc_base_path')) {
     function mc_base_path() {
+        if (defined('SITE_BASE_PATH')) {
+            return (string) SITE_BASE_PATH;
+        }
         $script = str_replace('\\', '/', (string) ($_SERVER['SCRIPT_NAME'] ?? '/index.php'));
         $dir = dirname($script);
         if ($dir === '/' || $dir === '\\' || $dir === '.') {
