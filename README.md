@@ -82,13 +82,6 @@ When we bump `version.json` on `master`, GitHub Actions publishes a [Release](ht
 - [Security policy](SECURITY.md)
 - [Contributing](CONTRIBUTING.md)
 
-## Development smoke check
-
-```bash
-php scripts/php-lint-smoke.php
-php scripts/smoke-phase2.php
-```
-
 ## License
 
 See [LICENSE.md](LICENSE.md) (GPLv3).

@@ -11,7 +11,9 @@ Thanks for your interest. MultiCMS is a Fresh-core CMS (installer, `includes/`, 
 ## Development notes
 
 - PHP 7.4+ (8.x recommended)
-- Run `php scripts/php-lint-smoke.php` before opening a PR (syntax check on core paths)
+- Before a PR:
+  - `php scripts/php-lint-smoke.php` (syntax check)
+  - `php scripts/smoke-phase2.php` (needs local MySQL on `127.0.0.1:3307` — same as CI)
 - Keep security fixes focused and documented
 
 ## Pull requests
