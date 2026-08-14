@@ -14,7 +14,7 @@ Open-source PHP/MySQL CMS. Install it on shared hosting or a VPS, run the web in
 5. Use **Posts**, **Site Settings**, and optionally **Flagship Sites**.
 6. Delete or block `install.php` after install.
 
-At install you can choose **Fresh** (empty core) or a **Flagship site** (e.g. Blog Starter with sample posts and pages). Packages live under `sites/`.
+At install you can choose **Fresh** (empty core) or a **Flagship site** (Blog, Business, Portfolio, Clinic, Nonprofit). Packages live under `sites/`.
 
 Do **not** commit `includes/db_config.php` or `includes/env.php`.
 

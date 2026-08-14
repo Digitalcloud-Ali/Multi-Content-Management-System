@@ -1,0 +1,66 @@
+{
+  "site": {
+    "title": "Community Impact",
+    "description": "Tell your mission, share program updates, and invite supporters to get involved."
+  },
+  "categories": [
+    {
+      "name": "Impact Stories",
+      "slug": "impact-stories",
+      "description": "People and outcomes"
+    },
+    {
+      "name": "Programs",
+      "slug": "programs",
+      "description": "What we run and how to join"
+    }
+  ],
+  "posts": [
+    {
+      "title": "Welcome to your nonprofit site",
+      "slug": "welcome-nonprofit-site",
+      "category": "programs",
+      "status": "published",
+      "excerpt": "Nonprofit Starter is ready. Share your mission and replace sample stories.",
+      "content": "<p>The <strong>Nonprofit Starter</strong> flagship gives you a public home for mission, programs, and stories.</p><p>Update Site Settings with your legal name, then rewrite these posts so supporters see real impact—not placeholders.</p>"
+    },
+    {
+      "title": "How last month’s food drive helped 120 families",
+      "slug": "food-drive-helped-families",
+      "category": "impact-stories",
+      "status": "published",
+      "excerpt": "Sample impact story with a clear outcome number.",
+      "content": "<p><em>Sample story.</em> Lead with the outcome, then explain how volunteers and donors made it possible.</p><p>Invite readers to the next event or a donation page when you have one.</p>"
+    },
+    {
+      "title": "Volunteer orientation every second Saturday",
+      "slug": "volunteer-orientation",
+      "category": "programs",
+      "status": "published",
+      "excerpt": "Sample program post for recurring volunteer onboarding.",
+      "content": "<p>Explain who can join, what to expect, and how to sign up.</p><p>Include time, location, and a contact email so people can take the next step without calling the office.</p>"
+    },
+    {
+      "title": "Three ways to support this month",
+      "slug": "three-ways-to-support",
+      "category": "programs",
+      "status": "published",
+      "excerpt": "Donate, volunteer, or share — a simple call-to-action post.",
+      "content": "<ol><li><strong>Donate</strong> — one-time or monthly</li><li><strong>Volunteer</strong> — shifts posted on this site</li><li><strong>Share</strong> — forward our stories to friends</li></ol><p>Replace links and amounts with your real campaigns.</p>"
+    }
+  ],
+  "pages": [
+    {
+      "title": "About",
+      "slug": "about",
+      "status": "published",
+      "content": "<p>State your mission, who you serve, and where you operate. Mention registration or charity numbers if required in your country.</p><p>Seeded by the <strong>Nonprofit Starter</strong> flagship.</p>"
+    },
+    {
+      "title": "Contact",
+      "slug": "contact",
+      "status": "published",
+      "content": "<p>Office hours, press contact, and a postal address help journalists and partners reach you.</p><p>Nonprofit Starter sample Contact content.</p>"
+    }
+  ]
+}

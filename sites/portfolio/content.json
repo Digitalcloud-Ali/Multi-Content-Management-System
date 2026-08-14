@@ -1,0 +1,66 @@
+{
+  "site": {
+    "title": "Studio Portfolio",
+    "description": "Showcase selected projects and introduce your creative practice. Edit every sample piece with your real work."
+  },
+  "categories": [
+    {
+      "name": "Projects",
+      "slug": "projects",
+      "description": "Selected work"
+    },
+    {
+      "name": "Process",
+      "slug": "process",
+      "description": "How we work"
+    }
+  ],
+  "posts": [
+    {
+      "title": "Welcome to your portfolio",
+      "slug": "welcome-portfolio",
+      "category": "process",
+      "status": "published",
+      "excerpt": "Your Portfolio Starter is ready. Replace sample projects with your best work.",
+      "content": "<p>The <strong>Portfolio Starter</strong> gives you a clean home for selected projects and a short process note.</p><p>Open Admin → Posts to rename these samples, add images later, and publish only the work you want public.</p>"
+    },
+    {
+      "title": "Project: Brand refresh for Northwind",
+      "slug": "project-brand-refresh-northwind",
+      "category": "projects",
+      "status": "published",
+      "excerpt": "Sample case study — logo, type, and landing page refresh.",
+      "content": "<p><em>Sample project.</em> Describe the brief, constraints, and outcome.</p><p>Include what changed for the client (clarity, conversions, recognition) and link to a live URL when you have one.</p>"
+    },
+    {
+      "title": "Project: Product photography set",
+      "slug": "project-product-photography",
+      "category": "projects",
+      "status": "published",
+      "excerpt": "Sample shoot write-up for e-commerce stills.",
+      "content": "<p><em>Sample project.</em> Note lighting setup, props, and delivery format.</p><p>Replace with a real shoot and add gallery images when your theme supports media fields.</p>"
+    },
+    {
+      "title": "How I take a brief from idea to launch",
+      "slug": "from-idea-to-launch",
+      "category": "process",
+      "status": "published",
+      "excerpt": "A short process post you can keep or rewrite.",
+      "content": "<ol><li>Discovery call and goals</li><li>Moodboards and proposal</li><li>Production and revisions</li><li>Handoff and launch support</li></ol><p>Adapt these steps to match how you actually work.</p>"
+    }
+  ],
+  "pages": [
+    {
+      "title": "About",
+      "slug": "about",
+      "status": "published",
+      "content": "<p>Share your background, tools, and the kinds of clients you enjoy working with.</p><p>Seeded by the <strong>Portfolio Starter</strong> flagship.</p>"
+    },
+    {
+      "title": "Contact",
+      "slug": "contact",
+      "status": "published",
+      "content": "<p>Invite project inquiries: budget range, timeline, and preferred start date help you reply faster.</p><p>Portfolio Starter sample Contact copy.</p>"
+    }
+  ]
+}

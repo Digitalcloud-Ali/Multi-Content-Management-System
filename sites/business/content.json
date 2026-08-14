@@ -1,0 +1,58 @@
+{
+  "site": {
+    "title": "Acme Business",
+    "description": "A ready-to-edit company website powered by MultiCMS. Replace sample services and news with your own."
+  },
+  "categories": [
+    {
+      "name": "Company News",
+      "slug": "company-news",
+      "description": "Announcements and updates"
+    },
+    {
+      "name": "Insights",
+      "slug": "insights",
+      "description": "Tips and industry notes"
+    }
+  ],
+  "posts": [
+    {
+      "title": "Welcome to your business site",
+      "slug": "welcome-business-site",
+      "category": "company-news",
+      "status": "published",
+      "excerpt": "Your Business Starter flagship is live. Edit these posts and pages to match your brand.",
+      "content": "<p>This is the <strong>Business Starter</strong> flagship site.</p><p>You already have sample company news, insight articles, and About / Contact pages so visitors see a real company site immediately.</p><p>Replace the company name in Site Settings and rewrite these posts with your real offers.</p>"
+    },
+    {
+      "title": "How we help clients grow",
+      "slug": "how-we-help-clients-grow",
+      "category": "insights",
+      "status": "published",
+      "excerpt": "Sample insight post — swap for a real case study or service story.",
+      "content": "<p>Use this article as a template for a service story or case study.</p><p>Describe a problem, your approach, and the result. Keep it concrete so visitors understand what you deliver.</p>"
+    },
+    {
+      "title": "Our services at a glance",
+      "slug": "services-at-a-glance",
+      "category": "insights",
+      "status": "published",
+      "excerpt": "Short overview of three sample service areas you can rename.",
+      "content": "<p>Example service areas:</p><ul><li><strong>Consulting</strong> — strategy and planning</li><li><strong>Delivery</strong> — implementation and support</li><li><strong>Training</strong> — workshops for your team</li></ul><p>Edit or delete this post once your real service pages are ready.</p>"
+    }
+  ],
+  "pages": [
+    {
+      "title": "About",
+      "slug": "about",
+      "status": "published",
+      "content": "<p>Introduce your company: who you serve, what you stand for, and how long you have been operating.</p><p>This About page was seeded by the <strong>Business Starter</strong> package.</p>"
+    },
+    {
+      "title": "Contact",
+      "slug": "contact",
+      "status": "published",
+      "content": "<p>Add your office address, phone, and preferred contact hours. Visitors can also use the form below.</p><p>Business Starter sample Contact content — replace with your details.</p>"
+    }
+  ]
+}

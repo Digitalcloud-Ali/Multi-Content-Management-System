@@ -1,0 +1,58 @@
+{
+  "site": {
+    "title": "Community Clinic",
+    "description": "A welcoming starter site for a clinic or local practice. Replace sample tips and hours with your real information."
+  },
+  "categories": [
+    {
+      "name": "Health Tips",
+      "slug": "health-tips",
+      "description": "Practical advice for patients"
+    },
+    {
+      "name": "Practice News",
+      "slug": "practice-news",
+      "description": "Hours, staff, and updates"
+    }
+  ],
+  "posts": [
+    {
+      "title": "Welcome to your clinic website",
+      "slug": "welcome-clinic-site",
+      "category": "practice-news",
+      "status": "published",
+      "excerpt": "Clinic Starter is installed. Update hours, services, and contact details next.",
+      "content": "<p>This is the <strong>Clinic Starter</strong> flagship.</p><p>Patients can already browse sample tips and reach your Contact page. Replace every sample with accurate medical and administrative information for your practice.</p><p><strong>Important:</strong> Do not present sample tips as clinical advice — rewrite them for your specialty and local guidelines.</p>"
+    },
+    {
+      "title": "What to bring to your first visit",
+      "slug": "what-to-bring-first-visit",
+      "category": "health-tips",
+      "status": "published",
+      "excerpt": "Sample checklist patients can follow before an appointment.",
+      "content": "<ul><li>Photo ID and insurance card (if applicable)</li><li>List of current medications</li><li>Questions you want to ask</li><li>Arrival 10–15 minutes early for forms</li></ul><p>Edit this list to match your intake process.</p>"
+    },
+    {
+      "title": "New evening hours starting next month",
+      "slug": "new-evening-hours",
+      "category": "practice-news",
+      "status": "published",
+      "excerpt": "Sample announcement — swap for a real schedule change.",
+      "content": "<p><em>Sample news.</em> Announce extended hours, a new clinician, or holiday closures here.</p><p>Clear dates and phone numbers reduce no-shows and front-desk calls.</p>"
+    }
+  ],
+  "pages": [
+    {
+      "title": "About",
+      "slug": "about",
+      "status": "published",
+      "content": "<p>Describe your practice, specialties, and care philosophy. Mention languages spoken and accessibility if relevant.</p><p>Seeded by the <strong>Clinic Starter</strong> package.</p>"
+    },
+    {
+      "title": "Contact",
+      "slug": "contact",
+      "status": "published",
+      "content": "<p>List phone, address, parking notes, and emergency guidance (when to call emergency services instead of the clinic).</p><p>Clinic Starter sample Contact content.</p>"
+    }
+  ]
+}

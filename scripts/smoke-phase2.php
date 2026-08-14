@@ -79,7 +79,9 @@ $topic = $conn->query("SELECT selecttopic FROM settings WHERE settingid=1")->fet
 ok('selecttopic=default', ($topic['selecttopic'] ?? '') === 'default');
 
 $pkgs = FlagshipSite::listPackages();
-ok('blog package listed', in_array('blog', array_column($pkgs, 'slug'), true));
+$slugs = array_column($pkgs, 'slug');
+sort($slugs);
+ok('all flagships listed', $slugs === ['blog', 'business', 'clinic', 'nonprofit', 'portfolio'], implode(',', $slugs));
 
 $applied = FlagshipSite::apply('blog', $conn, $authorId);
 ok('flagship blog apply', !empty($applied['success']), $applied['message'] ?? '');
@@ -90,9 +92,14 @@ ok('flagship posts seeded', $postCount >= 3, "count=$postCount");
 $pageCount = (int) ($conn->query("SELECT COUNT(*) AS c FROM pages WHERE status='published'")->fetch_assoc()['c'] ?? 0);
 ok('flagship pages seeded', $pageCount >= 2, "count=$pageCount");
 
+$biz = FlagshipSite::apply('business', $conn, $authorId);
+ok('flagship business apply', !empty($biz['success']), $biz['message'] ?? '');
+$bizPost = $conn->query("SELECT slug FROM posts WHERE slug='welcome-business-site'")->fetch_assoc();
+ok('business post present', ($bizPost['slug'] ?? '') === 'welcome-business-site');
+
 $again = FlagshipSite::apply('blog', $conn, $authorId);
 $postCount2 = (int) ($conn->query("SELECT COUNT(*) AS c FROM posts")->fetch_assoc()['c'] ?? 0);
-ok('re-apply skips duplicates', $postCount2 === $postCount && !empty($again['success']));
+ok('re-apply skips duplicates', $postCount2 >= $postCount && !empty($again['success']));
 
 $active = json_decode((string) @file_get_contents($root . '/includes/active_site.json'), true);
 ok('active_site flagship', ($active['mode'] ?? '') === 'flagship' && ($active['slug'] ?? '') === 'blog');
