@@ -161,7 +161,7 @@ if($row_setting['onlinestatus'] == "yes")
                       <td><a href="adposting.php?adpostingid=<?php echo $row_adposting['adpostingid']; ?>" class="posttitle"><?php echo multicms_h($row_adposting['title']); ?></a></td>
                     </tr>
                     <tr>
-                      <td colspan="2"><?php echo $row_adposting['owner']; ?> / <?php echo $row_adposting['date']; ?> / View : <?php echo $row_adposting['views']; ?> / Rating : <?php echo $row_adposting['rating']; ?> / <?php echo multicms_h($row_adposting['catename']); ?></td>
+                      <td colspan="2"><?php echo multicms_h($row_adposting['owner']); ?> / <?php echo $row_adposting['date']; ?> / View : <?php echo $row_adposting['views']; ?> / Rating : <?php echo $row_adposting['rating']; ?> / <?php echo multicms_h($row_adposting['catename']); ?></td>
                     </tr>
                   </table>
                   <?php } while ($row_adposting = mysqli_fetch_assoc($adposting)); ?>

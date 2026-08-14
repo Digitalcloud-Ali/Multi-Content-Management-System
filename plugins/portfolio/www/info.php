@@ -89,7 +89,7 @@ if(isset($_GET["newsid"]))
 }
 ?>
 <?php include($theme_path."".$row_setting['theme']."/topdocs.php"); ?>
-<title><?php echo $row_pagesdetail['title']; ?></title>
+<title><?php echo multicms_h($row_pagesdetail['title']); ?></title>
 <link href="/themes/<?php echo $row_setting['theme']; ?>/multicms.css" rel="stylesheet" type="text/css">
 <?php $favicon ?>
 <?php include($theme_path."".$row_setting['theme']."/botdocs.php"); ?>
@@ -107,7 +107,7 @@ if($row_setting['onlinestatus'] == "yes")
       <?php if ($totalRows_pagesdetail > 0) { // Show if recordset not empty ?>
       <div style="padding-left:7px; padding-top:7px;">
         <?php do { ?>
-        <div class="orangetitle"><a href="info.php?newsid=<?php echo $row_pagesdetail['newsid']; ?>"><?php echo $row_pagesdetail['title']; ?></a></div>
+        <div class="orangetitle"><a href="info.php?newsid=<?php echo $row_pagesdetail['newsid']; ?>"><?php echo multicms_h($row_pagesdetail['title']); ?></a></div>
         <div class="texts" style="padding-bottom:7px;"><?php echo $row_pagesdetail['description']; ?></div>
         <?php } while ($row_pagesdetail = mysqli_fetch_assoc($pagesdetail)); ?>
       </div>
@@ -117,7 +117,7 @@ if($row_setting['onlinestatus'] == "yes")
       <?php } // Show if recordset empty ?>
       <?php } // Show if recordset empty ?>
       <?php if ($totalRows_pagesdetail1 > 0) { // Show if recordset not empty ?>
-      <div class="title"><?php echo $row_pagesdetail1['title']; ?></div>
+      <div class="title"><?php echo multicms_h($row_pagesdetail1['title']); ?></div>
       <div class="texts" style="padding-left:7px; padding-top:7px;"><?php echo $row_pagesdetail1['description']; ?></div>
       <?php } // Show if recordset not empty ?>
             <?php

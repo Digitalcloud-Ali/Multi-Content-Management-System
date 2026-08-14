@@ -7,13 +7,14 @@ Open-source PHP/MySQL CMS. The **product core** is a modern installer + default 
 
 ## Status (honest)
 
-Phase 1–2 modernization focuses on:
+Phase 1–3 modernization focuses on:
 
 - Fresh install that writes/reads `includes/db_config.php`
 - Modern `users` / `posts` / `core_categories` schema for the core front door
 - Auth fixes (hashed passwords; legacy `isAuthorized` gate closed)
 - Quarantined ready-made packs with path bootstrap + critical auth patches
-- **Phase 2:** pretty front-controller URLs for active packs, legacy table bootstrap on apply, Admin → Posts (core), targeted CSRF/XSS/upload hardening, Composer + CI lint
+- **Phase 2:** pretty front-controller URLs, legacy table bootstrap, Admin → Posts (core), CSRF/XSS/upload hardening, Composer + CI lint
+- **Phase 3:** minimal hooks API (`add_action` / `add_filter`), settings/parts/pages bridge on pack apply, broader XSS pass, Admin → Site Settings (core)
 
 Ready-made packs are still largely Dreamweaver-era code. Prefer the fresh core for production. See [plugins/README.md](plugins/README.md).
 
@@ -41,8 +42,9 @@ Do **not** commit `includes/db_config.php`.
 | Layer | Path | Role |
 |-------|------|------|
 | Core | `index.php`, `includes/`, `themes/default/`, `install.php` | Primary product |
-| Admin | `administrator/` (Posts core + Ready Sites) | Legacy admin + modern posts |
+| Admin | `administrator/` (Posts, Site Settings, Ready Sites) | Legacy admin + modern core screens |
 | Ready-made sites | `plugins/<slug>/www/` | Optional legacy site packs (served via front controller when active) |
+| Hooks | `includes/Hooks.php`, `plugins/<slug>/hooks.php` | Minimal actions/filters API |
 | Theme packages | `plugins/prebuilt-sites/` | Optional theme demos |
 
 ## Documentation

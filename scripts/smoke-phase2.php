@@ -227,6 +227,18 @@ ok('upload rejects .php. in filename', empty($up2['success']), json_encode($up2)
 
 ok('composer.json present', is_file($root . '/composer.json'));
 ok('php-lint workflow present', is_file($root . '/.github/workflows/php-lint.yml'));
+ok('Hooks API loaded', function_exists('do_action') && function_exists('apply_filters'));
+
+$hookFired = false;
+add_action('multicms_smoke_probe', function () use (&$hookFired) {
+    $hookFired = true;
+});
+do_action('multicms_smoke_probe');
+ok('hooks do_action fires', $hookFired === true);
+$filtered = apply_filters('multicms_smoke_filter', 'a');
+add_filter('multicms_smoke_filter', function ($v) { return $v . 'b'; });
+$filtered = apply_filters('multicms_smoke_filter', 'a');
+ok('hooks apply_filters works', $filtered === 'ab');
 
 passthru('php "' . $root . '/scripts/php-lint-smoke.php"', $lintCode);
 ok('php-lint-smoke', $lintCode === 0, 'exit=' . $lintCode);

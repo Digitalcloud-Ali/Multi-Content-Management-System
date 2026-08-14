@@ -171,7 +171,7 @@ if(isset($_GET["adpostingid"]))
 
 ?>
 <?php include($theme_path."".$row_setting['theme']."/topdocs.php"); ?>
-<title><?php echo $row_setting['title']; ?></title>
+<title><?php echo multicms_h($row_setting['title']); ?></title>
 <meta name="keywords" content="<?php echo $row_setting['metakey']; ?>">
 <meta name="description" content="<?php echo $row_setting['metadesc']; ?>">
 <link href="/themes/<?php echo $row_setting['theme']; ?>/multicms.css" rel="stylesheet" type="text/css">
@@ -201,12 +201,12 @@ if($row_setting['onlinestatus'] == "yes")
                 <td height="42"><table width="100%" border="0" cellpadding="0" cellspacing="2">
                   <tr>
                     <td width="1" rowspan="2" valign="top"><a href="adposting.php?adpostingid=<?php echo $row_adposting['adpostingid']; ?>"><img src="images/adposting/<?php echo $row_adposting['imageurl']; ?>" width="115" height="92" border="0"></a></td>
-                    <td bgcolor="#F9F9F9" class="posttitle"><a href="adposting.php?adpostingid=<?php echo $row_adposting['adpostingid']; ?>" class="title"><?php echo $row_adposting['title']; ?></a></td>
+                    <td bgcolor="#F9F9F9" class="posttitle"><a href="adposting.php?adpostingid=<?php echo $row_adposting['adpostingid']; ?>" class="title"><?php echo multicms_h($row_adposting['title']); ?></a></td>
                     </tr>
                   <tr>
                     <td valign="top" bgcolor="#F9F9F9"><p><?php echo $row_adposting['description']; ?></p>
-                      <p>&nbsp;<?php echo $row_adposting['adpostingurl']; ?></p>
-                      <p><span class="textsmall"><?php echo $row_adposting['owner']; ?> / <?php echo $row_adposting['date']; ?> / View : <?php echo $row_adposting['views']; ?> / Rating : <?php echo $row_adposting['rating']; ?> / <?php echo $row_adposting['catename']; ?></span></p></td>
+                      <p>&nbsp;<?php echo multicms_h($row_adposting['adpostingurl']); ?></p>
+                      <p><span class="textsmall"><?php echo multicms_h($row_adposting['owner']); ?> / <?php echo $row_adposting['date']; ?> / View : <?php echo $row_adposting['views']; ?> / Rating : <?php echo $row_adposting['rating']; ?> / <?php echo multicms_h($row_adposting['catename']); ?></span></p></td>
                     </tr>
                   <tr></tr>
                   </table></td>
@@ -243,7 +243,7 @@ if(($widgetstatus['status'] == 'active') && (!empty($widgets)))
                 <?php do { ?>
                 <table width="100%" border="0" cellpadding="0" cellspacing="4">
                   <tr>
-                    <td bgcolor="#F9F9F9" class="textsmall"><?php echo $row_Comments['name']; ?> / <?php echo $row_Comments['email']; ?> / <a href="<?php echo $row_Comments['website']; ?>"><?php echo $row_Comments['website']; ?> <span class="texts">
+                    <td bgcolor="#F9F9F9" class="textsmall"><?php echo multicms_h($row_Comments['name']); ?> / <?php echo multicms_h($row_Comments['email']); ?> / <a href="<?php echo $row_Comments['website']; ?>"><?php echo $row_Comments['website']; ?> <span class="texts">
                       <input name="status" type="hidden" id="status" value="<?php echo $row_Comments['status']; ?>">
                     </span></a></td>
                   </tr>
@@ -280,10 +280,10 @@ if(($widgetstatus['status'] == 'active') && (!empty($widgets)))
                         <?php if ($totalRows_members > 0) { // Show if recordset not empty ?>
                           <table width="147" border="0" cellspacing="0" cellpadding="0">
                             <tr>
-                              <td width="139"><input name="name" type="text" id="name" value="<?php echo $row_members['users']; ?>" readonly></td>
+                              <td width="139"><input name="name" type="text" id="name" value="<?php echo multicms_h($row_members['users']); ?>" readonly></td>
                             </tr>
                             <tr>
-                              <td><input name="email" type="text" id="email" value="<?php echo $row_members['email']; ?>" readonly></td>
+                              <td><input name="email" type="text" id="email" value="<?php echo multicms_h($row_members['email']); ?>" readonly></td>
                             </tr>
                             <tr>
                               <td><input type="text" name="website" id="website"></td>

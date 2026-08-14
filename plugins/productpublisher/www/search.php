@@ -159,7 +159,7 @@ if($row_setting['onlinestatus'] == "yes")
           <td><a href="productpublisher.php?productpublisherid=<?php echo $row_productpublisher['productpublisherid']; ?>"  class="posttitle"><?php echo multicms_h($row_productpublisher['title']); ?></a></td>
         </tr>
         <tr>
-          <td colspan="2"><?php echo $row_productpublisher['owner']; ?> / <?php echo $row_productpublisher['date']; ?> / View : <?php echo $row_productpublisher['views']; ?> / Rating : <?php echo $row_productpublisher['rating']; ?> / <?php echo multicms_h($row_productpublisher['catename']); ?></td>
+          <td colspan="2"><?php echo multicms_h($row_productpublisher['owner']); ?> / <?php echo $row_productpublisher['date']; ?> / View : <?php echo $row_productpublisher['views']; ?> / Rating : <?php echo $row_productpublisher['rating']; ?> / <?php echo multicms_h($row_productpublisher['catename']); ?></td>
         </tr>
       </table>
       <?php } while ($row_productpublisher = mysqli_fetch_assoc($productpublisher)); ?>

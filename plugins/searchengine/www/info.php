@@ -158,7 +158,7 @@ if(isset($_GET["newsid"]))
 }
 ?>
 <?php include($theme_path."".$row_setting['theme']."/topdocs.php"); ?>
-<title><?php echo $row_setting['title']; ?></title>
+<title><?php echo multicms_h($row_setting['title']); ?></title>
 <meta name="keywords" content="<?php echo $row_setting['metakey']; ?>">
 <meta name="description" content="<?php echo $row_setting['metadesc']; ?>">
 <link href="/themes/<?php echo $row_setting['theme']; ?>/multicms.css" rel="stylesheet" type="text/css">
@@ -179,7 +179,7 @@ if($row_setting['onlinestatus'] == "yes")
     <div class="title">NEWS</div>
   <?php do { ?>
     <div style="padding-left:5px; padding-top:5px;">
-      <div class="admintitle"><a href="info.php?newsid=<?php echo $row_pagesdetail['newsid']?>"><?php echo $row_pagesdetail['title']; ?></a></div>
+      <div class="admintitle"><a href="info.php?newsid=<?php echo $row_pagesdetail['newsid']?>"><?php echo multicms_h($row_pagesdetail['title']); ?></a></div>
     </div>
     <div style="height:2px;" class="texts"><?php echo $row_pagesdetail['description']; ?></div>
     
@@ -191,7 +191,7 @@ if($row_setting['onlinestatus'] == "yes")
   <?php } // Show if recordset empty ?>
 <?php if ($totalRows_pagesdetail1 > 0) { // Show if recordset not empty ?>
   <div style="padding-left:0px; padding-top:0px;">
-    <div class="title"><?php echo $row_pagesdetail1['title']; ?></div>
+    <div class="title"><?php echo multicms_h($row_pagesdetail1['title']); ?></div>
   </div>
     <div class="texts"><?php echo $row_pagesdetail1['description']; ?></div>
         

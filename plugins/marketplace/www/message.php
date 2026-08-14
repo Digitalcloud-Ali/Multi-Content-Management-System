@@ -152,7 +152,7 @@ $queryString_market = sprintf("&totalRows_market=%d%s", $totalRows_market, $quer
 ?>
 <!-- index start -->
 <?php include($theme_path."".$row_setting['theme']."/topdocs.php"); ?>
-<title><?php echo $row_setting['title']; ?></title>
+<title><?php echo multicms_h($row_setting['title']); ?></title>
 <meta name="keywords" content="<?php echo $row_setting['metakey']; ?>">
 <meta name="description" content="<?php echo $row_setting['metadesc']; ?>">
 <link href="/themes/<?php echo $row_setting['theme']; ?>/multicms.css" rel="stylesheet" type="text/css">
@@ -176,8 +176,8 @@ if($row_setting['onlinestatus'] == "yes")
               </tr>
               <tr>
                 <td><input name="marketid" type="hidden" id="marketid" value="<?php echo $row_market['marketid']; ?>">
-                  <input name="users" type="hidden" id="users" value="<?php echo $row_market['users']; ?>"> <input name="status" type="hidden" id="status" value="send">
-                  <input name="from" type="hidden" id="from" value="<?php echo $row_members['users']; ?>">
+                  <input name="users" type="hidden" id="users" value="<?php echo multicms_h($row_market['users']); ?>"> <input name="status" type="hidden" id="status" value="send">
+                  <input name="from" type="hidden" id="from" value="<?php echo multicms_h($row_members['users']); ?>">
                   <input name="status1" type="hidden" id="status1" value="received"></td>
                 <td colspan="2"><input name="button2" type="submit" class="search" id="button2" value="Send"></td>
               </tr>

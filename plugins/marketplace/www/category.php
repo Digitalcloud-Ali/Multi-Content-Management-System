@@ -165,7 +165,7 @@ if($row_setting['onlinestatus'] == "yes")
                   <tr>
                     <td><a href="market.php?marketid=<?php echo $row_market['marketid']; ?>"><?php echo multicms_h($row_market['title']); ?></a></td>
                     <td align="center"><span class="textsmall"><?php echo $row_market['price']; ?></span></td>
-                    <td align="center"><span class="textsmall">BY <a href="profile.php?users=<?php echo $row_market['owner']; ?>"><?php echo $row_market['owner']; ?></a></span></td>
+                    <td align="center"><span class="textsmall">BY <a href="profile.php?users=<?php echo multicms_h($row_market['owner']); ?>"><?php echo multicms_h($row_market['owner']); ?></a></span></td>
                     <td align="center"><span class="textsmall"><a href="category.php?catename=<?php echo multicms_h($row_market['catename']); ?>"><?php echo multicms_h($row_market['catename']); ?></a></span></td>
                     <td align="center" class="textsmall"><?php echo $row_market['date']; ?></td>
                   </tr>

@@ -199,7 +199,7 @@ if($row_setting['onlinestatus'] == "yes")
                       <tr>
                         <td><a href="market.php?marketid=<?php echo $row_market['marketid']; ?>"><?php echo multicms_h($row_market['title']); ?></a></td>
                         <td align="center"><span><?php echo $row_market['price']; ?></span></td>
-                        <td align="center"><span>BY <a href="profile.php?users=<?php echo $row_market['owner']; ?>"><?php echo $row_market['owner']; ?></a></span></td>
+                        <td align="center"><span>BY <a href="profile.php?users=<?php echo multicms_h($row_market['owner']); ?>"><?php echo multicms_h($row_market['owner']); ?></a></span></td>
                         <td align="center"><span><a href="category.php?catename=<?php echo multicms_h($row_market['catename']); ?>"><?php echo multicms_h($row_market['catename']); ?></a></span></td>
                         <td align="center"><?php echo $row_market['date']; ?></td>
                       </tr>
@@ -218,7 +218,7 @@ if($row_setting['onlinestatus'] == "yes")
   <tr>
     <td><a href="market.php?marketid=<?php echo $row_featuredadposts['marketid']; ?>"><?php echo multicms_h($row_featuredadposts['title']); ?></a></td>
     <td align="center"><span><?php echo $row_featuredadposts['price']; ?></span></td>
-    <td align="center"><span>BY <a href="profile.php?users=<?php echo $row_featuredadposts['owner']; ?>"><?php echo $row_featuredadposts['owner']; ?></a></span></td>
+    <td align="center"><span>BY <a href="profile.php?users=<?php echo multicms_h($row_featuredadposts['owner']); ?>"><?php echo multicms_h($row_featuredadposts['owner']); ?></a></span></td>
     <td align="center"><span><a href="category.php?catename=<?php echo multicms_h($row_featuredadposts['catename']); ?>"><?php echo multicms_h($row_featuredadposts['catename']); ?></a></span></td>
     <td align="center"><?php echo $row_featuredadposts['date']; ?></td>
   </tr>

@@ -16,10 +16,13 @@ if (!defined('ENVIRONMENT')) {
 
 // Include all modern classes
 require_once __DIR__ . '/modern_functions.php';
+require_once __DIR__ . '/Hooks.php';
 require_once __DIR__ . '/Database.php';
 require_once __DIR__ . '/Session.php';
 require_once __DIR__ . '/Validator.php';
 require_once __DIR__ . '/ErrorHandler.php';
+require_once __DIR__ . '/LegacyAuth.php';
+require_once __DIR__ . '/PluginManager.php';
 
 // Include service classes
 require_once __DIR__ . '/services/AuthService.php';

@@ -83,7 +83,7 @@ $queryString_doctors = sprintf("&totalRows_doctors=%d%s", $totalRows_doctors, $q
 ?>
 <!-- index start -->
 <?php include($theme_path."".$row_setting['theme']."/topdocs.php"); ?>
-<title><?php echo $row_doctors['title']; ?></title>
+<title><?php echo multicms_h($row_doctors['title']); ?></title>
 <link href="/themes/<?php echo $row_setting['theme']; ?>/multicms.css" rel="stylesheet" type="text/css">
 <?php $favicon ?><?php include($theme_path."".$row_setting['theme']."/botdocs.php"); ?>
 <?php
@@ -99,7 +99,7 @@ if($row_setting['onlinestatus'] == "yes")
           <?php do { ?>
             <table align="left">
               <tr>
-                <td><?php echo $row_doctors['title']; ?></td>
+                <td><?php echo multicms_h($row_doctors['title']); ?></td>
               </tr>
             </table>
           <?php } while ($row_doctors = mysqli_fetch_assoc($doctors)); ?></td>

@@ -136,7 +136,7 @@ $queryString_searchengine = sprintf("&totalRows_searchengine=%d%s", $totalRows_s
 ?>
 <!-- index start -->
 <?php include($theme_path."".$row_setting['theme']."/topdocs.php"); ?>
-<title><?php echo $row_setting['title']; ?></title>
+<title><?php echo multicms_h($row_setting['title']); ?></title>
 <meta name="keywords" content="<?php echo $row_setting['metakey']; ?>">
 <meta name="description" content="<?php echo $row_setting['metadesc']; ?>">
 <link href="/themes/<?php echo $row_setting['theme']; ?>/multicms.css" rel="stylesheet" type="text/css">

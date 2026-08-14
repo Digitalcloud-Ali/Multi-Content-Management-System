@@ -155,7 +155,7 @@ if($row_setting['onlinestatus'] == "yes")
       <table>
         <tr>
           <td><span><a href="tutorials.php?tutorialsid=<?php echo $row_tutorials['tutorialsid']; ?>" class="textsblue"><?php echo multicms_h($row_tutorials['title']); ?></a></span><a href="tutorials.php?tutorialsid=<?php echo $row_tutorials['tutorialsid']; ?>"><br />
-            </a><span class="textsmallbig">Submitted by <a href="profile.php?users=<?php echo $row_tutorials['owner']; ?>" class="textsmallgreen"><?php echo $row_tutorials['owner']; ?></a> on </span><span class="textsmallgreen"><?php echo $row_tutorials['date']; ?></span><span class="textsmallbig"><br />
+            </a><span class="textsmallbig">Submitted by <a href="profile.php?users=<?php echo multicms_h($row_tutorials['owner']); ?>" class="textsmallgreen"><?php echo multicms_h($row_tutorials['owner']); ?></a> on </span><span class="textsmallgreen"><?php echo $row_tutorials['date']; ?></span><span class="textsmallbig"><br />
               From </span><span class="textsmallgreen"><a href="http://<?php echo $row_tutorials['tutorialsurl']; ?>" class="textsmallgreen"><?php echo $row_tutorials['tutorialsurl']; ?></a></span></td>
         </tr>
         <tr>

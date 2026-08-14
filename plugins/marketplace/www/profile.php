@@ -172,15 +172,15 @@ if($row_setting['onlinestatus'] == "yes")
   <tr>
     <?php include($theme_path."".$row_setting['theme']."/leftmenu.php"); ?>
     <td valign="top"><div class="title">Profile</div>
-      <p><strong>Username :</strong> <?php echo $row_userinfo['users']; ?></p>
+      <p><strong>Username :</strong> <?php echo multicms_h($row_userinfo['users']); ?></p>
       <p><strong>Name :</strong> <?php echo $row_userinfo['fullname']; ?></p>
       <p><strong>Address :</strong> <?php echo $row_userinfo['address']; ?></p>
-      <p><strong>Email :</strong> <?php echo $row_userinfo['email']; ?></p>
+      <p><strong>Email :</strong> <?php echo multicms_h($row_userinfo['email']); ?></p>
       <p><strong>Zip : </strong><?php echo $row_userinfo['zip']; ?></p>
       <p><strong>City :</strong> <?php echo $row_userinfo['city']; ?></p>
       <p><strong>State :</strong> <?php echo $row_userinfo['state']; ?></p>
       <p><strong>Country :</strong> <?php echo $row_userinfo['country']; ?></p>
-      <p><strong>Phone :</strong> <?php echo $row_userinfo['phone']; ?></p>
+      <p><strong>Phone :</strong> <?php echo multicms_h($row_userinfo['phone']); ?></p>
       <p><strong>Yahooid :</strong> <?php echo $row_userinfo['yahooid']; ?></p>
       <p><strong>Twitter :</strong> <?php echo $row_userinfo['twitter']; ?></p>
       <p><strong>Facebook :</strong> <?php echo $row_userinfo['facebook']; ?></p>

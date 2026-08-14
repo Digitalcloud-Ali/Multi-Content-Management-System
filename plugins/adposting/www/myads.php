@@ -196,7 +196,7 @@ if($row_setting['onlinestatus'] == "yes")
                         <?php do { ?>
                             <table width="100%" border="0" cellpadding="2" cellspacing="2">
                               <tr>
-                                <td width="48%"><?php echo $row_posts['title']; ?></td>
+                                <td width="48%"><?php echo multicms_h($row_posts['title']); ?></td>
                                 <td width="10%" align="center"><?php echo $row_posts['status']; ?></td>
                                 <td width="10%" align="center"><a href="editpost.php?adpostingid=<?php echo $row_posts['adpostingid']; ?>">Edit</a></td>
                                 <td width="10%" align="center"><a href="deletepost.php?adpostingid=<?php echo $row_posts['adpostingid']; ?>">Delete</a></td>

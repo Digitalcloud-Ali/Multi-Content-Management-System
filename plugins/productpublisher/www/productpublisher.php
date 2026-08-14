@@ -135,7 +135,7 @@ if(isset($_GET["productpublisherid"]))
 
 ?>
 <?php include($theme_path."".$row_setting['theme']."/topdocs.php"); ?>
-<title><?php echo $row_setting['title']; ?></title>
+<title><?php echo multicms_h($row_setting['title']); ?></title>
 <meta name="keywords" content="<?php echo $row_setting['metakey']; ?>">
 <meta name="description" content="<?php echo $row_setting['metadesc']; ?>">
 <link href="/themes/<?php echo $row_setting['theme']; ?>/multicms.css" rel="stylesheet" type="text/css">
@@ -152,15 +152,15 @@ if($row_setting['onlinestatus'] == "yes")
       <tr>
         <?php include($theme_path."".$row_setting['theme']."/leftmenu.php"); ?>
         <td valign="top"><?php if ($totalRows_productpublisher > 0) { // Show if recordset not empty ?>
-<div class="title"><?php echo $row_productpublisher['title']; ?></div>
+<div class="title"><?php echo multicms_h($row_productpublisher['title']); ?></div>
 <table width="100%">
                   <tr>
                     <td align="center"><p><a href="productpublisher.php?productpublisherid=<?php echo $row_productpublisher['productpublisherid']; ?>"><img src="images/productpublisher/<?php echo $row_productpublisher['imageurl']; ?>" width="231" height="207" border="0"></a></p></td>
                   </tr>
                   <tr>
                     <td align="center" valign="top"><p><?php echo $row_productpublisher['description']; ?></p>
-                      <p><a href="<?php echo $row_productpublisher['productpublisherurl']; ?>"><strong>BUY NOW</strong></a></p>
-                      <p><span class="textsmall"><?php echo $row_productpublisher['owner']; ?> / <?php echo $row_productpublisher['date']; ?> / View : <?php echo $row_productpublisher['views']; ?> / Rating : <?php echo $row_productpublisher['rating']; ?> / <?php echo $row_productpublisher['catename']; ?></span></p></td>
+                      <p><a href="<?php echo multicms_h($row_productpublisher['productpublisherurl']); ?>"><strong>BUY NOW</strong></a></p>
+                      <p><span class="textsmall"><?php echo multicms_h($row_productpublisher['owner']); ?> / <?php echo $row_productpublisher['date']; ?> / View : <?php echo $row_productpublisher['views']; ?> / Rating : <?php echo $row_productpublisher['rating']; ?> / <?php echo multicms_h($row_productpublisher['catename']); ?></span></p></td>
                   </tr>
                   </table>
   <?php } // Show if recordset not empty ?>

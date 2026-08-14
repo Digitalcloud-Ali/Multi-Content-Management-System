@@ -12,6 +12,8 @@ $paths = [
     $root . '/administrator/login.php',
     $root . '/administrator/plugins_prebuilt_sites.php',
     $root . '/administrator/posts.php',
+    $root . '/administrator/settings_core.php',
+    $root . '/includes/Hooks.php',
 ];
 
 $files = [];

@@ -171,7 +171,7 @@ if(isset($_GET["tutorialsid"]))
 
 ?>
 <?php include($theme_path."".$row_setting['theme']."/topdocs.php"); ?>
-<title><?php echo $row_setting['title']; ?></title>
+<title><?php echo multicms_h($row_setting['title']); ?></title>
 <meta name="keywords" content="<?php echo $row_setting['metakey']; ?>">
 <meta name="description" content="<?php echo $row_setting['metadesc']; ?>">
 <link href="/themes/<?php echo $row_setting['theme']; ?>/multicms.css" rel="stylesheet" type="text/css">
@@ -187,12 +187,12 @@ if($row_setting['onlinestatus'] == "yes")
       <tr>
         <?php include($theme_path."".$row_setting['theme']."/leftmenu.php"); ?>
         <td valign="top"><?php if ($totalRows_tutorials > 0) { // Show if recordset not empty ?>
-				<div class="title"><?php echo $row_tutorials['title']; ?></div>
+				<div class="title"><?php echo multicms_h($row_tutorials['title']); ?></div>
                 <table>
                   <tr></tr>
                   <tr>
                     <td>
-                      <span class="textsmallbig">Submitted by <a href="profile.php?users=<?php echo $row_tutorials['owner']; ?>" class="textsmallgreen"><?php echo $row_tutorials['owner']; ?></a> on </span><span class="textsmallgreen"><?php echo $row_tutorials['date']; ?></span><span class="textsmallbig"><br>
+                      <span class="textsmallbig">Submitted by <a href="profile.php?users=<?php echo multicms_h($row_tutorials['owner']); ?>" class="textsmallgreen"><?php echo multicms_h($row_tutorials['owner']); ?></a> on </span><span class="textsmallgreen"><?php echo $row_tutorials['date']; ?></span><span class="textsmallbig"><br>
                             From </span><span class="textsmallgreen"><a href="http://<?php echo $row_tutorials['tutorialsurl']; ?>" class="textsmallgreen"><?php echo $row_tutorials['tutorialsurl']; ?></a></span></td>
                   </tr>
                   <tr>

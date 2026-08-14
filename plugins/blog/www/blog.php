@@ -232,7 +232,7 @@ if(($widgetstatus['status'] == 'active') && (!empty($widgets)))
             <?php do { ?>
                         <table class="tables">
                           <tr>
-                          <td class="textsmall"><?php echo multicms_h($row_Comments['name']); ?> / <?php echo $row_Comments['email']; ?> / <a href="<?php echo $row_Comments['website']; ?>"><?php echo $row_Comments['website']; ?> <span class="texts">
+                          <td class="textsmall"><?php echo multicms_h($row_Comments['name']); ?> / <?php echo multicms_h($row_Comments['email']); ?> / <a href="<?php echo $row_Comments['website']; ?>"><?php echo $row_Comments['website']; ?> <span class="texts">
                               <input name="status" type="hidden" id="status" value="<?php echo $row_Comments['status']; ?>">
                             </span></a></td>
                           </tr>
@@ -272,7 +272,7 @@ if(($widgetstatus['status'] == 'active') && (!empty($widgets)))
                               <td><input name="name" type="text" class="form" id="name" value="<?php echo multicms_h($row_members['users']); ?>" readonly></td>
                             </tr>
                             <tr>
-                              <td><input name="email" type="text" class="form" id="email" value="<?php echo $row_members['email']; ?>" readonly></td>
+                              <td><input name="email" type="text" class="form" id="email" value="<?php echo multicms_h($row_members['email']); ?>" readonly></td>
                             </tr>
                             <tr>
                               <td><input name="website" type="text" class="form" id="website"></td>

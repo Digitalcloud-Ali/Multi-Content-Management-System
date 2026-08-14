@@ -206,7 +206,7 @@ if($row_setting['onlinestatus'] == "yes")
                         <?php do { ?>
                           <table width="100%">
                             <tr>
-                              <td width="48%"><?php echo $row_receivedmessages['title']; ?></td>
+                              <td width="48%"><?php echo multicms_h($row_receivedmessages['title']); ?></td>
                               <td width="10%" align="center"><a href="send.php?users=<?php echo $row_receivedmessages['from']; ?>&marketid=<?php echo $row_receivedmessages['marketid']; ?>"><?php echo $row_receivedmessages['from']; ?></a></td>
                               <td width="10%" align="center"><a href="market.php?marketid=<?php echo $row_receivedmessages['marketid']; ?>" target="_blank">Check</a></td>
                             </tr>

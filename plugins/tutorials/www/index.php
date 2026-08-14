@@ -189,7 +189,7 @@ if($row_setting['onlinestatus'] == "yes")
 <table>
                             <tr></tr>
                             <tr>
-                              <td><span><a href="tutorials.php?tutorialsid=<?php echo $row_tutorials['tutorialsid']; ?>" class="textsblue"><?php echo multicms_h($row_tutorials['title']); ?></a></span><br><span class="textsmallbig">Submitted by <a href="profile.php?users=<?php echo $row_tutorials['owner']; ?>" class="textsmallgreen"><?php echo $row_tutorials['owner']; ?></a> on </span><span class="textsmallgreen"><?php echo $row_tutorials['date']; ?></span><span class="textsmallbig"><br>
+                              <td><span><a href="tutorials.php?tutorialsid=<?php echo $row_tutorials['tutorialsid']; ?>" class="textsblue"><?php echo multicms_h($row_tutorials['title']); ?></a></span><br><span class="textsmallbig">Submitted by <a href="profile.php?users=<?php echo multicms_h($row_tutorials['owner']); ?>" class="textsmallgreen"><?php echo multicms_h($row_tutorials['owner']); ?></a> on </span><span class="textsmallgreen"><?php echo $row_tutorials['date']; ?></span><span class="textsmallbig"><br>
                                   From </span><span class="textsmallgreen"><a href="http://<?php echo $row_tutorials['tutorialsurl']; ?>" class="textsmallgreen"><?php echo $row_tutorials['tutorialsurl']; ?></a></span></td>
                             </tr>
                             <tr>
@@ -203,7 +203,7 @@ if($row_setting['onlinestatus'] == "yes")
                               <tr></tr>
                               <tr>
                                 <td><span><a href="tutorials.php?tutorialsid=<?php echo $row_featuredadposts['tutorialsid']; ?>" class="textsblue"><?php echo multicms_h($row_featuredadposts['title']); ?></a></span><a href="featuredadposts.php?tutorialsid=<?php echo $row_featuredadposts['tutorialsid']; ?>"><br>
-                                  </a><span class="textsmallbig">Submitted by <a href="profile.php?users=<?php echo $row_featuredadposts['owner']; ?>" class="textsmallgreen"><?php echo $row_featuredadposts['owner']; ?></a> on </span><span class="textsmallgreen"><?php echo $row_featuredadposts['date']; ?></span><span class="textsmallbig"><br>
+                                  </a><span class="textsmallbig">Submitted by <a href="profile.php?users=<?php echo multicms_h($row_featuredadposts['owner']); ?>" class="textsmallgreen"><?php echo multicms_h($row_featuredadposts['owner']); ?></a> on </span><span class="textsmallgreen"><?php echo $row_featuredadposts['date']; ?></span><span class="textsmallbig"><br>
                                     From </span><span class="textsmallgreen"><a href="http://<?php echo $row_featuredadposts['tutorialsurl']; ?>" class="textsmallgreen"><?php echo $row_featuredadposts['tutorialsurl']; ?></a></span></td>
                               </tr>
                               <tr>

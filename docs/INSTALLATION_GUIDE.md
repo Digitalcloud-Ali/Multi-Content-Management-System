@@ -28,7 +28,7 @@ location ~ ^/includes/.*\.php$ { deny all; }
 location ~* /images/.*\.(php|phtml|phar)$ { deny all; }
 ```
 
-After install, manage core posts at `/administrator/posts.php` and ready-made packs at `/administrator/plugins_prebuilt_sites.php`. Prefer **Fresh default**; use Ready Sites only when you accept legacy-pack risk.
+After install, manage core content at `/administrator/posts.php`, site metadata at `/administrator/settings_core.php`, and ready-made packs at `/administrator/plugins_prebuilt_sites.php`. Prefer **Fresh default**; use Ready Sites only when you accept legacy-pack risk.
 
 ## Installation Process
 

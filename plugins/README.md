@@ -25,6 +25,16 @@ When a pack is active, `index.php` **internally dispatches** to `plugins/<slug>/
 
 To force the modern core while a pack is selected: `index.php?mc_core=1&page=blog`.
 
+## Hooks (Phase 3)
+
+Optional `plugins/<slug>/hooks.php` can register:
+
+- `add_action('multicms_site_applied', …)` — after apply / fresh default
+- `add_action('multicms_before_pack_dispatch', …)` / `multicms_after_pack_dispatch`
+- `add_filter('multicms_active_site_public_url', …)`
+
+Core also ships `includes/Hooks.php` (`do_action` / `apply_filters`).
+
 ## Legacy tables on apply
 
 `PluginManager::applySiteAsMain()` runs [`includes/sql/legacy_pack_tables.sql`](../includes/sql/legacy_pack_tables.sql) (CREATE TABLE IF NOT EXISTS, no seed passwords). If a modern `categories` table exists, it is renamed to `core_categories` so legacy `categories` can be created.

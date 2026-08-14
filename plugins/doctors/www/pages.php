@@ -85,7 +85,7 @@ if(isset($_GET["pageid"]))
 
 ?>
 <?php include($theme_path."".$row_setting['theme']."/topdocs.php"); ?>
-<title><?php echo $row_pagesdetail['title']; ?></title>
+<title><?php echo multicms_h($row_pagesdetail['title']); ?></title>
 <meta name="keywords" content="<?php echo $row_pagesdetail['metakey']; ?>">
 <meta name="description" content="<?php echo $row_pagesdetail['metadesc']; ?>">
 <link href="/themes/<?php echo $row_setting['theme']; ?>/multicms.css" rel="stylesheet" type="text/css">
@@ -99,7 +99,7 @@ if($row_setting['onlinestatus'] == "yes")
       <tr>
         <?php include($theme_path."".$row_setting['theme']."/leftmenu.php"); ?>
         <td valign="top"><?php if ($totalRows_pagesdetail > 0) { // Show if recordset not empty ?>
-            <div class="title"><?php echo $row_pagesdetail['title']; ?></div>
+            <div class="title"><?php echo multicms_h($row_pagesdetail['title']); ?></div>
             <table class="tables">
               <tr>
                 <td class="texts"><?php echo $row_pagesdetail['description']; ?></td>

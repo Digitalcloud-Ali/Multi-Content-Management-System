@@ -31,7 +31,8 @@ try {
             $uri = ltrim((string) $uri, '/');
             $route = ($uri === '' || $uri === 'index.php') ? '' : $uri;
         }
-        if (empty($_GET['mc_core'])) {
+if (empty($_GET['mc_core'])) {
+            do_action('multicms_before_front_dispatch', $topic, $route);
             PluginManager::dispatchActiveSite(basename($topic), $route);
             exit;
         }

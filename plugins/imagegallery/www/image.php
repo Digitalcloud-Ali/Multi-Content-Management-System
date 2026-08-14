@@ -164,7 +164,7 @@ if(isset($_GET["imageid"]))
 
 ?>
 <?php include($theme_path."".$row_setting['theme']."/topdocs.php"); ?>
-<title><?php echo $row_setting['title']; ?></title>
+<title><?php echo multicms_h($row_setting['title']); ?></title>
 <meta name="keywords" content="<?php echo $row_setting['metakey']; ?>">
 <meta name="description" content="<?php echo $row_setting['metadesc']; ?>">
 <link href="/themes/<?php echo $row_setting['theme']; ?>/multicms.css" rel="stylesheet" type="text/css">
@@ -181,9 +181,9 @@ if($row_setting['onlinestatus'] == "yes")
       <tr>
         <?php include($theme_path."".$row_setting['theme']."/leftmenu.php"); ?> 
         <td valign="top"><?php if ($totalRows_image > 0) { // Show if recordset not empty ?>
-              <div class="title"><?php echo $row_image['title']; ?></div><table class="tables">
+              <div class="title"><?php echo multicms_h($row_image['title']); ?></div><table class="tables">
                 <tr>
-                  <td><p><span class="textsmall"><?php echo $row_image['users']; ?> / <?php echo $row_image['date']; ?> / <a href="category.php?catename=<?php echo $row_image['catename']; ?>"><?php echo $row_image['catename']; ?></a></span></p></td>
+                  <td><p><span class="textsmall"><?php echo multicms_h($row_image['users']); ?> / <?php echo $row_image['date']; ?> / <a href="category.php?catename=<?php echo multicms_h($row_image['catename']); ?>"><?php echo multicms_h($row_image['catename']); ?></a></span></p></td>
                 </tr>
                 <tr>
                   <td><table class="tables">
@@ -245,7 +245,7 @@ if(($widgetstatus['status'] == 'active') && (!empty($widgets)))
             <?php do { ?>
                         <table class="tables">
                           <tr>
-                          <td class="textsmall"><?php echo $row_Comments['name']; ?> / <?php echo $row_Comments['email']; ?> / <a href="<?php echo $row_Comments['website']; ?>"><?php echo $row_Comments['website']; ?> <span class="texts">
+                          <td class="textsmall"><?php echo multicms_h($row_Comments['name']); ?> / <?php echo multicms_h($row_Comments['email']); ?> / <a href="<?php echo $row_Comments['website']; ?>"><?php echo $row_Comments['website']; ?> <span class="texts">
                               <input name="status" type="hidden" id="status" value="<?php echo $row_Comments['status']; ?>">
                             </span></a></td>
                           </tr>
@@ -282,10 +282,10 @@ if(($widgetstatus['status'] == 'active') && (!empty($widgets)))
                         <?php if ($totalRows_members > 0) { // Show if recordset not empty ?>
                           <table>
                             <tr>
-                              <td><input name="name" type="text" class="form" id="name" value="<?php echo $row_members['users']; ?>" readonly></td>
+                              <td><input name="name" type="text" class="form" id="name" value="<?php echo multicms_h($row_members['users']); ?>" readonly></td>
                             </tr>
                             <tr>
-                              <td><input name="email" type="text" class="form" id="email" value="<?php echo $row_members['email']; ?>" readonly></td>
+                              <td><input name="email" type="text" class="form" id="email" value="<?php echo multicms_h($row_members['email']); ?>" readonly></td>
                             </tr>
                             <tr>
                               <td><input name="website" type="text" class="form" id="website"></td>

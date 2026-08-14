@@ -207,8 +207,12 @@ location.replace("/mobadmin/");
             <span>Posts (core)</span>        </a>    </li>
 
     <li>
+    	<a class="multicms" href="settings_core.php">
+            <span>Site Settings (core)</span>        </a>    </li>
+
+    <li>
     	<a class="multicms" href="plugins_prebuilt_sites.php">
-            <span>Ready Sites</span>        </a>    </li>
+            <span>Ready Sites (legacy)</span>        </a>    </li>
     
     <li>
     	<a class="messages" href="contact.php">

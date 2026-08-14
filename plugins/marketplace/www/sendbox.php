@@ -205,8 +205,8 @@ if($row_setting['onlinestatus'] == "yes")
                         <?php do { ?>
                           <table width="100%">
                             <tr>
-                              <td width="48%"><?php echo $row_sentmessages['title']; ?></td>
-                              <td width="10%" align="center"><?php echo $row_sentmessages['users']; ?></td>
+                              <td width="48%"><?php echo multicms_h($row_sentmessages['title']); ?></td>
+                              <td width="10%" align="center"><?php echo multicms_h($row_sentmessages['users']); ?></td>
                             </tr>
                           </table>
                       <?php } while ($row_sentmessages = mysqli_fetch_assoc($sentmessages)); ?></td>

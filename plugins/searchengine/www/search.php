@@ -147,7 +147,7 @@ if($row_setting['onlinestatus'] == "yes")
 <div style="height:20px; border-bottom:1px; border-bottom-style:solid; border-bottom-color:#CCCCCC;margin-bottom:15px;">ABOUT <?php echo $totalRows_searchengine ?> RESULTS FOUND</div>
 <?php if ($totalRows_searchengine > 0) { // Show if recordset not empty ?>
                   <?php do { ?>
-<div style="height:2px;"><a href="<?php echo $row_searchengine['siteurl']; ?>" class="admintitle"><?php echo multicms_h($row_searchengine['title']); ?></a></div><br /><div style="height:2px;" class="searchenginegreen"><?php echo $row_searchengine['siteurl']; ?></div><br />
+<div style="height:2px;"><a href="<?php echo multicms_h($row_searchengine['siteurl']); ?>" class="admintitle"><?php echo multicms_h($row_searchengine['title']); ?></a></div><br /><div style="height:2px;" class="searchenginegreen"><?php echo multicms_h($row_searchengine['siteurl']); ?></div><br />
 <div style="height:2px;" class="texts"><?php echo multicms_h($row_searchengine['metadesc']); ?></div><br /><br />
                     <?php } while ($row_searchengine = mysqli_fetch_assoc($searchengine)); ?>
                   <?php } // Show if recordset not empty ?>

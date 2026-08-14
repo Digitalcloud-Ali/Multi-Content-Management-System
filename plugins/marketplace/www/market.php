@@ -191,10 +191,10 @@ if($row_setting['onlinestatus'] == "yes")
                   <tr>
                     <td width="1" valign="top"><a href="market.php?marketid=<?php echo $row_market['marketid']; ?>"><img src="images/market/<?php echo $row_market['imageurl']; ?>" width="120" height="120" border="0"></a></td>
                     <td valign="top"><p><?php echo $row_market['description']; ?></p>
-                      <p><span class="textsmall"><a href="profile.php?users=<?php echo $row_market['owner']; ?>"><?php echo $row_market['owner']; ?></a> / <?php echo $row_market['date']; ?> / View : <?php echo $row_market['views']; ?> / Rating : <?php echo $row_market['rating']; ?> / <a href="category.php?catename=<?php echo multicms_h($row_market['catename']); ?>"><?php echo multicms_h($row_market['catename']); ?></a></span></p></td>
+                      <p><span class="textsmall"><a href="profile.php?users=<?php echo multicms_h($row_market['owner']); ?>"><?php echo multicms_h($row_market['owner']); ?></a> / <?php echo $row_market['date']; ?> / View : <?php echo $row_market['views']; ?> / Rating : <?php echo $row_market['rating']; ?> / <a href="category.php?catename=<?php echo multicms_h($row_market['catename']); ?>"><?php echo multicms_h($row_market['catename']); ?></a></span></p></td>
                     <td align="center" valign="top"><?php if ($totalRows_members > 0) { // Show if recordset not empty ?>
                       <p><br>
-                        <a href="message.php?users=<?php echo $row_market['owner']; ?>&marketid=<?php echo $row_market['marketid']; ?>" target="_blank" class="orangetitle">Contact Seller</a></p>
+                        <a href="message.php?users=<?php echo multicms_h($row_market['owner']); ?>&marketid=<?php echo $row_market['marketid']; ?>" target="_blank" class="orangetitle">Contact Seller</a></p>
                       <?php } // Show if recordset not empty ?>
                       <?php if ($totalRows_members == 0) { // Show if recordset empty ?>
                         Please Login
@@ -233,7 +233,7 @@ if(($widgetstatus['status'] == 'active') && (!empty($widgets)))
                 <?php do { ?>
                 <table class="tables">
                   <tr>
-                    <td ><?php echo multicms_h($row_Comments['name']); ?> / <?php echo $row_Comments['email']; ?> / <a href="<?php echo $row_Comments['website']; ?>"><?php echo $row_Comments['website']; ?> <span class="texts">
+                    <td ><?php echo multicms_h($row_Comments['name']); ?> / <?php echo multicms_h($row_Comments['email']); ?> / <a href="<?php echo $row_Comments['website']; ?>"><?php echo $row_Comments['website']; ?> <span class="texts">
                       <input name="status" type="hidden" id="status" value="<?php echo $row_Comments['status']; ?>">
                     </span></a></td>
                   </tr>
@@ -273,7 +273,7 @@ if(($widgetstatus['status'] == 'active') && (!empty($widgets)))
                               <td><input name="name" type="text" class="form" id="name" value="<?php echo multicms_h($row_members['users']); ?>" readonly></td>
                             </tr>
                             <tr>
-                              <td><input name="email" type="text" class="form" id="email" value="<?php echo $row_members['email']; ?>" readonly></td>
+                              <td><input name="email" type="text" class="form" id="email" value="<?php echo multicms_h($row_members['email']); ?>" readonly></td>
                             </tr>
                             <tr>
                               <td><input name="website" type="text" class="form" id="website"></td>

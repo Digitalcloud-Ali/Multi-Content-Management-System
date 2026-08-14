@@ -13,11 +13,13 @@
       "includes/Validator.php",
       "includes/ErrorHandler.php",
       "includes/PluginManager.php",
+      "includes/Hooks.php",
       "includes/services/"
     ],
     "files": [
       "includes/LegacyAuth.php",
-      "includes/modern_functions.php"
+      "includes/modern_functions.php",
+      "includes/Hooks.php"
     ]
   },
   "scripts": {

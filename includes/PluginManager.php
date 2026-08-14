@@ -2,6 +2,10 @@
 /**
  * PluginManager - discover site plugins / prebuilt packages and apply them as the main site.
  */
+if (!class_exists('Multicms_Hooks') && is_file(__DIR__ . '/Hooks.php')) {
+    require_once __DIR__ . '/Hooks.php';
+}
+
 class PluginManager {
     public static function pluginsPath() {
         return __DIR__ . '/../plugins';
@@ -153,7 +157,7 @@ class PluginManager {
             }
         }
 
-        $publicUrl = 'index.php'; // pretty front door via front controller
+        $publicUrl = apply_filters('multicms_active_site_public_url', 'index.php', $slug, $site);
         $markerDir = __DIR__;
         @file_put_contents($markerDir . '/active_site.json', json_encode([
             'slug' => $slug,
@@ -163,6 +167,8 @@ class PluginManager {
             'applied_at' => date('c'),
             'mode' => 'readymade',
         ], JSON_PRETTY_PRINT));
+
+        do_action('multicms_site_applied', $slug, $site);
 
         return [
             'success' => true,
@@ -195,6 +201,8 @@ class PluginManager {
             'applied_at' => date('c'),
             'mode' => 'fresh',
         ], JSON_PRETTY_PRINT));
+
+        do_action('multicms_site_applied', 'default', ['slug' => 'default', 'name' => 'Fresh default']);
 
         return ['success' => true, 'message' => 'Fresh default site selected.', 'slug' => 'default', 'url' => 'index.php'];
     }
@@ -264,7 +272,9 @@ class PluginManager {
             // Make relative includes resolve; SCRIPT name for legacy $currentPage
             $_SERVER['SCRIPT_FILENAME'] = $target;
             $_SERVER['PHP_SELF'] = '/' . str_replace('\\', '/', substr($target, strlen($www) + 1));
+            do_action('multicms_before_pack_dispatch', $slug, $route, $target);
             require $target;
+            do_action('multicms_after_pack_dispatch', $slug, $route, $target);
             if ($prevCwd) {
                 @chdir($prevCwd);
             }
@@ -331,6 +341,25 @@ class PluginManager {
         self::ensureLegacySettingsCompat($conn);
 
         return ['success' => true, 'message' => 'Legacy pack tables ensured'];
+    }
+
+    /** Public bridge for admin settings without re-running full SQL unnecessarily. */
+    public static function bridgeLegacySettings($mysqli = null) {
+        $conn = null;
+        if ($mysqli instanceof mysqli) {
+            $conn = $mysqli;
+        } elseif (function_exists('getDB')) {
+            try {
+                $conn = getDB()->getConnection();
+            } catch (Exception $e) {
+                return ['success' => false, 'message' => $e->getMessage()];
+            }
+        }
+        if (!$conn instanceof mysqli) {
+            return ['success' => false, 'message' => 'No database connection'];
+        }
+        self::ensureLegacySettingsCompat($conn);
+        return ['success' => true];
     }
 
     /**
@@ -432,6 +461,67 @@ class PluginManager {
                         $stmt->execute();
                         $stmt->close();
                     }
+                }
+            }
+        }
+
+        // Placeholder pages / widgets / friendlinks so pack queries don't fatal on empty joins
+        $topic = 'default';
+        $tr = $conn->query('SELECT selecttopic FROM settings WHERE settingid=1 LIMIT 1');
+        if ($tr && ($trow = $tr->fetch_assoc()) && !empty($trow['selecttopic'])) {
+            $topic = $trow['selecttopic'];
+        }
+        $pagesExist = $conn->query("SHOW TABLES LIKE 'pages'");
+        if ($pagesExist && $pagesExist->num_rows > 0) {
+            $pc = $conn->query('SELECT COUNT(*) AS c FROM pages');
+            $n = $pc ? (int) ($pc->fetch_assoc()['c'] ?? 0) : 0;
+            if ($n === 0) {
+                $stmt = $conn->prepare("INSERT INTO pages (name, title, description, selecttopic, position, views) VALUES ('about','About','About this site',?, 'menu', 0)");
+                if ($stmt) {
+                    $stmt->bind_param('s', $topic);
+                    $stmt->execute();
+                    $stmt->close();
+                }
+            }
+        }
+        $widgetsExist = $conn->query("SHOW TABLES LIKE 'widgets'");
+        if ($widgetsExist && $widgetsExist->num_rows > 0) {
+            $wc = $conn->query('SELECT COUNT(*) AS c FROM widgets');
+            $n = $wc ? (int) ($wc->fetch_assoc()['c'] ?? 0) : 0;
+            if ($n === 0) {
+                // Match columns from legacy_pack_tables.sql
+                $cols = $conn->query('SHOW COLUMNS FROM widgets');
+                $names = [];
+                if ($cols) {
+                    while ($c = $cols->fetch_assoc()) {
+                        $names[] = $c['Field'];
+                    }
+                }
+                if (in_array('content', $names, true) && in_array('position', $names, true)) {
+                    if (in_array('widget', $names, true)) {
+                        $conn->query("INSERT INTO widgets (widget, content, position, status) VALUES ('Welcome','Welcome to MultiCMS','home','disabled')");
+                    } else {
+                        $conn->query("INSERT INTO widgets (title, content, position, status) VALUES ('Welcome','Welcome to MultiCMS','home','disabled')");
+                    }
+                }
+            }
+        }
+        $flExist = $conn->query("SHOW TABLES LIKE 'friendlinks'");
+        if ($flExist && $flExist->num_rows > 0) {
+            $fc = $conn->query('SELECT COUNT(*) AS c FROM friendlinks');
+            $n = $fc ? (int) ($fc->fetch_assoc()['c'] ?? 0) : 0;
+            if ($n === 0) {
+                $cols = $conn->query('SHOW COLUMNS FROM friendlinks');
+                $names = [];
+                if ($cols) {
+                    while ($c = $cols->fetch_assoc()) {
+                        $names[] = $c['Field'];
+                    }
+                }
+                if (in_array('linktitle', $names, true) && in_array('linkurl', $names, true)) {
+                    $conn->query("INSERT INTO friendlinks (linktitle, linkurl) VALUES ('MultiCMS','https://github.com/Digitalcloud-Ali/Multi-Content-Management-System')");
+                } elseif (in_array('title', $names, true)) {
+                    $conn->query("INSERT INTO friendlinks (title, url, status) VALUES ('MultiCMS','https://github.com/Digitalcloud-Ali/Multi-Content-Management-System','disabled')");
                 }
             }
         }

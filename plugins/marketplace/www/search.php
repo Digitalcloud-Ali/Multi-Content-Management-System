@@ -160,7 +160,7 @@ if($row_setting['onlinestatus'] == "yes")
                       <td><a href="market.php?marketid=<?php echo $row_market['marketid']; ?>"><?php echo multicms_h($row_market['title']); ?></a></td>
                     </tr>
                     <tr>
-                      <td colspan="2"><?php echo $row_market['owner']; ?> / <?php echo $row_market['date']; ?> / View : <?php echo $row_market['views']; ?> / Rating : <?php echo $row_market['rating']; ?> / <?php echo multicms_h($row_market['catename']); ?></td>
+                      <td colspan="2"><?php echo multicms_h($row_market['owner']); ?> / <?php echo $row_market['date']; ?> / View : <?php echo $row_market['views']; ?> / Rating : <?php echo $row_market['rating']; ?> / <?php echo multicms_h($row_market['catename']); ?></td>
                     </tr>
                   </table>
                   <?php } while ($row_market = mysqli_fetch_assoc($market)); ?>
