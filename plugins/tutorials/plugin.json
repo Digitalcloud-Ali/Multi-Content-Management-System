@@ -1,7 +1,8 @@
 {
-  "name": "Tutorials",
-  "slug": "tutorials",
-  "version": "1.0.0",
-  "description": "Tutorials module migrated into plugin. onActivate will copy legacy tutorials/ into plugins/tutorials/www.",
-  "entry": "src/TutorialsPlugin.php"
+    "name": "Tutorials",
+    "slug": "tutorials",
+    "type": "site",
+    "version": "1.0.0",
+    "description": "Tutorials / learning ready-made site",
+    "entry": "src/TutorialsPlugin.php"
 }

@@ -1,7 +1,8 @@
 {
-  "name": "ImageGallery",
-  "slug": "imagegallery",
-  "version": "1.0.0",
-  "description": "ImageGallery module migrated into plugin. onActivate will copy legacy imagegallery/ into plugins/imagegallery/www.",
-  "entry": "src/ImageGalleryPlugin.php"
+    "name": "Image Gallery",
+    "slug": "imagegallery",
+    "type": "site",
+    "version": "1.0.0",
+    "description": "Image gallery ready-made site",
+    "entry": "src/ImageGalleryPlugin.php"
 }

@@ -1,3 +1,9 @@
-AdPosting plugin
+﻿# Ad Posting site plugin
 
-This plugin helps migrate the legacy adposting/ folder into plugins/adposting/www on activation. Activating the plugin will copy files (non-destructive) and create a .migrated marker.
+Ready-made MultiCMS site package.
+
+- `plugin.json` — manifest (`type: site`)
+- `src/` — activation helpers
+- `www/` — front-end site files (applied as main site from install or admin)
+
+Activate / apply via Admin → Ready-made Sites, or choose during installation.

@@ -1,7 +1,7 @@
 <?php
 /**
  * Modern Database Class for Multi-Content Management System
- * Uses prepared statements and proper error handling
+ * Uses prepared statements and loads credentials from includes/db_config.php
  */
 
 class Database {
@@ -10,15 +10,42 @@ class Database {
     private static $instance = null;
     
     private function __construct() {
-        $this->config = [
+        $this->config = self::loadConfig();
+        $this->connect();
+    }
+
+    /**
+     * Load DB credentials from installer-generated config (fail closed if incomplete).
+     */
+    private static function loadConfig() {
+        $configFile = __DIR__ . '/db_config.php';
+        $defaults = [
             'host' => 'localhost',
-            'username' => 'db_username',
-            'password' => 'password',
-            'database' => 'db_password',
+            'username' => '',
+            'password' => '',
+            'database' => '',
             'charset' => 'utf8mb4'
         ];
-        
-        $this->connect();
+
+        if (is_file($configFile)) {
+            require_once $configFile;
+            if (defined('DB_HOST') && defined('DB_USERNAME') && defined('DB_NAME')) {
+                return [
+                    'host' => DB_HOST,
+                    'username' => DB_USERNAME,
+                    'password' => defined('DB_PASSWORD') ? DB_PASSWORD : '',
+                    'database' => DB_NAME,
+                    'charset' => defined('DB_CHARSET') ? DB_CHARSET : 'utf8mb4'
+                ];
+            }
+        }
+
+        // Uninstalled / misconfigured — do not use fake placeholder credentials
+        if (is_file(__DIR__ . '/installed.lock')) {
+            throw new Exception('Database configuration missing. Re-run install or restore includes/db_config.php.');
+        }
+
+        return $defaults;
     }
     
     public static function getInstance() {
@@ -29,6 +56,10 @@ class Database {
     }
     
     private function connect() {
+        if ($this->config['username'] === '' || $this->config['database'] === '') {
+            throw new Exception('Database is not configured. Run install.php first.');
+        }
+
         try {
             $this->connection = new mysqli(
                 $this->config['host'],
@@ -49,9 +80,6 @@ class Database {
         }
     }
     
-    /**
-     * Execute a prepared statement
-     */
     public function prepare($sql, $types = '', $params = []) {
         try {
             $stmt = $this->connection->prepare($sql);
@@ -72,9 +100,6 @@ class Database {
         }
     }
     
-    /**
-     * Execute a query and return result
-     */
     public function query($sql, $types = '', $params = []) {
         try {
             $stmt = $this->prepare($sql, $types, $params);
@@ -90,17 +115,11 @@ class Database {
         }
     }
     
-    /**
-     * Execute a query and return single row
-     */
     public function queryOne($sql, $types = '', $params = []) {
         $result = $this->query($sql, $types, $params);
         return $result ? $result->fetch_assoc() : null;
     }
     
-    /**
-     * Execute a query and return all rows
-     */
     public function queryAll($sql, $types = '', $params = []) {
         $result = $this->query($sql, $types, $params);
         $rows = [];
@@ -114,9 +133,6 @@ class Database {
         return $rows;
     }
     
-    /**
-     * Execute INSERT, UPDATE, DELETE queries
-     */
     public function execute($sql, $types = '', $params = []) {
         try {
             $stmt = $this->prepare($sql, $types, $params);
@@ -136,60 +152,40 @@ class Database {
         }
     }
     
-    /**
-     * Begin transaction
-     */
     public function beginTransaction() {
         $this->connection->begin_transaction();
     }
     
-    /**
-     * Commit transaction
-     */
     public function commit() {
         $this->connection->commit();
     }
     
-    /**
-     * Rollback transaction
-     */
     public function rollback() {
         $this->connection->rollback();
     }
     
-    /**
-     * Close connection
-     */
     public function close() {
         if ($this->connection) {
             $this->connection->close();
+            $this->connection = null;
         }
     }
     
-    /**
-     * Get connection for legacy compatibility
-     */
     public function getConnection() {
         return $this->connection;
     }
     
-    /**
-     * Escape string safely
-     */
     public function escape($string) {
         return $this->connection->real_escape_string($string);
     }
     
-    /**
-     * Destructor
-     */
     public function __destruct() {
-        $this->close();
+        // Keep singleton connection alive for request lifetime; do not close here.
     }
 }
 
-// Legacy compatibility function
-function dbconnect() {
-    return Database::getInstance()->getConnection();
+if (!function_exists('dbconnect')) {
+    function dbconnect() {
+        return Database::getInstance()->getConnection();
+    }
 }
-?>

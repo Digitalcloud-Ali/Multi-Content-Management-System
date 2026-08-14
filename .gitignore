@@ -1,0 +1,26 @@
+# Secrets / install artifacts
+includes/db_config.php
+includes/installed.lock
+includes/active_site.json
+
+# Runtime
+uploads/
+logs/
+*.log
+error_log
+**/error_log
+
+# Dreamweaver / editor noise
+**/_notes/
+*.mno
+
+# OS / IDE
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Composer (if added later)
+/vendor/

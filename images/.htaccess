@@ -1,0 +1,6 @@
+# Deny script execution in image uploads
+<FilesMatch "\.(?i:php|phtml|phar|cgi|pl|py|jsp|asp|aspx)$">
+    Require all denied
+</FilesMatch>
+Options -ExecCGI
+RemoveHandler .php .phtml .php3 .php4 .php5 .php7 .php8

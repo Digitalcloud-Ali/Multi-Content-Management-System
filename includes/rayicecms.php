@@ -1,44 +1,53 @@
 <?php
-// Include modern classes for PHP 7.0+ compatibility
-require_once(__DIR__ . '/modern_functions.php');
-require_once(__DIR__ . '/Database.php');
-require_once(__DIR__ . '/Session.php');
-require_once(__DIR__ . '/Validator.php');
+/**
+ * Legacy bootstrap for administrator + ready-made site packs.
+ * Loads modern DB config and shared auth helpers.
+ */
 
-// Initialize modern session management
+if (!defined('MULTICMS_ROOT')) {
+    define('MULTICMS_ROOT', dirname(__DIR__));
+}
+
+if (is_file(__DIR__ . '/db_config.php')) {
+    require_once __DIR__ . '/db_config.php';
+}
+
+require_once __DIR__ . '/modern_functions.php';
+require_once __DIR__ . '/LegacyAuth.php';
+require_once __DIR__ . '/Database.php';
+require_once __DIR__ . '/Session.php';
+require_once __DIR__ . '/Validator.php';
+
 Session::start();
 
-// Legacy compatibility function (now uses modern Database class)
-function dbconnect() {
-    return Database::getInstance()->getConnection();
+if (!function_exists('dbconnect')) {
+    function dbconnect() {
+        return Database::getInstance()->getConnection();
+    }
 }
 
-// Set modern error reporting
 set_modern_error_reporting();
 
-// Get database instance
-$db = Database::getInstance();
+// Legacy mysqli_select_db() expects a database name variable
+$database_rayicecms = defined('DB_NAME') ? DB_NAME : '';
+$hostname_rayicecms = defined('DB_HOST') ? DB_HOST : 'localhost';
+$username_rayicecms = defined('DB_USERNAME') ? DB_USERNAME : '';
+$password_rayicecms = defined('DB_PASSWORD') ? DB_PASSWORD : '';
 
-// Query settings with modern database class
 try {
-    $query = "SELECT * FROM settings WHERE settingid = 1";
-    $row = $db->queryOne($query);
-    
+    $db = Database::getInstance();
+    $row = $db->queryOne("SELECT * FROM settings WHERE settingid = 1");
+
     if ($row && isset($row['selecttopic']) && isset($_SESSION['sitetopic']) && $row['selecttopic'] != $_SESSION['sitetopic']) {
-        // Redirect if site topic doesn't match
-        echo '<script type="text/javascript">location.replace("Location: /");</script>';
+        echo '<script type="text/javascript">location.replace("/");</script>';
     } else {
-        unset($_SESSION['sitetopic']); 
+        unset($_SESSION['sitetopic']);
     }
-    
 } catch (Exception $e) {
-    // Log error but don't expose it to users
     error_log("Settings query error: " . $e->getMessage());
-    
-    // Set default values if database is not available
     $row = [
         'selecttopic' => 'default',
-        'installed' => 'yes'
+        'installed' => 'yes',
+        'title' => 'MultiCMS'
     ];
 }
-?>

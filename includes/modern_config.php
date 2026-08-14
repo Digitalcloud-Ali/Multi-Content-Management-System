@@ -9,23 +9,33 @@ if (!defined('ENVIRONMENT')) {
     define('ENVIRONMENT', 'development'); // Change to 'production' for live sites
 }
 
-// Database configuration
+// Database configuration — prefer installer-generated includes/db_config.php
+$_multicms_db = [
+    'host' => 'localhost',
+    'username' => '',
+    'password' => '',
+    'database' => '',
+    'charset' => 'utf8mb4',
+];
+if (is_file(__DIR__ . '/db_config.php')) {
+    require_once __DIR__ . '/db_config.php';
+    if (defined('DB_HOST')) {
+        $_multicms_db = [
+            'host' => DB_HOST,
+            'username' => DB_USERNAME,
+            'password' => defined('DB_PASSWORD') ? DB_PASSWORD : '',
+            'database' => DB_NAME,
+            'charset' => defined('DB_CHARSET') ? DB_CHARSET : 'utf8mb4',
+        ];
+    }
+}
+
 $config = [
-    'development' => [
-        'host' => 'localhost',
-        'username' => 'db_username',
-        'password' => 'password',
-        'database' => 'db_password',
-        'charset' => 'utf8mb4',
+    'development' => $_multicms_db + [
         'error_reporting' => E_ALL & ~E_NOTICE,
         'display_errors' => 1
     ],
-    'production' => [
-        'host' => 'localhost',
-        'username' => 'db_username',
-        'password' => 'password',
-        'database' => 'db_password',
-        'charset' => 'utf8mb4',
+    'production' => $_multicms_db + [
         'error_reporting' => E_ALL & ~E_NOTICE & ~E_WARNING & ~E_DEPRECATED,
         'display_errors' => 0
     ]

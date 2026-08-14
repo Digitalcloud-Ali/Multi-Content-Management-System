@@ -1,14 +1,11 @@
-<?php require_once('../includes/rayicecms.php'); ?>
 <?php
+require_once('../includes/rayicecms.php');
 
-mysqli_select_db(dbconnect(),$database_rayicecms);
+mysqli_select_db(dbconnect(), $database_rayicecms);
 $query_setting = "SELECT * FROM settings WHERE settingid = 1";
-$setting = mysqli_query(dbconnect(),$query_setting) or die(mysqli_connect_error());
+$setting = mysqli_query(dbconnect(), $query_setting) or die(mysqli_connect_error());
 $row_setting = mysqli_fetch_assoc($setting);
-$totalRows_setting = mysqli_num_rows($setting);
-?>
-<?php
-// *** Validate request to login to this site.
+
 if (!isset($_SESSION)) {
   session_start();
 }
@@ -18,84 +15,92 @@ if (isset($_GET['accesscheck'])) {
   $_SESSION['PrevUrl'] = $_GET['accesscheck'];
 }
 
-
-if (!function_exists("GetSQLValueString")) {
-function GetSQLValueString($theValue, $theType, $theDefinedValue = "", $theNotDefinedValue = "") 
-{
-  // Modern PHP handles input automatically - no need for magic quotes handling
-  
-  // Use mysqli_real_escape_string for proper SQL escaping
-  if (function_exists('dbconnect') && function_exists('mysqli_real_escape_string')) {
-    $theValue = mysqli_real_escape_string(dbconnect(), $theValue);
-  }
-  
-  switch ($theType) {
-    case "text":
-      $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
-      break;    
-    case "long":
-    case "int":
-      $theValue = ($theValue != "") ? intval($theValue) : "NULL";
-      break;
-    case "double":
-      $theValue = ($theValue != "") ? doubleval($theValue) : "NULL";
-      break;
-    case "date":
-      $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
-      break;
-    case "defined":
-      $theValue = ($theValue != "") ? $theDefinedValue : $theNotDefinedValue;
-      break;
-  }
-  return $theValue;
-}
-  return $theValue;
-}
-}
+$loginError = '';
 
 if (isset($_POST['datauser'])) {
-  $loginUsername=$_POST['datauser'];
-  $password=$_POST['datapass'];
-  $MM_fldUserAuthorization = "level";
-  $MM_redirectLoginSuccess = "index.php";
-  $MM_redirectLoginFailed = "login.php?status=fail";
-  $MM_redirecttoReferrer = false;
-  mysqli_select_db(dbconnect(),$database_rayicecms);
-  	
-  $LoginRS__query=sprintf("SELECT users, passs, level FROM members WHERE users=%s AND passs=%s",
-  GetSQLValueString($loginUsername, "text"), GetSQLValueString($password, "text")); 
-   
-  $LoginRS = mysqli_query(dbconnect(),$LoginRS__query) or die(mysqli_connect_error());
-  $loginFoundUser = mysqli_num_rows($LoginRS);
-  if ($loginFoundUser) {
-    
-    $loginStrGroup  = "";
-    
-	if (PHP_VERSION >= 5.1) {session_regenerate_id(true);} else {session_regenerate_id();}
-    //declare two session variables and assign them
-    $_SESSION['MM_Username'] = $loginUsername;
-    $_SESSION['MM_UserGroup'] = $loginStrGroup;	      
+  if (!multicms_csrf_validate($_POST['csrf_token'] ?? '')) {
+    $loginError = 'Invalid security token. Please try again.';
+  } else {
+    $loginUsername = trim((string) $_POST['datauser']);
+    $password = (string) $_POST['datapass'];
+    $MM_redirectLoginSuccess = "index.php";
+    $MM_redirectLoginFailed = "login.php?status=fail";
 
-    if (isset($_SESSION['PrevUrl']) && false) {
-      $MM_redirectLoginSuccess = $_SESSION['PrevUrl'];	
+    $user = null;
+
+    // Prefer modern users table (Phase 1 core)
+    $stmt = mysqli_prepare(dbconnect(), "SELECT userid, username, password, role, status FROM users WHERE username = ? LIMIT 1");
+    if ($stmt) {
+      mysqli_stmt_bind_param($stmt, 's', $loginUsername);
+      mysqli_stmt_execute($stmt);
+      $res = mysqli_stmt_get_result($stmt);
+      $user = $res ? mysqli_fetch_assoc($res) : null;
+      mysqli_stmt_close($stmt);
     }
-    header("Location: " . $MM_redirectLoginSuccess );
-  }
-  else {
-    header("Location: ". $MM_redirectLoginFailed );
+
+    $ok = false;
+    $group = '';
+
+    if ($user && ($user['status'] ?? '') === 'active') {
+      list($ok, $rehash) = multicms_verify_password_flexible($password, $user['password']);
+      if ($ok) {
+        $group = $user['role'] ?: 'admin';
+        if ($rehash) {
+          $newHash = password_hash($password, PASSWORD_DEFAULT);
+          $upd = mysqli_prepare(dbconnect(), "UPDATE users SET password = ? WHERE userid = ?");
+          if ($upd) {
+            mysqli_stmt_bind_param($upd, 'si', $newHash, $user['userid']);
+            mysqli_stmt_execute($upd);
+            mysqli_stmt_close($upd);
+          }
+        }
+      }
+    } else {
+      // Fallback: legacy members table (ready-made / old dumps)
+      $stmt = mysqli_prepare(dbconnect(), "SELECT memberid, users, passs, level FROM members WHERE users = ? LIMIT 1");
+      if ($stmt) {
+        mysqli_stmt_bind_param($stmt, 's', $loginUsername);
+        mysqli_stmt_execute($stmt);
+        $res = mysqli_stmt_get_result($stmt);
+        $legacy = $res ? mysqli_fetch_assoc($res) : null;
+        mysqli_stmt_close($stmt);
+        if ($legacy) {
+          list($ok, $rehash) = multicms_verify_password_flexible($password, $legacy['passs']);
+          if ($ok) {
+            $group = $legacy['level'] ?: 'administrator';
+            if ($rehash) {
+              $newHash = password_hash($password, PASSWORD_DEFAULT);
+              $upd = mysqli_prepare(dbconnect(), "UPDATE members SET passs = ? WHERE users = ?");
+              if ($upd) {
+                mysqli_stmt_bind_param($upd, 'ss', $newHash, $loginUsername);
+                mysqli_stmt_execute($upd);
+                mysqli_stmt_close($upd);
+              }
+            }
+          }
+        }
+      }
+    }
+
+    if ($ok) {
+      session_regenerate_id(true);
+      $_SESSION['MM_Username'] = $loginUsername;
+      $_SESSION['MM_UserGroup'] = $group;
+      header('Location: ' . $MM_redirectLoginSuccess);
+      exit;
+    }
+    header('Location: ' . $MM_redirectLoginFailed);
+    exit;
   }
 }
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-
-<title><?php echo $row_setting['title']; ?> - Login Box</title>
+<title><?php echo htmlspecialchars($row_setting['title'] ?? $row_setting['site_title'] ?? 'MultiCMS'); ?> - Login Box</title>
 <link href="rayicecms.css" rel="stylesheet" type="text/css" />
 </head>
-
 <body>
-
 <div class="bgcontent">
 <div class="bginner">
 <table width="100%" height="34" border="0" cellpadding="0" cellspacing="0">
@@ -103,9 +108,6 @@ if (isset($_POST['datauser'])) {
     <td align="center" bgcolor="#000000" class="texts4">Administrator Section</td>
   </tr>
 </table>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
 <p>&nbsp;</p>
 <table width="300" border="0" align="center" cellpadding="12" cellspacing="0">
   <tr>
@@ -118,7 +120,8 @@ if (isset($_POST['datauser'])) {
     </table></td>
   </tr>
   <tr>
-    <td bgcolor="#FFFFFF"><form id="form1" name="form1" method="POST" action="<?php echo $loginFormAction; ?>">
+    <td bgcolor="#FFFFFF"><form id="form1" name="form1" method="POST" action="<?php echo htmlspecialchars($loginFormAction); ?>">
+      <?php echo multicms_csrf_field(); ?>
       <table width="100%" border="0" cellspacing="4" cellpadding="4">
         <tr>
           <td width="1" class="texts"><strong>USERNAME:</strong></td>
@@ -132,24 +135,14 @@ if (isset($_POST['datauser'])) {
           <td>&nbsp;</td>
           <td><input name="button" type="submit" class="button" id="button" value="Login" /></td>
         </tr>
-      </table><?php if($_GET['status'] == 'fail')
-	  {
-	  ?>
+      </table>
+      <?php if (!empty($_GET['status']) && $_GET['status'] === 'fail'): ?>
       <div style="color:#990000; text-align:center; background:#D5E8FF;">Login Failed</div>
-      <?php
-	  }
-	  ?>
+      <?php endif; ?>
+      <?php if ($loginError): ?>
+      <div style="color:#990000; text-align:center; background:#D5E8FF;"><?php echo htmlspecialchars($loginError); ?></div>
+      <?php endif; ?>
     </form></td>
-  </tr>
-</table>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-<p><br />
-</p>
-<table border="0" align="center" cellpadding="0" cellspacing="0">
-  <tr>
-    <td class="textsmall"><?php echo $row_setting['footer']; ?></td>
   </tr>
 </table>
 </div>
@@ -157,7 +150,4 @@ if (isset($_POST['datauser'])) {
 </body>
 </html>
 <?php
-
 mysqli_free_result($setting);
-
-?>

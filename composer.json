@@ -1,0 +1,26 @@
+{
+  "name": "digitalcloud-ali/multicms",
+  "description": "Multi-Content Management System — modern core with optional ready-made site plugins",
+  "type": "project",
+  "license": "GPL-3.0-or-later",
+  "require": {
+    "php": ">=7.4"
+  },
+  "autoload": {
+    "classmap": [
+      "includes/Database.php",
+      "includes/Session.php",
+      "includes/Validator.php",
+      "includes/ErrorHandler.php",
+      "includes/PluginManager.php",
+      "includes/services/"
+    ],
+    "files": [
+      "includes/LegacyAuth.php",
+      "includes/modern_functions.php"
+    ]
+  },
+  "scripts": {
+    "lint": "php scripts/php-lint-smoke.php"
+  }
+}

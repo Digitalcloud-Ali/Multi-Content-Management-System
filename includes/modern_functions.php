@@ -53,17 +53,19 @@ if (!function_exists("modern_dbconnect")) {
         static $connection = null;
         
         if ($connection === null) {
-            $hostname_rayicecms = 'localhost';
-            $database_rayicecms = 'db_password';
-            $username_rayicecms = 'db_username';
-            $password_rayicecms = 'password';
-            
-            $connection = mysqli_connect($hostname_rayicecms, $username_rayicecms, $password_rayicecms, $database_rayicecms);
+            $configFile = __DIR__ . '/db_config.php';
+            if (!is_file($configFile)) {
+                trigger_error('Database not configured. Run install.php.', E_USER_ERROR);
+                return false;
+            }
+            require_once $configFile;
+            $connection = mysqli_connect(DB_HOST, DB_USERNAME, DB_PASSWORD, DB_NAME);
             
             if (!$connection) {
                 trigger_error(mysqli_connect_error(), E_USER_ERROR);
                 return false;
             }
+            mysqli_set_charset($connection, defined('DB_CHARSET') ? DB_CHARSET : 'utf8mb4');
         }
         
         return $connection;

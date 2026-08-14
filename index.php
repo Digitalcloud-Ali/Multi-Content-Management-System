@@ -1,62 +1,57 @@
 <?php
 /**
  * Main Entry Point - Multi-Content Management System
- * Now uses modern bootstrap system and classes
+ * Front controller for fresh core + ready-made site packs
  */
 
-// Include the modern bootstrap
 require_once 'includes/bootstrap.php';
+require_once 'includes/PluginManager.php';
 
-// Check if system is installed
 try {
     $db = getDB();
     $settings = $db->queryOne("SELECT * FROM settings WHERE settingid = 1");
-    
+
     if (!$settings || !isset($settings['installed']) || $settings['installed'] !== 'yes') {
-        // Redirect to installation
         header("Location: install.php");
         exit;
     }
-    
+
+    $topic = $settings['selecttopic'] ?? 'default';
+    if ($topic && $topic !== 'default' && is_dir(__DIR__ . '/plugins/' . basename($topic) . '/www')) {
+        $route = $_GET['mc_route'] ?? '';
+        if ($route === '' || $route === null) {
+            $uri = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH);
+            $base = rtrim(str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? '/')), '/');
+            if ($base === '\\' || $base === '.') {
+                $base = '';
+            }
+            if ($base && strpos($uri, $base) === 0) {
+                $uri = substr($uri, strlen($base));
+            }
+            $uri = ltrim((string) $uri, '/');
+            $route = ($uri === '' || $uri === 'index.php') ? '' : $uri;
+        }
+        if (empty($_GET['mc_core'])) {
+            PluginManager::dispatchActiveSite(basename($topic), $route);
+            exit;
+        }
+    }
 } catch (Exception $e) {
     logError("System check error: " . $e->getMessage(), 'ERROR');
-    
-    // If database is not available, show maintenance page
     if (ENVIRONMENT === 'production') {
-        echo "<!DOCTYPE html>
-        <html>
-        <head>
-            <title>System Maintenance</title>
-            <style>
-                body { font-family: Arial, sans-serif; text-align: center; padding: 50px; }
-                .maintenance { background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 5px; padding: 30px; }
-            </style>
-        </head>
-        <body>
-            <div class='maintenance'>
-                <h1>🛠️ System Maintenance</h1>
-                <p>We're currently performing system maintenance. Please check back soon.</p>
-                <p>If this issue persists, please contact support.</p>
-            </div>
-        </body>
-        </html>";
-        exit;
-    } else {
-        // Development: show error
-        displayError("Database connection failed. Check configuration.", 'error');
+        echo "<!DOCTYPE html><html><head><title>System Maintenance</title></head><body><p>System maintenance.</p></body></html>";
         exit;
     }
+    displayError("Database connection failed. Check configuration.", 'error');
+    exit;
 }
 
-// Initialize services
 $authService = new AuthService();
 $contentService = new ContentService();
 
-// Get current page from URL
 $page = $_GET['page'] ?? 'home';
 $page = Validator::sanitize($page);
 
-// Get popular and recent posts for sidebar
 try {
     $popularPosts = $contentService->getPopularPosts(5);
     $recentPosts = $contentService->getRecentPosts(5);
@@ -68,66 +63,52 @@ try {
     $categories = [];
 }
 
-// Get current user if logged in
 $currentUser = $authService->getCurrentUser();
 
-// Include header
 include 'themes/default/header.php';
 ?>
 
-<!-- Main Content Area -->
 <div class="main-content">
     <div class="container">
         <div class="row">
-            <!-- Main Content Column -->
             <div class="col-md-8">
                 <?php
-                // Route to appropriate content based on page
                 switch ($page) {
                     case 'home':
                         include 'themes/default/home.php';
                         break;
-                        
                     case 'blog':
                         include 'themes/default/blog.php';
                         break;
-                        
                     case 'about':
                         include 'themes/default/about.php';
                         break;
-                        
                     case 'contact':
                         include 'themes/default/contact.php';
                         break;
-                        
                     case 'login':
                         if ($authService->isAuthenticated()) {
                             safeRedirect('index.php', 'You are already logged in');
                         }
                         include 'themes/default/login.php';
                         break;
-                        
                     case 'register':
                         if ($authService->isAuthenticated()) {
                             safeRedirect('index.php', 'You are already logged in');
                         }
                         include 'themes/default/register.php';
                         break;
-                        
                     case 'profile':
                         if (!$authService->isAuthenticated()) {
                             safeRedirect('index.php?page=login', 'Please login to access your profile');
                         }
                         include 'themes/default/profile.php';
                         break;
-                        
                     case 'logout':
                         $authService->logout();
                         safeRedirect('index.php', 'You have been logged out successfully');
                         break;
-                        
                     default:
-                        // Check if it's a blog post
                         if (is_numeric($page)) {
                             $post = $contentService->getBlogPost($page);
                             if ($post) {
@@ -142,8 +123,6 @@ include 'themes/default/header.php';
                 }
                 ?>
             </div>
-            
-            <!-- Sidebar -->
             <div class="col-md-4">
                 <?php include 'themes/default/sidebar.php'; ?>
             </div>
@@ -151,7 +130,4 @@ include 'themes/default/header.php';
     </div>
 </div>
 
-<?php
-// Include footer
-include 'themes/default/footer.php';
-?>
+<?php include 'themes/default/footer.php'; ?>

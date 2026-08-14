@@ -1,0 +1,25 @@
+# Contributing to MultiCMS
+
+Thanks for your interest. MultiCMS is being modernized: the **core** (installer, `includes/`, `themes/default`) is the product; **ready-made site packs** under `plugins/*/www` are optional legacy plugins.
+
+## Before you start
+
+1. Read [plugins/README.md](plugins/README.md) for the core vs plugin boundary.
+2. Prefer changes to the modern core over large rewrites of legacy packs.
+3. Do not commit `includes/db_config.php`, locks, or real credentials.
+
+## Development notes
+
+- PHP 7.4+ (8.x recommended)
+- Run `php scripts/php-lint-smoke.php` before opening a PR (syntax check on core paths)
+- Keep security fixes focused and documented
+
+## Pull requests
+
+- One concern per PR when possible
+- Describe whether the change affects **core**, **admin**, or **legacy packs**
+- Note any intentional leftover legacy risk
+
+## Security
+
+Report vulnerabilities privately to the contact in [SECURITY.md](SECURITY.md).

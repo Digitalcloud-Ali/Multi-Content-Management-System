@@ -14,6 +14,22 @@ Before installing, ensure your server meets these requirements:
 - **Permissions**: Writable `includes/` and `uploads/` directories
 - **Web Server**: Apache (with mod_rewrite) or Nginx
 
+## Pretty URLs / ready-made packs (Phase 2)
+
+Apache: the bundled `.htaccess` rewrites non-file requests to `index.php?mc_route=...` so an active ready-made pack is served from the site root.
+
+Nginx example (document root = MultiCMS root):
+
+```nginx
+location / {
+    try_files $uri $uri/ /index.php?mc_route=$uri&$args;
+}
+location ~ ^/includes/.*\.php$ { deny all; }
+location ~* /images/.*\.(php|phtml|phar)$ { deny all; }
+```
+
+After install, manage core posts at `/administrator/posts.php` and ready-made packs at `/administrator/plugins_prebuilt_sites.php`. Prefer **Fresh default**; use Ready Sites only when you accept legacy-pack risk.
+
 ## Installation Process
 
 ### Step 1: Upload Files
@@ -48,7 +64,7 @@ Before installing, ensure your server meets these requirements:
 #### Site Configuration
 - **Site Title**: Your website's name
 - **Site Description**: Brief description of your site
-- **Site Type**: Choose from Blog, Business, E-commerce, Portfolio, or News
+- **Start mode**: Fresh default, or a ready-made site plugin (blog, marketplace, doctors, …). Switch later from Admin → Ready-made Sites.
 - **Admin Email**: Primary administrator email address
 - **Timezone**: Select your local timezone
 - Click "Continue to Admin Setup"

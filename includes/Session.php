@@ -132,8 +132,16 @@ class Session {
             return false;
         }
         
-        $userRole = self::get('MM_UserGroup');
-        return $userRole === $role;
+        $userRole = (string) self::get('MM_UserGroup');
+        if ($userRole === $role) {
+            return true;
+        }
+        // Aliases between modern install roles and legacy admin group names
+        $adminAliases = ['admin', 'administrator'];
+        if (in_array($role, $adminAliases, true) && in_array($userRole, $adminAliases, true)) {
+            return true;
+        }
+        return false;
     }
     
     /**

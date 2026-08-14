@@ -17,6 +17,8 @@ ini_set('display_errors', 1);
 // Start session for installation process
 session_start();
 
+require_once __DIR__ . '/includes/LegacyAuth.php';
+
 // Installation steps
 $steps = [
     'welcome' => 'Welcome',
@@ -33,16 +35,20 @@ $current_step = in_array($current_step, array_keys($steps)) ? $current_step : 'w
 
 // Handle form submissions
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    switch ($current_step) {
-        case 'database':
-            handleDatabaseConfig();
-            break;
-        case 'site_config':
-            handleSiteConfig();
-            break;
-        case 'admin_setup':
-            handleAdminSetup();
-            break;
+    if (!multicms_csrf_validate($_POST['csrf_token'] ?? '')) {
+        $_SESSION['install_error'] = 'Invalid security token. Please try again.';
+    } else {
+        switch ($current_step) {
+            case 'database':
+                handleDatabaseConfig();
+                break;
+            case 'site_config':
+                handleSiteConfig();
+                break;
+            case 'admin_setup':
+                handleAdminSetup();
+                break;
+        }
     }
 }
 
@@ -152,15 +158,29 @@ function handleSiteConfig() {
         exit;
     }
     
-    if (!isset($_POST['site_title']) || !isset($_POST['site_description']) || !isset($_POST['site_topic'])) {
+    if (!isset($_POST['site_title']) || !isset($_POST['site_description']) || !isset($_POST['site_mode'])) {
         $_SESSION['install_error'] = 'All site configuration fields are required';
         return;
+    }
+
+    $mode = $_POST['site_mode'] === 'readymade' ? 'readymade' : 'fresh';
+    $topic = 'default';
+
+    if ($mode === 'readymade') {
+        require_once __DIR__ . '/includes/PluginManager.php';
+        $slug = basename((string) ($_POST['site_topic'] ?? ''));
+        if (!$slug || !PluginManager::getSiteModule($slug)) {
+            $_SESSION['install_error'] = 'Please choose a ready-made site plugin';
+            return;
+        }
+        $topic = $slug;
     }
     
     $_SESSION['site_config'] = [
         'title' => trim($_POST['site_title']),
         'description' => trim($_POST['site_description']),
-        'topic' => $_POST['site_topic'],
+        'mode' => $mode,
+        'topic' => $topic,
         'admin_email' => trim($_POST['admin_email']),
         'timezone' => $_POST['timezone'] ?? 'UTC'
     ];
@@ -230,6 +250,14 @@ function performInstallation() {
         // Create configuration file
         createConfigFile($db_config);
         
+        // Apply fresh default or ready-made site plugin as main site
+        require_once __DIR__ . '/includes/PluginManager.php';
+        if (($site_config['mode'] ?? 'fresh') === 'readymade') {
+            PluginManager::applySiteAsMain($site_config['topic'], $connection);
+        } else {
+            PluginManager::applyFreshDefault($connection);
+        }
+
         // Create installed lock file
         file_put_contents('includes/installed.lock', date('Y-m-d H:i:s'));
         
@@ -255,7 +283,7 @@ function createDatabaseTables($connection) {
             `username` varchar(255) NOT NULL,
             `password` varchar(255) NOT NULL,
             `database` varchar(255) NOT NULL,
-            `selecttopic` varchar(50) NOT NULL DEFAULT 'blog',
+            `selecttopic` varchar(50) NOT NULL DEFAULT 'default',
             `installed` enum('yes','no') NOT NULL DEFAULT 'no',
             `site_title` varchar(255) NOT NULL,
             `site_description` text,
@@ -278,7 +306,7 @@ function createDatabaseTables($connection) {
             PRIMARY KEY (`userid`)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci",
         
-        'categories' => "CREATE TABLE `categories` (
+        'core_categories' => "CREATE TABLE `core_categories` (
             `categoryid` int(11) NOT NULL AUTO_INCREMENT,
             `name` varchar(100) NOT NULL,
             `slug` varchar(100) NOT NULL UNIQUE,
@@ -318,36 +346,55 @@ function createDatabaseTables($connection) {
 
 // Function to insert initial data
 function insertInitialData($connection, $site_config, $admin_config) {
-    // Insert settings
-    $settings_sql = "INSERT INTO settings (host, username, password, database, selecttopic, installed, site_title, site_description, admin_email, timezone) VALUES (?, ?, ?, ?, ?, 'yes', ?, ?, ?, ?)";
+    // DB password is NOT stored in settings — only in includes/db_config.php
+    $emptyPassword = '';
+    $settings_sql = "INSERT INTO settings (host, username, password, `database`, selecttopic, installed, site_title, site_description, admin_email, timezone) VALUES (?, ?, ?, ?, ?, 'yes', ?, ?, ?, ?)";
     $stmt = $connection->prepare($settings_sql);
-    $stmt->bind_param('ssssssss', 
-        $_SESSION['db_config']['host'],
-        $_SESSION['db_config']['username'],
-        $_SESSION['db_config']['password'],
-        $_SESSION['db_config']['database'],
-        $site_config['topic'],
-        $site_config['title'],
-        $site_config['description'],
-        $site_config['admin_email'],
-        $site_config['timezone']
+    if (!$stmt) {
+        throw new Exception('Failed to prepare settings insert: ' . $connection->error);
+    }
+    $host = $_SESSION['db_config']['host'];
+    $dbUser = $_SESSION['db_config']['username'];
+    $dbName = $_SESSION['db_config']['database'];
+    $topic = $site_config['topic'];
+    $title = $site_config['title'];
+    $description = $site_config['description'];
+    $adminEmail = $site_config['admin_email'];
+    $timezone = $site_config['timezone'];
+    $stmt->bind_param(
+        'sssssssss',
+        $host,
+        $dbUser,
+        $emptyPassword,
+        $dbName,
+        $topic,
+        $title,
+        $description,
+        $adminEmail,
+        $timezone
     );
-    $stmt->execute();
+    if (!$stmt->execute()) {
+        throw new Exception('Failed to insert settings: ' . $stmt->error);
+    }
     $stmt->close();
     
-    // Insert admin user
-    $admin_sql = "INSERT INTO users (username, email, password, role) VALUES (?, ?, ?, 'admin')";
+    // Insert admin user (role hardcoded server-side)
+    $admin_sql = "INSERT INTO users (username, email, password, role, status) VALUES (?, ?, ?, 'admin', 'active')";
     $stmt = $connection->prepare($admin_sql);
     $hashed_password = password_hash($admin_config['password'], PASSWORD_DEFAULT);
-    $stmt->bind_param('sss', $admin_config['username'], $admin_config['email'], $hashed_password);
-    $stmt->execute();
+    $adminUser = $admin_config['username'];
+    $adminMail = $admin_config['email'];
+    $stmt->bind_param('sss', $adminUser, $adminMail, $hashed_password);
+    if (!$stmt->execute()) {
+        throw new Exception('Failed to create admin user: ' . $stmt->error);
+    }
     $stmt->close();
     
     // Insert default categories
     $default_categories = ['General', 'Technology', 'Business', 'Lifestyle'];
     foreach ($default_categories as $category) {
         $slug = strtolower(str_replace(' ', '-', $category));
-        $cat_sql = "INSERT INTO categories (name, slug) VALUES (?, ?)";
+        $cat_sql = "INSERT INTO core_categories (name, slug) VALUES (?, ?)";
         $stmt = $connection->prepare($cat_sql);
         $stmt->bind_param('ss', $category, $slug);
         $stmt->execute();
@@ -360,7 +407,7 @@ function createConfigFile($db_config) {
     $config_content = "<?php
 /**
  * Database Configuration
- * Auto-generated during installation
+ * Auto-generated during installation — do not commit real credentials.
  */
 
 define('DB_HOST', '" . addslashes($db_config['host']) . "');
@@ -369,12 +416,15 @@ define('DB_PASSWORD', '" . addslashes($db_config['password']) . "');
 define('DB_NAME', '" . addslashes($db_config['database']) . "');
 define('DB_CHARSET', 'utf8mb4');
 
-// Site configuration
 define('SITE_INSTALLED', true);
 define('INSTALLATION_DATE', '" . date('Y-m-d H:i:s') . "');
-?>";
+
+// For production releases set ENVIRONMENT to production in includes/bootstrap.php (or your vhost).
+";
     
-    file_put_contents('includes/db_config.php', $config_content);
+    if (file_put_contents('includes/db_config.php', $config_content) === false) {
+        throw new Exception('Failed to write includes/db_config.php');
+    }
 }
 
 // Perform installation if on installation step
@@ -530,6 +580,7 @@ foreach ($requirements as $req) {
                     <p>Enter your database connection details:</p>
                     
                     <form method="POST" action="install.php?step=database">
+                        <?php echo multicms_csrf_field(); ?>
                         <div class="form-group">
                             <label for="db_host" class="form-label">Database Host</label>
                             <input type="text" class="form-control" id="db_host" name="db_host" 
@@ -569,6 +620,7 @@ foreach ($requirements as $req) {
                     <p>Configure your website settings:</p>
                     
                     <form method="POST" action="install.php?step=site_config">
+                        <?php echo multicms_csrf_field(); ?>
                         <div class="form-group">
                             <label for="site_title" class="form-label">Site Title</label>
                             <input type="text" class="form-control" id="site_title" name="site_title" 
@@ -580,16 +632,40 @@ foreach ($requirements as $req) {
                             <textarea class="form-control" id="site_description" name="site_description" rows="3" required><?php echo htmlspecialchars($_SESSION['site_config']['description'] ?? ''); ?></textarea>
                         </div>
                         
+                        <?php
+                        require_once __DIR__ . '/includes/PluginManager.php';
+                        $readyMadeSites = PluginManager::listSiteModules();
+                        $selectedMode = $_SESSION['site_config']['mode'] ?? 'fresh';
+                        $selectedTopic = $_SESSION['site_config']['topic'] ?? '';
+                        ?>
                         <div class="form-group">
-                            <label for="site_topic" class="form-label">Site Type</label>
-                            <select class="form-select" id="site_topic" name="site_topic" required>
-                                <option value="">Select site type...</option>
-                                <option value="blog" <?php echo (($_SESSION['site_config']['topic'] ?? '') === 'blog') ? 'selected' : ''; ?>>Blog / Portal</option>
-                                <option value="business" <?php echo (($_SESSION['site_config']['topic'] ?? '') === 'business') ? 'selected' : ''; ?>>Business / Corporate</option>
-                                <option value="ecommerce" <?php echo (($_SESSION['site_config']['topic'] ?? '') === 'ecommerce') ? 'selected' : ''; ?>>E-commerce</option>
-                                <option value="portfolio" <?php echo (($_SESSION['site_config']['topic'] ?? '') === 'portfolio') ? 'selected' : ''; ?>>Portfolio</option>
-                                <option value="news" <?php echo (($_SESSION['site_config']['topic'] ?? '') === 'news') ? 'selected' : ''; ?>>News / Magazine</option>
+                            <label class="form-label">Start mode</label>
+                            <div style="display:flex;flex-direction:column;gap:8px">
+                                <label style="font-weight:normal">
+                                    <input type="radio" name="site_mode" value="fresh" <?php echo $selectedMode === 'fresh' ? 'checked' : ''; ?>
+                                           onchange="document.getElementById('site_topic_wrap').style.display='none'">
+                                    Fresh default — modern MultiCMS theme (start empty)
+                                </label>
+                                <label style="font-weight:normal">
+                                    <input type="radio" name="site_mode" value="readymade" <?php echo $selectedMode === 'readymade' ? 'checked' : ''; ?>
+                                           onchange="document.getElementById('site_topic_wrap').style.display='block'">
+                                    Ready-made site — apply a packaged site plugin now
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group" id="site_topic_wrap" style="<?php echo $selectedMode === 'readymade' ? '' : 'display:none'; ?>">
+                            <label for="site_topic" class="form-label">Ready-made site</label>
+                            <select class="form-select" id="site_topic" name="site_topic">
+                                <option value="">Select a site plugin...</option>
+                                <?php foreach ($readyMadeSites as $site): ?>
+                                    <option value="<?php echo htmlspecialchars($site['slug']); ?>"
+                                        <?php echo $selectedTopic === $site['slug'] ? 'selected' : ''; ?>>
+                                        <?php echo htmlspecialchars($site['name']); ?> — <?php echo htmlspecialchars($site['description']); ?>
+                                    </option>
+                                <?php endforeach; ?>
                             </select>
+                            <small class="form-text text-muted">You can also switch later from Admin → Ready-made Sites.</small>
                         </div>
                         
                         <div class="form-group">
@@ -625,6 +701,7 @@ foreach ($requirements as $req) {
                     <p>Create your administrator account:</p>
                     
                     <form method="POST" action="install.php?step=admin_setup">
+                        <?php echo multicms_csrf_field(); ?>
                         <div class="form-group">
                             <label for="admin_username" class="form-label">Username</label>
                             <input type="text" class="form-control" id="admin_username" name="admin_username" 
@@ -679,10 +756,10 @@ foreach ($requirements as $req) {
                         <div class="alert alert-info">
                             <h5><i class="fas fa-info-circle"></i> Next Steps:</h5>
                             <ul class="text-start">
-                                <li>Access your admin panel to manage content</li>
-                                <li>Customize your site settings</li>
-                                <li>Add your first content</li>
-                                <li>Configure themes and plugins</li>
+                                <li>Open the site front door (fresh core) or Admin → Ready Sites for legacy packs</li>
+                                <li>For production, set <code>ENVIRONMENT</code> to <code>production</code> in <code>includes/bootstrap.php</code></li>
+                                <li>Do not commit <code>includes/db_config.php</code>; remove or lock down <code>install.php</code> / <code>test_installation.php</code></li>
+                                <li>Customize settings and add content</li>
                             </ul>
                         </div>
                         

@@ -99,7 +99,7 @@ $row_pagesdetail1 = mysqli_fetch_assoc($pagesdetail1);
 $totalRows_pagesdetail1 = mysqli_num_rows($pagesdetail1);
 
 ?>
-<?php include("../configuration.php"); ?>
+<?php require_once (defined('MULTICMS_ROOT') ? MULTICMS_ROOT : dirname(__DIR__)) . '/configuration.php'; ?>
 <!-- code start -->
 <?php
 	  if(($row_setting['installed'] == "yes") && ($row_setting['selecttopic'] == "custom"))

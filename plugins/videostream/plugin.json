@@ -1,7 +1,8 @@
 {
-  "name": "VideoStream",
-  "slug": "videostream",
-  "version": "1.0.0",
-  "description": "VideoStream module migrated into plugin. onActivate will copy legacy videostream/ into plugins/videostream/www.",
-  "entry": "src/VideoStreamPlugin.php"
+    "name": "Video Stream",
+    "slug": "videostream",
+    "type": "site",
+    "version": "1.0.0",
+    "description": "Video streaming ready-made site",
+    "entry": "src/VideoStreamPlugin.php"
 }

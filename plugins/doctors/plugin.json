@@ -1,7 +1,8 @@
 {
-  "name": "Doctors",
-  "slug": "doctors",
-  "version": "1.0.0",
-  "description": "Doctors module migrated into plugin. onActivate will copy legacy doctors/ into plugins/doctors/www.",
-  "entry": "src/DoctorsPlugin.php"
+    "name": "Doctors",
+    "slug": "doctors",
+    "type": "site",
+    "version": "1.0.0",
+    "description": "Doctors / clinic directory ready-made site",
+    "entry": "src/DoctorsPlugin.php"
 }

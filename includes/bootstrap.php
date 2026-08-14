@@ -149,8 +149,32 @@ function requireRole($role) {
 
 // Helper function to get settings
 function getSetting($key, $default = null) {
+    static $cache = null;
+    if ($cache === null) {
+        $cache = [];
+        try {
+            if (function_exists('getDB')) {
+                $row = getDB()->queryOne("SELECT * FROM settings WHERE settingid = 1");
+                if (is_array($row)) {
+                    $cache = $row;
+                    // Aliases for theme templates
+                    if (!isset($cache['site_name']) && isset($cache['site_title'])) {
+                        $cache['site_name'] = $cache['site_title'];
+                    }
+                    if (!isset($cache['title']) && isset($cache['site_title'])) {
+                        $cache['title'] = $cache['site_title'];
+                    }
+                }
+            }
+        } catch (Exception $e) {
+            $cache = [];
+        }
+    }
     global $raycms_settings;
-    return $raycms_settings[$key] ?? $default;
+    if (is_array($raycms_settings ?? null) && array_key_exists($key, $raycms_settings)) {
+        return $raycms_settings[$key];
+    }
+    return $cache[$key] ?? $default;
 }
 
 // Helper function to sanitize input

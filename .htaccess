@@ -18,16 +18,27 @@
     Deny from all
 </Files>
 
-# Block access to configuration files
 <Files "db_config.php">
     Order allow,deny
     Deny from all
 </Files>
 
-# Prevent access to includes directory
 <IfModule mod_rewrite.c>
     RewriteEngine On
+
+    # Block PHP under includes/
     RewriteRule ^includes/.*\.php$ - [F,L]
+
+    # Block PHP execution under images/ uploads
+    RewriteRule ^images/.*\.(?i:php|phtml|phar)$ - [F,L]
+
+    # Existing files/dirs (administrator, themes, plugins assets, images) — serve directly
+    RewriteCond %{REQUEST_FILENAME} -f [OR]
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteRule ^ - [L]
+
+    # Front controller for pretty ready-made pack URLs + clean routes
+    RewriteRule ^(.*)$ index.php?mc_route=$1 [QSA,L]
 </IfModule>
 
 # Custom error pages

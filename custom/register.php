@@ -63,8 +63,8 @@ if (isset($_SERVER['QUERY_STRING'])) {
 if ((isset($_POST["MM_insert"])) && ($_POST["MM_insert"] == "registerbox")) {
   $insertSQL = sprintf("INSERT INTO members (users, passs, level, fullname, address, email, zip, city, `state`, country, phone, yahooid, twitter, facebook, status, `position`) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
                        GetSQLValueString($_POST['users'], "text"),
-                       GetSQLValueString($_POST['passs'], "text"),
-					   GetSQLValueString($_POST['level'], "text"),
+                       GetSQLValueString(password_hash((string)$_POST['passs'], PASSWORD_DEFAULT), "text"),
+					   GetSQLValueString('member', "text"),
                        GetSQLValueString($_POST['fullname'], "text"),
                        GetSQLValueString($_POST['address'], "text"),
                        GetSQLValueString($_POST['email'], "text"),
@@ -185,7 +185,7 @@ if (!empty($_SERVER['QUERY_STRING'])) {
 }
 $queryString_custom = sprintf("&totalRows_custom=%d%s", $totalRows_custom, $queryString_custom);
 ?>
-<?php include("../configuration.php"); ?>
+<?php require_once (defined('MULTICMS_ROOT') ? MULTICMS_ROOT : dirname(__DIR__)) . '/configuration.php'; ?>
 <!-- code start -->
 <?php
 	  if(($row_setting['installed'] == "yes") && ($row_setting['selecttopic'] == "custom"))

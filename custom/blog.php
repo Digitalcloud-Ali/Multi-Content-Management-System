@@ -163,7 +163,7 @@ $queryString_custom = sprintf("&totalRows_custom=%d%s", $totalRows_custom, $quer
 	  if(($row_setting['installed'] == "yes") && ($row_setting['selecttopic'] == "custom"))
 	  {
 ?>
-<?php include("../configuration.php"); ?>
+<?php require_once (defined('MULTICMS_ROOT') ? MULTICMS_ROOT : dirname(__DIR__)) . '/configuration.php'; ?>
 <!-- index start -->
 <?php
 
