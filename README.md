@@ -2,9 +2,11 @@
 
 [![PHP Version](https://img.shields.io/badge/PHP-7.4%2B-blue.svg)](https://www.php.net/)
 [![License](https://img.shields.io/badge/License-GPL%20v3-green.svg)](LICENSE.md)
-[![Version](https://img.shields.io/badge/version-1.2.1-blue.svg)](version.json)
+[![Version](https://img.shields.io/badge/version-1.2.2-blue.svg)](version.json)
 
 Open-source PHP/MySQL CMS. Install it on shared hosting or a VPS, run the web installer, then publish posts from admin.
+
+Developed by [DigitalCloud.no](https://digitalcloud.no) — visit the site if you want to know more about us.
 
 ## Quick start
 
@@ -85,3 +87,5 @@ When we bump `version.json` on `master`, GitHub Actions publishes a [Release](ht
 ## License
 
 See [LICENSE.md](LICENSE.md) (GPLv3).
+
+Developed by [DigitalCloud.no](https://digitalcloud.no).

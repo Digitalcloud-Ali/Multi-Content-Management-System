@@ -6,14 +6,20 @@ $root = dirname(__DIR__);
 $paths = [
     $root . '/includes',
     $root . '/themes/default',
+    $root . '/sites',
     $root . '/install.php',
     $root . '/index.php',
-    $root . '/configuration.php',
     $root . '/administrator/login.php',
     $root . '/administrator/posts.php',
     $root . '/administrator/settings_core.php',
     $root . '/administrator/dashboard.php',
+    $root . '/administrator/flagship_sites.php',
+    $root . '/administrator/updates.php',
     $root . '/includes/Hooks.php',
+    $root . '/includes/Routing.php',
+    $root . '/includes/FlagshipSite.php',
+    $root . '/includes/UpdateService.php',
+    $root . '/includes/InstallPath.php',
 ];
 
 $files = [];

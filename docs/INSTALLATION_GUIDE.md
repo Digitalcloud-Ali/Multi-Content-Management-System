@@ -106,11 +106,10 @@ After install, manage content at `/administrator/posts.php` and site metadata at
 - Upload and organize media files
 - Configure navigation menus
 
-### 4. Security Cleanup
+### 4. Security notes
 - Leave `install.php` in place — it will report that the site is already installed
-- Delete `install_complete.php` file
-- Ensure `.htaccess` is properly configured
-- Set up SSL certificate (recommended)
+- Ensure `.htaccess` is present (RewriteBase is set by the installer)
+- Set up SSL / HTTPS (recommended)
 
 ## File Structure After Installation
 

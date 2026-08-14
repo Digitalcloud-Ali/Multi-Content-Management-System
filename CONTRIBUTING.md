@@ -1,12 +1,12 @@
 # Contributing to MultiCMS
 
-Thanks for your interest. MultiCMS is a Fresh-core CMS (installer, `includes/`, `themes/default`, admin Posts/Settings). Plugin packs will be redesigned later.
+Thanks for your interest. MultiCMS is a Fresh-core CMS (installer, `includes/`, `themes/default`, admin Posts/Settings/Flagship/Updates). Optional starters live under `sites/`.
 
 ## Before you start
 
-1. Read [plugins/README.md](plugins/README.md) for the core vs plugin boundary.
-2. Prefer changes to the modern core over large rewrites of legacy packs.
-3. Do not commit `includes/db_config.php`, locks, or real credentials.
+1. Prefer changes to the modern core (`install.php`, `includes/`, `themes/default`, modern admin pages).
+2. Do not commit `includes/db_config.php`, `env.php`, locks, or real credentials.
+3. Do not reintroduce old Dreamweaver pack trees under `custom/` or `plugins/*/www`.
 
 ## Development notes
 
@@ -19,8 +19,7 @@ Thanks for your interest. MultiCMS is a Fresh-core CMS (installer, `includes/`, 
 ## Pull requests
 
 - One concern per PR when possible
-- Describe whether the change affects **core**, **admin**, or **legacy packs**
-- Note any intentional leftover legacy risk
+- Describe whether the change affects **core**, **admin**, **flagship sites**, or **docs**
 
 ## Security
 

@@ -915,7 +915,7 @@ foreach ($requirements as $req) {
         <!-- Footer -->
         <div class="text-center mt-4">
             <small class="text-muted">
-                Multi-Content CMS Installation Wizard &copy; <?php echo date('Y'); ?>
+                MultiCMS Installation Wizard · Developed by <a href="https://digitalcloud.no" target="_blank" rel="noopener">DigitalCloud.no</a>
             </small>
         </div>
     </div>
