@@ -1,0 +1,42 @@
+name: Publish release from version.json
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - 'version.json'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Read version.json
+        id: ver
+        run: |
+          V=$(php -r 'echo json_decode(file_get_contents("version.json"), true)["version"];')
+          NOTES=$(php -r 'echo json_decode(file_get_contents("version.json"), true)["notes"] ?? "MultiCMS release";')
+          echo "version=$V" >> "$GITHUB_OUTPUT"
+          echo "tag=v$V" >> "$GITHUB_OUTPUT"
+          echo "notes<<EOF" >> "$GITHUB_OUTPUT"
+          echo "$NOTES" >> "$GITHUB_OUTPUT"
+          echo "EOF" >> "$GITHUB_OUTPUT"
+
+      - name: Create GitHub Release if missing
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TAG="${{ steps.ver.outputs.tag }}"
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            echo "Release $TAG already exists — skip"
+          else
+            gh release create "$TAG" \
+              --title "MultiCMS ${{ steps.ver.outputs.version }}" \
+              --notes "${{ steps.ver.outputs.notes }}" \
+              --target "${{ github.sha }}"
+            echo "Created release $TAG"
+          fi
