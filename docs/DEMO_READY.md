@@ -9,11 +9,11 @@
 
 1. Upload files / clone repo  
 2. Create MySQL database  
-3. Open `/install.php` and finish the wizard  
-4. Log in → Admin dashboard → Posts / Site Settings  
+3. Open `/install.php` — choose **Fresh** or a **Flagship** starter (e.g. Blog)  
+4. Log in → Admin dashboard → Posts / Site Settings / Flagship Sites  
 5. Delete or block `install.php`  
 
 ## Notes
 
-- Ready-made packs were removed; this product is Fresh core only.
+- Flagship packages under `sites/` seed modern `posts`, `core_categories`, and `pages` (not old Dreamweaver packs).
 - Do not commit `includes/db_config.php` or `includes/env.php`.

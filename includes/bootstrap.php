@@ -27,6 +27,7 @@ require_once __DIR__ . '/Validator.php';
 require_once __DIR__ . '/ErrorHandler.php';
 require_once __DIR__ . '/LegacyAuth.php';
 require_once __DIR__ . '/PluginManager.php';
+require_once __DIR__ . '/FlagshipSite.php';
 
 // Include service classes
 require_once __DIR__ . '/services/AuthService.php';

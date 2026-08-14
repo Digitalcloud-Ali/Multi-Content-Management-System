@@ -1,5 +1,9 @@
 <?php
 $pageTitle = 'Contact';
+$cmsPage = null;
+if (isset($contentService) && method_exists($contentService, 'getPageBySlug')) {
+    $cmsPage = $contentService->getPageBySlug('contact');
+}
 $sent = false;
 $error = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -11,7 +15,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 $csrfToken = Session::generateCsrfToken();
 ?>
-<h1 class="mb-3">Contact</h1>
+<?php if ($cmsPage): ?>
+    <h1 class="mb-3"><?php echo htmlspecialchars($cmsPage['title'], ENT_QUOTES, 'UTF-8'); ?></h1>
+    <div class="page-body mb-4"><?php echo $cmsPage['content']; ?></div>
+<?php else: ?>
+    <h1 class="mb-3">Contact</h1>
+<?php endif; ?>
 <?php if ($sent): ?>
     <div class="alert alert-success">Thanks — your message was received (demo form; wire to mail in a later phase).</div>
 <?php endif; ?>

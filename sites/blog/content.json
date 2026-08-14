@@ -1,0 +1,58 @@
+{
+  "site": {
+    "title": "My MultiCMS Blog",
+    "description": "A ready-to-edit blog starter powered by MultiCMS. Replace this text and the sample posts with your own story."
+  },
+  "categories": [
+    {
+      "name": "News",
+      "slug": "news",
+      "description": "Updates and announcements"
+    },
+    {
+      "name": "Guides",
+      "slug": "guides",
+      "description": "How-tos and tips"
+    }
+  ],
+  "posts": [
+    {
+      "title": "Welcome to your MultiCMS blog",
+      "slug": "welcome-to-multicms-blog",
+      "category": "news",
+      "status": "published",
+      "excerpt": "Your flagship blog site is ready. Edit or delete this post and start publishing.",
+      "content": "<p>Congratulations — you installed the <strong>Blog Starter</strong> flagship site.</p><p>This post, the sample guides, and the About / Contact pages were created automatically so you can see a working site immediately.</p><p>Next steps:</p><ul><li>Open Admin → Posts and edit this content</li><li>Update Site Settings with your real title and description</li><li>Delete sample posts you do not need</li></ul>"
+    },
+    {
+      "title": "How to publish your first real article",
+      "slug": "how-to-publish-first-article",
+      "category": "guides",
+      "status": "published",
+      "excerpt": "A short walkthrough of creating and publishing a post in MultiCMS admin.",
+      "content": "<p>Go to <strong>Admin → Posts</strong>, click create, write your title and body, set status to <em>Published</em>, then save.</p><p>Your article will appear on the blog listing and home page of the default theme.</p>"
+    },
+    {
+      "title": "Customize your site settings",
+      "slug": "customize-site-settings",
+      "category": "guides",
+      "status": "published",
+      "excerpt": "Change the site title, description, and online status from Site Settings.",
+      "content": "<p>Open <strong>Admin → Site Settings</strong> to change the public site title and description visitors see.</p><p>You can refine branding later; the flagship package only gives you a strong starting point.</p>"
+    }
+  ],
+  "pages": [
+    {
+      "title": "About",
+      "slug": "about",
+      "status": "published",
+      "content": "<p>Tell visitors who you are and what this site is about. Replace this About page content from Admin when page editing is available, or edit the seeded page in the database for now.</p><p>This page was created by the Blog Starter flagship package.</p>"
+    },
+    {
+      "title": "Contact",
+      "slug": "contact",
+      "status": "published",
+      "content": "<p>Add your email, phone, or contact form here. This is starter Contact page content from the Blog Starter package.</p>"
+    }
+  ]
+}

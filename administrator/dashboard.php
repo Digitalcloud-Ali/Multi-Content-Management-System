@@ -82,6 +82,7 @@ $username = htmlspecialchars((string) $_SESSION['MM_Username'], ENT_QUOTES, 'UTF
     <div class="list-group shadow-sm mb-4">
         <a class="list-group-item list-group-item-action" href="posts.php"><strong>Posts</strong> — create and publish content</a>
         <a class="list-group-item list-group-item-action" href="settings_core.php"><strong>Site Settings</strong> — title, description, online status</a>
+        <a class="list-group-item list-group-item-action" href="flagship_sites.php"><strong>Flagship Sites</strong> — apply a complete starter site</a>
     </div>
 
     <p class="text-muted small mb-0">Delete or block <code>install.php</code> after install.</p>

@@ -102,6 +102,24 @@ class ContentService {
             return null;
         }
     }
+
+    /** Published CMS page by slug (flagship / pages table). */
+    public function getPageBySlug($slug) {
+        try {
+            $slug = trim((string) $slug);
+            if ($slug === '') {
+                return null;
+            }
+            return $this->db->queryOne(
+                "SELECT * FROM pages WHERE slug = ? AND status = 'published' LIMIT 1",
+                's',
+                [$slug]
+            );
+        } catch (Exception $e) {
+            logError("Get page error: " . $e->getMessage(), 'ERROR');
+            return null;
+        }
+    }
     
     public function createBlogPost($data, $userId) {
         try {

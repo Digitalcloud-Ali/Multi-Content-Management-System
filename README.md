@@ -11,8 +11,10 @@ Open-source PHP/MySQL CMS. Install it on shared hosting or a VPS, run the web in
 2. Create a MySQL database in your host panel.
 3. Open `https://yoursite.com/install.php` and finish the wizard.
 4. Log in at `/administrator/login.php`.
-5. Use **Posts** and **Site Settings**.
+5. Use **Posts**, **Site Settings**, and optionally **Flagship Sites**.
 6. Delete or block `install.php` after install.
+
+At install you can choose **Fresh** (empty core) or a **Flagship site** (e.g. Blog Starter with sample posts and pages). Packages live under `sites/`.
 
 Do **not** commit `includes/db_config.php` or `includes/env.php`.
 
@@ -29,7 +31,8 @@ Do **not** commit `includes/db_config.php` or `includes/env.php`.
 | Layer | Path | Role |
 |-------|------|------|
 | Core | `index.php`, `includes/`, `themes/default/`, `install.php` | The product |
-| Admin | `administrator/` (dashboard, posts, settings) | Manage the site |
+| Flagship sites | `sites/<slug>/` | Optional 1-click complete starters |
+| Admin | `administrator/` (dashboard, posts, settings, flagship) | Manage the site |
 
 ## Documentation
 

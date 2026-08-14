@@ -173,10 +173,21 @@ function handleSiteConfig() {
         return;
     }
 
+    $mode = ($_POST['start_mode'] ?? 'fresh') === 'flagship' ? 'flagship' : 'fresh';
+    $flagship = basename(trim((string) ($_POST['flagship_slug'] ?? 'blog')));
+    if ($mode === 'flagship') {
+        require_once __DIR__ . '/includes/FlagshipSite.php';
+        if (!FlagshipSite::getPackage($flagship)) {
+            $_SESSION['install_error'] = 'Selected flagship site was not found.';
+            return;
+        }
+    }
+
     $_SESSION['site_config'] = [
         'title' => trim($_POST['site_title']),
         'description' => trim($_POST['site_description']),
-        'mode' => 'fresh',
+        'mode' => $mode,
+        'flagship_slug' => $flagship,
         'topic' => 'default',
         'admin_email' => trim($_POST['admin_email'] ?? ''),
         'timezone' => $_POST['timezone'] ?? 'UTC'
@@ -247,9 +258,33 @@ function performInstallation() {
         // Create configuration file
         createConfigFile($db_config);
         
-        // Always Fresh core (ready-made packs removed from product)
         require_once __DIR__ . '/includes/PluginManager.php';
-        PluginManager::applyFreshDefault($connection);
+        require_once __DIR__ . '/includes/FlagshipSite.php';
+
+        $mode = $site_config['mode'] ?? 'fresh';
+        if ($mode === 'flagship') {
+            $slug = $site_config['flagship_slug'] ?? 'blog';
+            $adminId = 1;
+            $uidRes = $connection->query("SELECT userid FROM users ORDER BY userid ASC LIMIT 1");
+            if ($uidRes && ($urow = $uidRes->fetch_assoc())) {
+                $adminId = (int) $urow['userid'];
+            }
+            $applied = FlagshipSite::apply($slug, $connection, $adminId);
+            if (empty($applied['success'])) {
+                throw new Exception($applied['message'] ?? 'Flagship apply failed');
+            }
+            // Keep installer title/description the visitor typed
+            $title = $site_config['title'];
+            $description = $site_config['description'];
+            $stmt = $connection->prepare('UPDATE settings SET site_title = ?, site_description = ? WHERE settingid = 1');
+            if ($stmt) {
+                $stmt->bind_param('ss', $title, $description);
+                $stmt->execute();
+                $stmt->close();
+            }
+        } else {
+            PluginManager::applyFreshDefault($connection);
+        }
 
         // Create installed lock file
         file_put_contents('includes/installed.lock', date('Y-m-d H:i:s'));
@@ -327,6 +362,18 @@ function createDatabaseTables($connection) {
             KEY `author_id` (`author_id`),
             KEY `category_id` (`category_id`),
             KEY `status` (`status`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci",
+
+        'pages' => "CREATE TABLE `pages` (
+            `pageid` int(11) NOT NULL AUTO_INCREMENT,
+            `title` varchar(255) NOT NULL,
+            `slug` varchar(255) NOT NULL,
+            `content` longtext NOT NULL,
+            `status` enum('published','draft') NOT NULL DEFAULT 'published',
+            `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+            `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            PRIMARY KEY (`pageid`),
+            UNIQUE KEY `slug` (`slug`)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci"
     ];
     
@@ -383,15 +430,17 @@ function insertInitialData($connection, $site_config, $admin_config) {
     }
     $stmt->close();
     
-    // Insert default categories
-    $default_categories = ['General', 'Technology', 'Business', 'Lifestyle'];
-    foreach ($default_categories as $category) {
-        $slug = strtolower(str_replace(' ', '-', $category));
-        $cat_sql = "INSERT INTO core_categories (name, slug) VALUES (?, ?)";
-        $stmt = $connection->prepare($cat_sql);
-        $stmt->bind_param('ss', $category, $slug);
-        $stmt->execute();
-        $stmt->close();
+    // Fresh install gets starter categories; flagship packages seed their own
+    if (($site_config['mode'] ?? 'fresh') !== 'flagship') {
+        $default_categories = ['General', 'Technology', 'Business', 'Lifestyle'];
+        foreach ($default_categories as $category) {
+            $slug = strtolower(str_replace(' ', '-', $category));
+            $cat_sql = "INSERT INTO core_categories (name, slug) VALUES (?, ?)";
+            $stmt = $connection->prepare($cat_sql);
+            $stmt->bind_param('ss', $category, $slug);
+            $stmt->execute();
+            $stmt->close();
+        }
     }
 }
 
@@ -628,7 +677,43 @@ foreach ($requirements as $req) {
                             <textarea class="form-control" id="site_description" name="site_description" rows="3" required><?php echo htmlspecialchars($_SESSION['site_config']['description'] ?? ''); ?></textarea>
                         </div>
 
-                        <p class="text-muted">Installs the modern MultiCMS theme. You can create posts from Admin after setup.</p>
+                        <?php
+                        require_once __DIR__ . '/includes/FlagshipSite.php';
+                        $flagships = FlagshipSite::listPackages();
+                        $selMode = $_SESSION['site_config']['mode'] ?? 'fresh';
+                        $selFlag = $_SESSION['site_config']['flagship_slug'] ?? 'blog';
+                        ?>
+                        <div class="form-group">
+                            <label class="form-label">Start mode</label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="start_mode" id="mode_fresh" value="fresh"
+                                    <?php echo $selMode !== 'flagship' ? 'checked' : ''; ?>>
+                                <label class="form-check-label" for="mode_fresh">
+                                    <strong>Fresh</strong> — empty modern core (you create all content)
+                                </label>
+                            </div>
+                            <div class="form-check mt-2">
+                                <input class="form-check-input" type="radio" name="start_mode" id="mode_flagship" value="flagship"
+                                    <?php echo $selMode === 'flagship' ? 'checked' : ''; ?>
+                                    <?php echo empty($flagships) ? 'disabled' : ''; ?>>
+                                <label class="form-check-label" for="mode_flagship">
+                                    <strong>Flagship site</strong> — 1-click starter with sample posts and pages
+                                </label>
+                            </div>
+                        </div>
+                        <?php if (!empty($flagships)): ?>
+                        <div class="form-group">
+                            <label for="flagship_slug" class="form-label">Flagship package</label>
+                            <select class="form-select" id="flagship_slug" name="flagship_slug">
+                                <?php foreach ($flagships as $pkg): ?>
+                                <option value="<?php echo htmlspecialchars($pkg['slug'], ENT_QUOTES, 'UTF-8'); ?>"
+                                    <?php echo $selFlag === $pkg['slug'] ? 'selected' : ''; ?>>
+                                    <?php echo htmlspecialchars($pkg['name'] . ' — ' . $pkg['description'], ENT_QUOTES, 'UTF-8'); ?>
+                                </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        <?php endif; ?>
                         
                         <div class="form-group">
                             <label for="admin_email" class="form-label">Admin Email</label>

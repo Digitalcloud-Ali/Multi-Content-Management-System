@@ -1,7 +1,5 @@
 # Plugins
 
-MultiCMS ships as a **Fresh core** product (installer + default theme + Posts / Settings).
+Optional extensions live under `plugins/<slug>/` (future).
 
-Ready-made site packs were removed from this repository. A new plugin system will be added later from scratch.
-
-Put future plugins under `plugins/<slug>/` when that work starts.
+**Flagship starter sites** (complete sample content) are separate — see `sites/` and Admin → Flagship Sites.

@@ -64,7 +64,7 @@ After install, manage content at `/administrator/posts.php` and site metadata at
 #### Site Configuration
 - **Site Title**: Your website's name
 - **Site Description**: Brief description of your site
-- **Start mode**: Modern MultiCMS theme (Fresh core)
+- **Start mode**: Fresh (empty core) or Flagship site (e.g. Blog Starter with sample content)
 - **Admin Email**: Primary administrator email address
 - **Timezone**: Select your local timezone
 - Click "Continue to Admin Setup"
