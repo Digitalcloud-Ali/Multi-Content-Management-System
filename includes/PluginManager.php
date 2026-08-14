@@ -328,9 +328,113 @@ class PluginManager {
         }
         $sql = file_get_contents($sqlFile);
         self::runSqlBatch($conn, $sql);
+        self::ensureLegacySettingsCompat($conn);
 
-        // Optional pack-specific schema
         return ['success' => true, 'message' => 'Legacy pack tables ensured'];
+    }
+
+    /**
+     * Bridge modern installer settings + themes seed so Dreamweaver packs can render.
+     */
+    private static function ensureLegacySettingsCompat(mysqli $conn) {
+        $legacyCols = [
+            'title' => "varchar(255) NOT NULL DEFAULT ''",
+            'siteurl' => "varchar(255) NOT NULL DEFAULT ''",
+            'logo' => "varchar(100) DEFAULT NULL",
+            'favicon' => "varchar(100) DEFAULT NULL",
+            'currency' => "varchar(50) NOT NULL DEFAULT 'USD'",
+            'theme' => "varchar(100) NOT NULL DEFAULT 'default'",
+            'owner' => "varchar(100) DEFAULT NULL",
+            'missingimage' => "varchar(100) DEFAULT 'missing.png'",
+            'email' => "varchar(255) DEFAULT NULL",
+            'phone' => "varchar(100) DEFAULT NULL",
+            'metadesc' => "varchar(255) DEFAULT NULL",
+            'metakey' => "varchar(255) DEFAULT NULL",
+            'onlinestatus' => "varchar(50) NOT NULL DEFAULT 'yes'",
+            'footer' => "text",
+            'ad1' => 'text',
+            'ad2' => 'text',
+            'ad3' => 'text',
+            'ad4' => 'text',
+            'ad5' => 'text',
+            'ad6' => 'text',
+        ];
+        foreach ($legacyCols as $col => $def) {
+            $check = $conn->query("SHOW COLUMNS FROM settings LIKE '" . $conn->real_escape_string($col) . "'");
+            if ($check && $check->num_rows === 0) {
+                $conn->query("ALTER TABLE settings ADD COLUMN `{$col}` {$def}");
+            }
+        }
+
+        // Backfill from modern columns when legacy fields empty
+        $row = null;
+        $rs = $conn->query('SELECT * FROM settings WHERE settingid = 1 LIMIT 1');
+        if ($rs) {
+            $row = $rs->fetch_assoc();
+        }
+        if ($row) {
+            $title = trim((string) ($row['title'] ?? ''));
+            if ($title === '' && !empty($row['site_title'])) {
+                $title = $row['site_title'];
+            }
+            if ($title === '') {
+                $title = 'MultiCMS';
+            }
+            $metadesc = trim((string) ($row['metadesc'] ?? ''));
+            if ($metadesc === '' && !empty($row['site_description'])) {
+                $metadesc = $row['site_description'];
+            }
+            $email = trim((string) ($row['email'] ?? ''));
+            if ($email === '' && !empty($row['admin_email'])) {
+                $email = $row['admin_email'];
+            }
+            $theme = trim((string) ($row['theme'] ?? ''));
+            if ($theme === '') {
+                $theme = 'default';
+            }
+            $online = trim((string) ($row['onlinestatus'] ?? ''));
+            if ($online === '') {
+                $online = 'yes';
+            }
+            $stmt = $conn->prepare('UPDATE settings SET title=?, metadesc=?, email=?, theme=?, onlinestatus=?, currency=IFNULL(NULLIF(currency,\'\'),\'USD\'), missingimage=IFNULL(NULLIF(missingimage,\'\'),\'missing.png\'), footer=IFNULL(footer,\'\') WHERE settingid=1');
+            if ($stmt) {
+                $stmt->bind_param('sssss', $title, $metadesc, $email, $theme, $online);
+                $stmt->execute();
+                $stmt->close();
+            }
+        }
+
+        // Seed themes.default when empty
+        $themesExist = $conn->query("SHOW TABLES LIKE 'themes'");
+        if ($themesExist && $themesExist->num_rows > 0) {
+            $count = $conn->query('SELECT COUNT(*) AS c FROM themes');
+            $c = $count ? (int) ($count->fetch_assoc()['c'] ?? 0) : 0;
+            if ($c === 0) {
+                $conn->query("INSERT INTO themes (theme, status) VALUES ('default', 'active')");
+            }
+        }
+
+        // Minimal parts rows packs/themes expect by partsid
+        $partsExist = $conn->query("SHOW TABLES LIKE 'parts'");
+        if ($partsExist && $partsExist->num_rows > 0) {
+            $needed = [
+                3 => ['ads management', 'disabled', 'component'],
+                7 => ['left menu', 'disabled', 'menu'],
+                8 => ['right menu', 'disabled', 'menu'],
+                12 => ['widgets', 'disabled', 'widget'],
+            ];
+            foreach ($needed as $id => $meta) {
+                $check = $conn->query('SELECT partsid FROM parts WHERE partsid=' . (int) $id);
+                if ($check && $check->num_rows === 0) {
+                    $stmt = $conn->prepare('INSERT INTO parts (partsid, part, status, type) VALUES (?,?,?,?)');
+                    if ($stmt) {
+                        $stmt->bind_param('isss', $id, $meta[0], $meta[1], $meta[2]);
+                        $stmt->execute();
+                        $stmt->close();
+                    }
+                }
+            }
+        }
     }
 
     public static function ensurePackSchema($slug, $mysqli = null) {

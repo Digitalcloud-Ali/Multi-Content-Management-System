@@ -32,6 +32,7 @@ class Database {
             if (defined('DB_HOST') && defined('DB_USERNAME') && defined('DB_NAME')) {
                 return [
                     'host' => DB_HOST,
+                    'port' => defined('DB_PORT') ? (int) DB_PORT : 3306,
                     'username' => DB_USERNAME,
                     'password' => defined('DB_PASSWORD') ? DB_PASSWORD : '',
                     'database' => DB_NAME,
@@ -61,11 +62,13 @@ class Database {
         }
 
         try {
+            $port = (int) ($this->config['port'] ?? 3306);
             $this->connection = new mysqli(
                 $this->config['host'],
                 $this->config['username'],
                 $this->config['password'],
-                $this->config['database']
+                $this->config['database'],
+                $port > 0 ? $port : 3306
             );
             
             if ($this->connection->connect_error) {
