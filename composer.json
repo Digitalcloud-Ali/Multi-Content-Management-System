@@ -1,6 +1,6 @@
 {
   "name": "digitalcloud-ali/multicms",
-  "description": "Multi-Content Management System — modern core with optional ready-made site plugins",
+  "description": "MultiCMS — modern PHP/MySQL CMS with optional Flagship starter sites",
   "type": "project",
   "license": "GPL-3.0-or-later",
   "require": {
@@ -23,6 +23,6 @@
     ]
   },
   "scripts": {
-    "lint": "php scripts/php-lint-smoke.php"
+    "lint": "php .github/scripts/php-lint-smoke.php"
   }
 }

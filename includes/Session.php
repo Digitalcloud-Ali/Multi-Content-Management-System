@@ -22,7 +22,7 @@ class Session {
         ini_set('session.cookie_samesite', 'Strict');
         
         // Set session name
-        session_name('RAYCMS_SESSION');
+        session_name('MULTICMS_SESSION');
         
         // Start session
         if (session_status() === PHP_SESSION_NONE) {
@@ -161,7 +161,7 @@ class Session {
         self::requireAuth();
         
         if (!self::hasRole($role)) {
-            header('Location: access-denied.php');
+            header('Location: ' . (function_exists('mc_url') ? mc_url('login') : 'login.php'));
             exit;
         }
     }

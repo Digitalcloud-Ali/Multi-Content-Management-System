@@ -1,6 +1,6 @@
 <?php
 /**
- * Core Site Settings (modern + legacy column sync) — Phase 3
+ * Site Settings — modern schema only.
  */
 require_once __DIR__ . '/../includes/bootstrap.php';
 require_once __DIR__ . '/../includes/LegacyAuth.php';
@@ -10,21 +10,14 @@ Session::start();
 $isAdmin = (function_exists('hasRole') && (hasRole('admin') || hasRole('administrator')))
     || (!empty($_SESSION['MM_UserGroup']) && in_array($_SESSION['MM_UserGroup'], ['admin', 'administrator'], true));
 
-if (!$isAdmin) {
+if (!$isAdmin || empty($_SESSION['MM_Username'])) {
     header('Location: login.php');
     exit;
 }
 
 $db = getDB();
-$conn = $db->getConnection();
 $flash = '';
-
-// Ensure legacy settings columns exist when possible
-if (class_exists('PluginManager') && method_exists('PluginManager', 'bridgeLegacySettings')) {
-    PluginManager::bridgeLegacySettings($conn);
-}
-
-$row = $db->queryOne('SELECT * FROM settings WHERE settingid = 1');
+$row = $db->queryOne('SELECT * FROM settings WHERE settingid = 1') ?: [];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!multicms_csrf_validate($_POST['csrf_token'] ?? '')) {
@@ -33,44 +26,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $siteTitle = trim((string) ($_POST['site_title'] ?? ''));
         $siteDesc = trim((string) ($_POST['site_description'] ?? ''));
         $adminEmail = trim((string) ($_POST['admin_email'] ?? ''));
-        $theme = preg_replace('/[^a-z0-9_-]/i', '', (string) ($_POST['theme'] ?? 'default')) ?: 'default';
-        $online = in_array($_POST['onlinestatus'] ?? '', ['yes', 'no'], true) ? $_POST['onlinestatus'] : 'yes';
-        $metakey = trim((string) ($_POST['metakey'] ?? ''));
-        $footer = (string) ($_POST['footer'] ?? '');
+        $timezone = trim((string) ($_POST['timezone'] ?? 'UTC')) ?: 'UTC';
 
         if ($siteTitle === '') {
             $flash = 'Site title is required.';
         } else {
-            // Modern columns (best effort)
-            $hasSiteTitle = $conn->query("SHOW COLUMNS FROM settings LIKE 'site_title'");
-            if ($hasSiteTitle && $hasSiteTitle->num_rows > 0) {
-                $db->execute(
-                    'UPDATE settings SET site_title=?, site_description=?, admin_email=? WHERE settingid=1',
-                    'sss',
-                    [$siteTitle, $siteDesc, $adminEmail]
-                );
-            }
-            // Legacy columns
             $db->execute(
-                'UPDATE settings SET title=?, metadesc=?, email=?, theme=?, onlinestatus=?, metakey=?, footer=? WHERE settingid=1',
-                'sssssss',
-                [$siteTitle, $siteDesc, $adminEmail, $theme, $online, $metakey, $footer]
+                'UPDATE settings SET site_title=?, site_description=?, admin_email=?, timezone=? WHERE settingid=1',
+                'ssss',
+                [$siteTitle, $siteDesc, $adminEmail, $timezone]
             );
-            do_action('multicms_settings_saved', $siteTitle);
+            if (function_exists('do_action')) {
+                do_action('multicms_settings_saved', $siteTitle);
+            }
             $flash = 'Settings saved.';
-            $row = $db->queryOne('SELECT * FROM settings WHERE settingid = 1');
+            $row = $db->queryOne('SELECT * FROM settings WHERE settingid = 1') ?: [];
         }
     }
 }
 
-$titleVal = $row['site_title'] ?? ($row['title'] ?? '');
-$descVal = $row['site_description'] ?? ($row['metadesc'] ?? '');
-$emailVal = $row['admin_email'] ?? ($row['email'] ?? '');
-$themeVal = $row['theme'] ?? 'default';
-$onlineVal = $row['onlinestatus'] ?? 'yes';
-$metakeyVal = $row['metakey'] ?? '';
-$footerVal = $row['footer'] ?? '';
-$siteTitle = $row['site_title'] ?? ($row['title'] ?? 'MultiCMS');
+$titleVal = $row['site_title'] ?? '';
+$descVal = $row['site_description'] ?? '';
+$emailVal = $row['admin_email'] ?? '';
+$tzVal = $row['timezone'] ?? 'UTC';
+$siteTitle = $titleVal !== '' ? $titleVal : 'MultiCMS';
 $adminNavActive = 'settings';
 ?>
 <!DOCTYPE html>
@@ -97,39 +76,21 @@ $adminNavActive = 'settings';
                     <input class="form-control" name="site_title" required value="<?php echo htmlspecialchars($titleVal, ENT_QUOTES, 'UTF-8'); ?>">
                 </div>
                 <div class="mb-3">
-                    <label class="form-label">Description / meta description</label>
+                    <label class="form-label">Description</label>
                     <textarea class="form-control" name="site_description" rows="3"><?php echo htmlspecialchars($descVal, ENT_QUOTES, 'UTF-8'); ?></textarea>
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Admin / contact email</label>
                     <input class="form-control" type="email" name="admin_email" value="<?php echo htmlspecialchars($emailVal, ENT_QUOTES, 'UTF-8'); ?>">
                 </div>
-                <div class="row">
-                    <div class="col-md-4 mb-3">
-                        <label class="form-label">Theme folder</label>
-                        <input class="form-control" name="theme" value="<?php echo htmlspecialchars($themeVal, ENT_QUOTES, 'UTF-8'); ?>">
-                    </div>
-                    <div class="col-md-4 mb-3">
-                        <label class="form-label">Online status</label>
-                        <select class="form-select" name="onlinestatus">
-                            <option value="yes" <?php echo $onlineVal === 'yes' ? 'selected' : ''; ?>>Online</option>
-                            <option value="no" <?php echo $onlineVal === 'no' ? 'selected' : ''; ?>>Offline</option>
-                        </select>
-                    </div>
-                    <div class="col-md-4 mb-3">
-                        <label class="form-label">Meta keywords</label>
-                        <input class="form-control" name="metakey" value="<?php echo htmlspecialchars($metakeyVal, ENT_QUOTES, 'UTF-8'); ?>">
-                    </div>
-                </div>
                 <div class="mb-3">
-                    <label class="form-label">Footer HTML</label>
-                    <textarea class="form-control" name="footer" rows="3"><?php echo htmlspecialchars($footerVal, ENT_QUOTES, 'UTF-8'); ?></textarea>
+                    <label class="form-label">Timezone</label>
+                    <input class="form-control" name="timezone" value="<?php echo htmlspecialchars($tzVal, ENT_QUOTES, 'UTF-8'); ?>">
                 </div>
                 <button class="btn btn-primary" type="submit">Save settings</button>
             </form>
         </div>
     </div>
-    <p class="text-muted small mt-3 mb-0">Updates the public site title, description, and related settings.</p>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>

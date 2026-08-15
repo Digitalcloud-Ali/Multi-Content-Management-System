@@ -14,5 +14,5 @@ $user = $currentUser ?? $authService->getCurrentUser();
         <dt class="col-sm-3">Role</dt>
         <dd class="col-sm-9"><?php echo htmlspecialchars($user['role'] ?? ''); ?></dd>
     </dl>
-    <a class="btn btn-outline-secondary" href="index.php?page=logout">Log out</a>
+    <a class="btn btn-outline-secondary" href="<?php echo htmlspecialchars(mc_url('logout'), ENT_QUOTES, 'UTF-8'); ?>">Log out</a>
 <?php endif; ?>

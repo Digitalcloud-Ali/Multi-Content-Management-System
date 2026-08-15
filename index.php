@@ -93,6 +93,9 @@ include $theme . '/header.php';
                     case 'cms_page':
                         include $theme . '/cms-page.php';
                         break;
+                    case 'search':
+                        include $theme . '/search.php';
+                        break;
                     default:
                         include $theme . '/404.php';
                         break;

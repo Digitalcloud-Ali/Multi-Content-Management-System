@@ -1,240 +1,86 @@
-# Multi-Content CMS Installation Guide
+# MultiCMS Installation Guide
 
 ## Overview
 
-The Multi-Content Management System now features a modern, secure installation process similar to WordPress. This guide will walk you through the complete installation process.
+MultiCMS is a modern PHP/MySQL content management system with an installer similar to WordPress, optional Flagship starter sites, and an Updates & Backup admin screen.
 
 ## Prerequisites
 
-Before installing, ensure your server meets these requirements:
+- **PHP** 7.4 or higher
+- **MySQL** 5.7+ or MariaDB 10.2+
+- **Extensions**: mysqli, GD, cURL, zip (for updates/backups)
+- **Writable**: `includes/` and `content/uploads/` (and `content/backups/` after install)
+- **Web server**: Apache with `mod_rewrite` (bundled `.htaccess`) or Nginx
 
-- **PHP**: 7.4 or higher
-- **MySQL**: 5.7 or higher (or MariaDB 10.2+)
-- **Extensions**: mysqli, GD, cURL
-- **Permissions**: Writable `includes/` and `uploads/` directories
-- **Web Server**: Apache (with mod_rewrite) or Nginx
+## Pretty URLs
 
-## Pretty URLs (optional)
-
-Apache: the bundled `.htaccess` can rewrite unknown paths to `index.php`.
+Apache: root `.htaccess` rewrites unknown paths to `index.php` via `mc_route`.
 
 Nginx example:
 
 ```nginx
 location / {
-    try_files $uri $uri/ /index.php?$args;
+    try_files $uri $uri/ /index.php?mc_route=$uri&$args;
 }
 location ~ ^/includes/.*\.php$ { deny all; }
-location ~* /images/.*\.(php|phtml|phar)$ { deny all; }
+location ~* /content/uploads/.*\.(php|phtml|phar)$ { deny all; }
 ```
 
-After install, manage content at `/administrator/posts.php` and site metadata at `/administrator/settings_core.php`.
+After install: posts at `/administrator/posts.php`, settings at `/administrator/settings_core.php`, updates at `/administrator/updates.php`.
 
-## Installation Process
+## Installation
 
-### Step 1: Upload Files
+1. Upload the project files to your web root (or a subdirectory).
+2. Open `https://yourdomain.com/install.php` (or `/subdir/install.php`).
+3. Complete the wizard: requirements → database → site → admin → install.
+4. Choose **Fresh** (empty site) or a **Flagship** starter (Blog, Business, Portfolio, Clinic, Nonprofit).
+5. When finished, `install.php` shows “already installed” — you do **not** need to delete it.
 
-1. Upload all CMS files to your web server
-2. Ensure the `uploads/` directory is writable
-3. Ensure the `includes/` directory is writable
+The installer writes `includes/db_config.php`, `includes/env.php`, `includes/site_path.php`, and `includes/installed.lock`, and sets `RewriteBase` / ErrorDocument paths in `.htaccess`.
 
-### Step 2: Run Installation
+## Post-installation
 
-1. Navigate to `yourdomain.com/install.php`
-2. The installation wizard will guide you through the process
+1. Sign in at `/administrator/` with the admin account you created.
+2. Configure site title, description, email, and timezone under **Site Settings**.
+3. Create posts/pages, or apply another Flagship from **Flagship sites** (admin).
+4. Use **Updates & Backup** to download backups and apply GitHub releases when available.
 
-### Step 3: Installation Steps
-
-#### Welcome
-- Introduction to the installation process
-- Click "Get Started" to begin
-
-#### System Requirements
-- Automatic check of PHP version, extensions, and permissions
-- All requirements must be met before proceeding
-- Click "Continue to Database Setup" when ready
-
-#### Database Configuration
-- **Database Host**: Usually `localhost` or your database server IP
-- **Username**: Your MySQL username
-- **Password**: Your MySQL password
-- **Database Name**: The database you want to use (will be created if it doesn't exist)
-- Click "Test Connection & Continue" to verify and proceed
-
-#### Site Configuration
-- **Site Title**: Your website's name
-- **Site Description**: Brief description of your site
-- **Start mode**: Fresh (empty core) or Flagship site (e.g. Blog Starter with sample content)
-- **Admin Email**: Primary administrator email address
-- **Timezone**: Select your local timezone
-- Click "Continue to Admin Setup"
-
-#### Administrator Setup
-- **Username**: Choose a unique admin username
-- **Password**: Create a strong password (minimum 8 characters)
-- **Confirm Password**: Re-enter your password
-- Click "Continue to Installation"
-
-#### Installation
-- System automatically creates database tables
-- Populates initial data
-- Creates configuration files
-- Sets up administrator account
-- Creates basic content structure
-
-#### Complete
-- Installation finished successfully
-- Access your admin panel or view your site
-- **Important**: After install, `install.php` only shows “already installed” — you do not need to delete it
-
-## Post-Installation
-
-### 1. First Login
-- Go to `yourdomain.com/administrator/`
-- Login with your admin credentials
-- Change your password immediately
-
-### 2. Site Configuration
-- Navigate to Settings in admin panel
-- Configure site title, description, and other options
-- Set up your preferred theme
-- Configure email settings
-
-### 3. Content Setup
-- Create your first blog post or page
-- Set up categories
-- Upload and organize media files
-- Configure navigation menus
-
-### 4. Security notes
-- Leave `install.php` in place — it will report that the site is already installed
-- Ensure `.htaccess` is present (RewriteBase is set by the installer)
-- Set up SSL / HTTPS (recommended)
-
-## File Structure After Installation
+## Layout
 
 ```
-your-project/
-├── includes/
-│   ├── installed.lock          # Installation lock file
-│   ├── db_config.php          # Database configuration
-│   ├── bootstrap.php          # Application bootstrap
-│   ├── Database.php           # Database class
-│   ├── Session.php            # Session management
-│   ├── Validator.php          # Input validation
-│   ├── ErrorHandler.php       # Error handling
-│   └── services/              # Service classes
-├── themes/
-│   └── default/               # Default theme
-├── uploads/                   # File uploads directory
-├── administrator/             # Admin panel
-├── index.php                  # Main entry point
-└── .htaccess                  # Security and routing
+/
+├── index.php                 # Front controller
+├── install.php               # Installer (safe after install)
+├── .htaccess
+├── administrator/            # Admin UI (like wp-admin)
+├── includes/                 # Core engine + config (not web-writable secrets in git)
+├── content/
+│   ├── themes/default/       # Front theme
+│   ├── sites/                # Flagship starter packs
+│   ├── uploads/
+│   ├── backups/
+│   ├── plugins/
+│   └── assets/
+└── docs/                     # Documentation (optional on host)
 ```
 
 ## Troubleshooting
 
-### Common Issues
+| Issue | Check |
+| --- | --- |
+| Database connection failed | Credentials, MySQL running, DB exists, user grants |
+| Permission errors | `includes/` and `content/uploads/` writable by the web user |
+| Install won’t finish | PHP error log; disk space; memory limit |
+| Can’t access admin | Account created; `installed.lock` present; session cookies |
+| 404 on pretty URLs | `mod_rewrite`; `RewriteBase` matches install path |
 
-#### Database Connection Failed
-- Verify database credentials
-- Ensure MySQL service is running
-- Check if database exists or can be created
-- Verify user permissions
+## Security notes
 
-#### Permission Errors
-- Ensure `includes/` directory is writable (755 or 775)
-- Ensure `uploads/` directory is writable (755 or 775)
-- Check web server user permissions
-
-#### Installation Won't Complete
-- Check error logs in `logs/error.log`
-- Verify all requirements are met
-- Ensure sufficient disk space
-- Check PHP memory limits
-
-#### Can't Access Admin Panel
-- Verify administrator account was created
-- Check if `installed.lock` file exists
-- Ensure proper file permissions
-- Check for JavaScript errors in browser console
-
-### Error Logs
-
-The system logs errors to `logs/error.log`. Check this file if you encounter issues:
-
-```bash
-tail -f logs/error.log
-```
-
-## Security Considerations
-
-### During Installation
-- Use strong passwords
-- Ensure secure database credentials
-- Run on HTTPS if possible
-
-### After Installation
-- Delete installation files
-- Change default admin password
-- Set up SSL certificate
-- Configure firewall rules
-- Regular security updates
-
-## Backup and Migration
-
-### Before Installation
-- Backup existing database (if upgrading)
-- Backup existing files
-- Document current configuration
-
-### After Installation
-- Backup new database
-- Backup configuration files
-- Document new setup
+- Leave `install.php` in place; it refuses reinstall when locked.
+- Prefer HTTPS in production.
+- Do not commit `includes/db_config.php` or `includes/env.php`.
+- Keep MultiCMS updated via Admin → Updates when a new `version.json` release appears on GitHub.
 
 ## Support
 
-If you encounter issues:
-
-1. Check this installation guide
-2. Review error logs
-3. Verify system requirements
-4. Check file permissions
-5. Consult system administrator
-
-## Advanced Configuration
-
-### Custom Database Prefix
-Edit `includes/db_config.php` to add table prefixes:
-
-```php
-define('DB_PREFIX', 'cms_');
-```
-
-### Custom Upload Directory
-Modify upload paths in admin panel or edit configuration files.
-
-### Custom Theme
-Upload custom themes to `themes/` directory and activate in admin panel.
-
-## Performance Optimization
-
-### Database
-- Run database optimization after installation
-- Set up regular maintenance schedules
-- Monitor query performance
-
-### Caching
-- Enable PHP OPcache
-- Configure web server caching
-- Consider Redis/Memcached for session storage
-
-### File System
-- Optimize image uploads
-- Use CDN for static assets
-- Regular cleanup of temporary files
-
----
-
-**Note**: This installation system is designed to run only once. After successful installation, the system will redirect to the main site and prevent re-running the installer.
+Developed by [DigitalCloud.no](https://digitalcloud.no). Report issues on the GitHub repository for this project.

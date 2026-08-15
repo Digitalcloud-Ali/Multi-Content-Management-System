@@ -206,10 +206,6 @@ function getSetting($key, $default = null) {
             $cache = [];
         }
     }
-    global $raycms_settings;
-    if (is_array($raycms_settings ?? null) && array_key_exists($key, $raycms_settings)) {
-        return $raycms_settings[$key];
-    }
     return $cache[$key] ?? $default;
 }
 } // getSetting

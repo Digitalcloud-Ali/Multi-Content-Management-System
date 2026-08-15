@@ -1,0 +1,25 @@
+/* MultiCMS default theme — light Bootstrap companion */
+:root {
+  --mc-accent: #0d6efd;
+}
+body {
+  min-height: 100vh;
+}
+.hero-section {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-radius: 0.5rem;
+}
+.feature-card .feature-icon {
+  opacity: 0.9;
+}
+.post-content img {
+  max-width: 100%;
+  height: auto;
+}
+.page-body img {
+  max-width: 100%;
+  height: auto;
+}
+footer a {
+  text-decoration: none;
+}

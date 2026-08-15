@@ -10,7 +10,7 @@ Session::start();
 $isAdmin = (function_exists('hasRole') && (hasRole('admin') || hasRole('administrator')))
     || (!empty($_SESSION['MM_UserGroup']) && in_array($_SESSION['MM_UserGroup'], ['admin', 'administrator'], true));
 
-if (!$isAdmin) {
+if (!$isAdmin || empty($_SESSION['MM_Username'])) {
     header('Location: login.php');
     exit;
 }

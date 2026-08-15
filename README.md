@@ -2,7 +2,7 @@
 
 [![PHP Version](https://img.shields.io/badge/PHP-7.4%2B-blue.svg)](https://www.php.net/)
 [![License](https://img.shields.io/badge/License-GPL%20v3-green.svg)](LICENSE.md)
-[![Version](https://img.shields.io/badge/version-1.3.1-blue.svg)](version.json)
+[![Version](https://img.shields.io/badge/version-1.3.2-blue.svg)](version.json)
 
 Open-source PHP/MySQL CMS. Install it on shared hosting or a VPS, run the web installer, then publish posts from admin.
 

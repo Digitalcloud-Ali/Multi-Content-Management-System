@@ -1,10 +1,28 @@
 <?php
 $pageTitle = 'Blog';
 $pageNum = max(1, (int) ($_GET['p'] ?? 1));
-$result = $contentService->getBlogPosts($pageNum, 10);
+$categoryId = isset($_GET['category']) ? (int) $_GET['category'] : null;
+if ($categoryId !== null && $categoryId <= 0) {
+    $categoryId = null;
+}
+$result = $contentService->getBlogPosts($pageNum, 10, $categoryId);
 $posts = $result['posts'] ?? [];
+$categoryLabel = '';
+if ($categoryId && !empty($categories)) {
+    foreach ($categories as $c) {
+        $cid = (int) ($c['id'] ?? $c['categoryid'] ?? 0);
+        if ($cid === $categoryId) {
+            $categoryLabel = (string) ($c['name'] ?? '');
+            break;
+        }
+    }
+}
+$pagerQuery = $categoryId ? ['category' => $categoryId] : [];
 ?>
-<h1 class="mb-4">Blog</h1>
+<h1 class="mb-4">Blog<?php echo $categoryLabel !== '' ? ' — ' . htmlspecialchars($categoryLabel, ENT_QUOTES, 'UTF-8') : ''; ?></h1>
+<?php if ($categoryId): ?>
+    <p class="mb-3"><a href="<?php echo htmlspecialchars(mc_url('blog'), ENT_QUOTES, 'UTF-8'); ?>">← All posts</a></p>
+<?php endif; ?>
 <?php if (empty($posts)): ?>
     <p class="text-muted">No published posts yet. Create content from Admin → Posts.</p>
 <?php else: ?>
@@ -28,7 +46,7 @@ $posts = $result['posts'] ?? [];
     <?php if (($result['pages'] ?? 1) > 1): ?>
         <nav>
             <?php for ($i = 1; $i <= $result['pages']; $i++): ?>
-                <a class="btn btn-sm <?php echo $i === $pageNum ? 'btn-primary' : 'btn-outline-primary'; ?>" href="<?php echo htmlspecialchars(mc_url('blog', ['p' => $i]), ENT_QUOTES, 'UTF-8'); ?>"><?php echo $i; ?></a>
+                <a class="btn btn-sm <?php echo $i === $pageNum ? 'btn-primary' : 'btn-outline-primary'; ?>" href="<?php echo htmlspecialchars(mc_url('blog', array_merge($pagerQuery, ['p' => $i])), ENT_QUOTES, 'UTF-8'); ?>"><?php echo $i; ?></a>
             <?php endfor; ?>
         </nav>
     <?php endif; ?>

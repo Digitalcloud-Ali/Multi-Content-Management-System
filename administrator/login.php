@@ -26,9 +26,9 @@ if ($isAdmin && !empty($_SESSION['MM_Username'])) {
 
 $siteTitle = 'MultiCMS';
 try {
-    $row = getDB()->queryOne('SELECT site_title, title FROM settings WHERE settingid = 1');
+    $row = getDB()->queryOne('SELECT site_title FROM settings WHERE settingid = 1');
     if ($row) {
-        $siteTitle = $row['site_title'] ?? ($row['title'] ?? $siteTitle);
+        $siteTitle = $row['site_title'] ?? $siteTitle;
     }
 } catch (Throwable $e) {
 }
@@ -52,6 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['datauser'])) {
             's',
             [$loginUsername]
         );
+        $legacy = null;
 
         if ($user && ($user['status'] ?? '') === 'active') {
             list($ok, $rehash) = multicms_verify_password_flexible($password, $user['password']);
@@ -89,6 +90,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['datauser'])) {
             session_regenerate_id(true);
             $_SESSION['MM_Username'] = $loginUsername;
             $_SESSION['MM_UserGroup'] = $group;
+            $_SESSION['MM_UserID'] = !empty($user['userid'])
+                ? (int) $user['userid']
+                : (int) ($legacy['memberid'] ?? 0);
             header('Location: dashboard.php');
             exit;
         }

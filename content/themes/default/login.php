@@ -18,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         
         if ($result['success']) {
             // Login successful, redirect to home page
-            safeRedirect('index.php', 'Welcome back! You have been logged in successfully.');
+            safeRedirect(mc_url(), 'Welcome back! You have been logged in successfully.');
         } else {
             $loginError = $result['message'] ?? 'Login failed. Please try again.';
         }
@@ -40,7 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </div>
                     <?php endif; ?>
                     
-                    <form method="POST" action="index.php?page=login">
+                    <form method="POST" action="<?php echo htmlspecialchars(mc_url('login'), ENT_QUOTES, 'UTF-8'); ?>">
                         <!-- CSRF Token -->
                         <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($csrfToken); ?>">
                         
@@ -85,10 +85,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     
                     <div class="text-center">
                         <p>Don't have an account? 
-                            <a href="index.php?page=register" class="text-decoration-none">Register here</a>
+                            <a href="<?php echo htmlspecialchars(mc_url('register'), ENT_QUOTES, 'UTF-8'); ?>" class="text-decoration-none">Register here</a>
                         </p>
                         <p>
-                            <a href="index.php?page=forgot-password" class="text-decoration-none">Forgot your password?</a>
+                            <span class="text-muted small">Forgot password? Ask your site administrator.</span>
                         </p>
                     </div>
                 </div>

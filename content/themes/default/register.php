@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         
         if ($result['success']) {
             // Registration successful, redirect to login
-            safeRedirect('index.php?page=login', 'Registration successful! Please login with your new account.');
+            safeRedirect(mc_url('login'), 'Registration successful! Please login with your new account.');
         } else {
             $registerError = $result['message'] ?? 'Registration failed. Please try again.';
             $validationErrors = $result['errors'] ?? [];
@@ -50,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </div>
                     <?php endif; ?>
                     
-                    <form method="POST" action="index.php?page=register" id="registerForm">
+                    <form method="POST" action="<?php echo htmlspecialchars(mc_url('register'), ENT_QUOTES, 'UTF-8'); ?>" id="registerForm">
                         <!-- CSRF Token -->
                         <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($csrfToken); ?>">
                         
@@ -168,7 +168,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     
                     <div class="text-center">
                         <p>Already have an account? 
-                            <a href="index.php?page=login" class="text-decoration-none">Login here</a>
+                            <a href="<?php echo htmlspecialchars(mc_url('login'), ENT_QUOTES, 'UTF-8'); ?>" class="text-decoration-none">Login here</a>
                         </p>
                     </div>
                 </div>

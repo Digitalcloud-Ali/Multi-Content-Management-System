@@ -5,7 +5,7 @@
  */
 
 // Set page title
-$pageTitle = 'Welcome to ' . getSetting('site_name', 'RayCMS');
+$pageTitle = 'Welcome to ' . getSetting('site_name', getSetting('site_title', 'MultiCMS'));
 $pageSubtitle = getSetting('site_description', 'A modern content management system');
 
 // Get recent posts for the homepage
@@ -25,7 +25,7 @@ try {
 <div class="hero-section text-center py-5 mb-5">
     <div class="container">
         <h1 class="display-3 fw-bold text-primary mb-4">
-            Welcome to <?php echo getSetting('site_name', 'RayCMS'); ?>
+            Welcome to <?php echo htmlspecialchars(getSetting('site_name', getSetting('site_title', 'MultiCMS')), ENT_QUOTES, 'UTF-8'); ?>
         </h1>
         <p class="lead mb-4">
             <?php echo getSetting('site_description', 'A modern content management system built with security and performance in mind.'); ?>

@@ -2,7 +2,7 @@
 
 ## Automated
 
-- [x] `php scripts/php-lint-smoke.php`
+- [x] `php .github/scripts/php-lint-smoke.php`
 - [x] GitHub Actions PHP lint (+ smoke when MySQL available)
 
 ## Operator (on your hosting)

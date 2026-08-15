@@ -37,7 +37,7 @@
       "slug": "customize-site-settings",
       "category": "guides",
       "status": "published",
-      "excerpt": "Change the site title, description, and online status from Site Settings.",
+      "excerpt": "Change the site title, description, email, and timezone from Site Settings.",
       "content": "<p>Open <strong>Admin → Site Settings</strong> to change the public site title and description visitors see.</p><p>You can refine branding later; the flagship package only gives you a strong starting point.</p>"
     }
   ],
